@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using MonoGame.Extended.Gui;
+using MonoGame.Extended.Gui.Controls;
+using MonoGame.Extended.Gui.Drawables;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.ViewportAdapters;
 
@@ -12,9 +15,10 @@ namespace Demo.Gui
         private GraphicsDeviceManager _graphicsDeviceManager;
         private SpriteBatch _spriteBatch;
         private Texture2D _texture;
-        private Sprite _sprite;
         private ViewportAdapter _viewportAdapter;
         private Camera2D _camera;
+        private GuiManager _guiManager;
+        private GuiButton _button;
 
         public Game1()
         {
@@ -29,11 +33,15 @@ namespace Demo.Gui
             _viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 800, 480);
             _camera = new Camera2D(_viewportAdapter);
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _texture = Content.Load<Texture2D>("monogame-extended-logo");
-            _sprite = new Sprite(_texture)
-            {
-                Position = new Vector2(400, 240)
-            };
+
+            _guiManager = new GuiManager(_viewportAdapter, GraphicsDevice);
+            var buttonStyle = new GuiButtonStyle(
+                Content.Load<Texture2D>("button-normal").ToGuiDrawable(),
+                Content.Load<Texture2D>("button-clicked").ToGuiDrawable(),
+                Content.Load<Texture2D>("button-hover").ToGuiDrawable());
+            _button = new GuiButton(buttonStyle);
+            _guiManager.Layout.Children.Add(_button);
+            _guiManager.PerformLayout();
         }
 
         protected override void UnloadContent()
@@ -48,8 +56,8 @@ namespace Demo.Gui
 
             if (keyboardState.IsKeyDown(Keys.Escape))
                 Exit();
-
-            _sprite.Rotation += MathHelper.ToRadians(5) * deltaTime;
+            
+            _guiManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -58,9 +66,7 @@ namespace Demo.Gui
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin(transformMatrix: _camera.GetViewMatrix());
-            _spriteBatch.Draw(_sprite);
-            _spriteBatch.End();
+            _guiManager.Draw(gameTime);
 
             base.Draw(gameTime);
         }

@@ -55,6 +55,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\9patch-1.png" />
+    <Content Include="Content\9patch-2.png" />
+    <Content Include="Content\button-clicked.png" />
+    <Content Include="Content\button-hover.png" />
+    <Content Include="Content\button-locked.png" />
+    <Content Include="Content\button-normal.png" />
     <Content Include="Content\monogame-extended-logo.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
