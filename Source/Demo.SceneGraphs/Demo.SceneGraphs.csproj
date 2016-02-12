@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2AFAD55A-899D-4A07-87C4-7E85C8F1D2EC}</ProjectGuid>
+    <ProjectGuid>{274091CB-D74C-4DCB-849D-75D29622ADD2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Demo.Gui</RootNamespace>
-    <AssemblyName>Demo.Gui</AssemblyName>
+    <RootNamespace>Demo.SceneGraphs</RootNamespace>
+    <AssemblyName>Demo.SceneGraphs</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>WindowsGL</MonoGamePlatform>
     <MonoGameContentBuilderExe>
@@ -55,13 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\9patch-1.png" />
-    <Content Include="Content\9patch-2.png" />
-    <Content Include="Content\button-clicked.png" />
-    <Content Include="Content\button-hover.png" />
-    <Content Include="Content\button-locked.png" />
-    <Content Include="Content\button-normal.png" />
-    <Content Include="Content\monogame-extended-logo.png" />
+    <Content Include="Content\car-hull.png" />
+    <Content Include="Content\car-wheel.png" />
+    <Content Include="Content\logo-square-512.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

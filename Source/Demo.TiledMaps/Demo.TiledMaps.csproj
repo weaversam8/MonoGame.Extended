@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2AFAD55A-899D-4A07-87C4-7E85C8F1D2EC}</ProjectGuid>
+    <ProjectGuid>{1AA1A796-CFC6-4663-8D23-FBB9CE62744B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Demo.Gui</RootNamespace>
-    <AssemblyName>Demo.Gui</AssemblyName>
+    <RootNamespace>Demo.TiledMaps</RootNamespace>
+    <AssemblyName>Demo.TiledMaps</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>WindowsGL</MonoGamePlatform>
     <MonoGameContentBuilderExe>
@@ -55,12 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\9patch-1.png" />
-    <Content Include="Content\9patch-2.png" />
-    <Content Include="Content\button-clicked.png" />
-    <Content Include="Content\button-hover.png" />
-    <Content Include="Content\button-locked.png" />
-    <Content Include="Content\button-normal.png" />
+    <Content Include="Content\free-tileset.png" />
+    <Content Include="Content\hills.png" />
     <Content Include="Content\monogame-extended-logo.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
@@ -68,6 +64,8 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\free-tileset.json" />
+    <None Include="Content\level01.tmx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
