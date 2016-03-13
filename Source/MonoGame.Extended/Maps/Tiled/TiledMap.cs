@@ -14,8 +14,8 @@ namespace MonoGame.Extended.Maps.Tiled
             TiledMapOrientation orientation = TiledMapOrientation.Orthogonal)
         {
             _graphicsDevice = graphicsDevice;
-            _renderTarget = new RenderTarget2D(graphicsDevice, width*tileWidth, height*tileHeight);
             _layers = new List<TiledLayer>();
+            _objectGroups = new List<TiledObjectGroup>();
             _tilesets = new List<TiledTileset>();
 
             Width = width;
@@ -35,7 +35,7 @@ namespace MonoGame.Extended.Maps.Tiled
         private readonly List<TiledTileset> _tilesets;
         private readonly GraphicsDevice _graphicsDevice;
         private readonly List<TiledLayer> _layers;
-        private readonly RenderTarget2D _renderTarget;
+        private readonly List<TiledObjectGroup> _objectGroups;
 
         public int Width { get; }
         public int Height { get; }
@@ -46,6 +46,7 @@ namespace MonoGame.Extended.Maps.Tiled
         public TiledProperties Properties { get; private set; }
         public TiledMapOrientation Orientation { get; private set; }
 
+        public List<TiledObjectGroup> ObjectGroups => _objectGroups;
         public IEnumerable<TiledLayer> Layers => _layers;
         public IEnumerable<TiledImageLayer> ImageLayers => _layers.OfType<TiledImageLayer>();
         public IEnumerable<TiledTileLayer> TileLayers => _layers.OfType<TiledTileLayer>();
@@ -68,9 +69,16 @@ namespace MonoGame.Extended.Maps.Tiled
 
         public TiledImageLayer CreateImageLayer(string name, Texture2D texture, Vector2 position)
         {
-            var layer = new TiledImageLayer(_graphicsDevice, name, texture, position);
+            var layer = new TiledImageLayer(name, texture, position);
             _layers.Add(layer);
             return layer;
+        }
+
+        public TiledObjectGroup CreateObjectGroup(string name, TiledObject[] objects, bool isVisible)
+        {
+            var objectGroup = new TiledObjectGroup(name, objects) {IsVisible = isVisible};
+            _objectGroups.Add(objectGroup);
+            return objectGroup;
         }
 
         public TiledLayer GetLayer(string name)
@@ -84,23 +92,22 @@ namespace MonoGame.Extended.Maps.Tiled
             return (T) GetLayer(name);
         }
 
-        public void Draw(SpriteBatch spriteBatch, Rectangle visibleRectangle, bool useMapBackgroundColor = false)
+        public TiledObjectGroup GetObjectGroup(string name)
         {
-            var backgroundColor = useMapBackgroundColor && BackgroundColor.HasValue ? BackgroundColor.Value : Color.Transparent;
-
-            using (_renderTarget.BeginDraw(_graphicsDevice, backgroundColor))
-            {
-                foreach (var layer in _layers)
-                    layer.Draw(visibleRectangle);
-            }
-
-            spriteBatch.Draw(_renderTarget, Vector2.Zero, Color.White);
+            return _objectGroups.FirstOrDefault(i => i.Name == name);
         }
 
-        public void Draw(SpriteBatch spriteBatch, Camera2D camera, bool useMapBackgroundColor = false)
+        
+        public void Draw(SpriteBatch spriteBatch, Rectangle? visibleRectangle = null)
+        {
+            foreach (var layer in _layers.Where(i => i.IsVisible))
+                layer.Draw(spriteBatch, visibleRectangle);
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Camera2D camera)
         {
             var visibleRectangle = camera.GetBoundingRectangle().ToRectangle();
-            Draw(spriteBatch, visibleRectangle, useMapBackgroundColor);
+            Draw(spriteBatch, visibleRectangle);
         }
 
         public TextureRegion2D GetTileRegion(int id)

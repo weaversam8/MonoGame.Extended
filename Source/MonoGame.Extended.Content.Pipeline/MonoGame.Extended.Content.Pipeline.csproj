@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -92,9 +92,12 @@
     <Compile Include="Tiled\TiledMapProcessorResult.cs" />
     <Compile Include="Tiled\TiledMapWriter.cs" />
     <Compile Include="Tiled\TmxData.cs" />
+    <Compile Include="Tiled\TmxEllipse.cs" />
     <Compile Include="Tiled\TmxImage.cs" />
     <Compile Include="Tiled\TmxImageLayer.cs" />
     <Compile Include="Tiled\TmxLayer.cs" />
+    <Compile Include="Tiled\TmxPolygon.cs" />
+    <Compile Include="Tiled\TmxPolyline.cs" />
     <Compile Include="Tiled\TmxTileLayer.cs" />
     <Compile Include="Tiled\TmxMap.cs" />
     <Compile Include="Tiled\TmxObject.cs" />

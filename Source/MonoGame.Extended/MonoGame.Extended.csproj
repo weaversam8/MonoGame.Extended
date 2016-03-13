@@ -95,12 +95,15 @@
     <Compile Include="RenderTarget2DExtensions.cs" />
     <Compile Include="Maps\Tiled\SpriteBatchExtensions.cs" />
     <Compile Include="Maps\Tiled\TiledMapOrientation.cs" />
+    <Compile Include="Maps\Tiled\TiledObject.cs" />
+    <Compile Include="Maps\Tiled\TiledObjectGroup.cs" />
     <Compile Include="MatrixExtensions.cs" />
     <Compile Include="SceneGraphs\ISceneEntity.cs" />
+    <Compile Include="SceneGraphs\SceneEntityCollection.cs" />
     <Compile Include="SceneGraphs\SceneGraph.cs" />
     <Compile Include="SceneGraphs\SceneNode.cs" />
-    <Compile Include="Screens\Screen.cs" />
-    <Compile Include="Screens\ScreenManager.cs" />
+    <Compile Include="SceneGraphs\SceneNodeCollection.cs" />
+    <Compile Include="SceneGraphs\SpriteBatchExtensions.cs" />
     <Compile Include="Shapes\SpriteBatchExtensions.cs" />
     <Compile Include="Shapes\CircleF.cs" />
     <Compile Include="Shapes\PolygonF.cs" />

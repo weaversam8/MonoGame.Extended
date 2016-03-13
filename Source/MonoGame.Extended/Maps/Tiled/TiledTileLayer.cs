@@ -14,14 +14,14 @@ namespace MonoGame.Extended.Maps.Tiled
             Width = width;
             Height = height;
 
+            _renderTargetSpriteBatch = new SpriteBatch(graphicsDevice);
             _map = map;
-            _spriteBatch = new SpriteBatch(graphicsDevice);
             _tiles = CreateTiles(data);
         }
-
+        
         public override void Dispose()
         {
-            _spriteBatch.Dispose();
+            _renderTargetSpriteBatch.Dispose();
         }
 
         public int Width { get; }
@@ -29,7 +29,7 @@ namespace MonoGame.Extended.Maps.Tiled
 
         private readonly TiledMap _map;
         private readonly TiledTile[] _tiles;
-        private readonly SpriteBatch _spriteBatch;
+        private readonly SpriteBatch _renderTargetSpriteBatch;
         private RenderTarget2D _renderTarget;
 
         public IEnumerable<TiledTile> Tiles => _tiles;
@@ -53,43 +53,50 @@ namespace MonoGame.Extended.Maps.Tiled
             return tiles;
         }
 
-        public override void Draw(Rectangle visibleRectangle)
+        public override void Draw(SpriteBatch spriteBatch, Rectangle? visibleRectangle = null, Color? backgroundColor = null)
         {
-            var renderOrderFunction = GetRenderOrderFunction();
-            var tileLocationFunction = GetTileLocationFunction();
-            var firstCol = (int)Math.Floor(visibleRectangle.Left / (float)_map.TileWidth);
-            var firstRow = (int)Math.Floor(visibleRectangle.Top / (float)_map.TileHeight);
+            if(!IsVisible)
+                return;
 
-            // +3 to cover any gaps
-            var columns = Math.Min(_map.Width, visibleRectangle.Width / _map.TileWidth) + 3;
-            var rows = Math.Min(_map.Height, visibleRectangle.Height / _map.TileHeight) + 3;
-
-            _spriteBatch.Begin(blendState: BlendState.AlphaBlend, samplerState: SamplerState.PointClamp);
-
-            foreach (var tile in renderOrderFunction(firstCol, firstRow, firstCol + columns, firstRow + rows))
+            if (_renderTarget == null)
             {
-                var region = tile != null ? _map.GetTileRegion(tile.Id) : null;
+                // create and render the entire map to a single render target.
+                // this gives the best frame rate performance at the cost of memory.
+                // ideally, we'd like to have a couple of different draw strategies for different situations.
+                _renderTarget = new RenderTarget2D(_renderTargetSpriteBatch.GraphicsDevice, _map.WidthInPixels, _map.WidthInPixels);
 
-                if (region != null)
+                using (_renderTarget.BeginDraw(_renderTargetSpriteBatch.GraphicsDevice, backgroundColor ?? Color.Transparent))
                 {
-                    var point = tileLocationFunction(tile);
-                    var destinationRectangle = new Rectangle(point.X, point.Y, region.Width, region.Height);
-                    _spriteBatch.Draw(region, destinationRectangle, Color.White);
+                    //var vr = visibleRectangle ?? new Rectangle(0, 0, _map.WidthInPixels, _map.HeightInPixels);
+                    var vr = new Rectangle(0, 0, _map.WidthInPixels, _map.HeightInPixels);
+                    var renderOrderFunction = GetRenderOrderFunction();
+                    var tileLocationFunction = GetTileLocationFunction();
+                    var firstCol = vr.Left < 0 ? 0 : (int) Math.Floor(vr.Left/(float) _map.TileWidth);
+                    var firstRow = vr.Top < 0 ? 0 : (int) Math.Floor(vr.Top/(float) _map.TileHeight);
+
+                    // +3 to cover any gaps
+                    var columns = Math.Min(_map.Width, vr.Width/_map.TileWidth) + 3;
+                    var rows = Math.Min(_map.Height, vr.Height/_map.TileHeight) + 3;
+
+                    _renderTargetSpriteBatch.Begin(blendState: BlendState.AlphaBlend, samplerState: SamplerState.PointClamp);
+
+                    foreach (var tile in renderOrderFunction(firstCol, firstRow, firstCol + columns, firstRow + rows))
+                    {
+                        var region = tile != null ? _map.GetTileRegion(tile.Id) : null;
+
+                        if (region != null)
+                        {
+                            var point = tileLocationFunction(tile);
+                            var destinationRectangle = new Rectangle(point.X, point.Y, region.Width, region.Height);
+                            _renderTargetSpriteBatch.Draw(region, destinationRectangle, Color.White*Opacity);
+                        }
+                    }
+
+                    _renderTargetSpriteBatch.End();
                 }
             }
 
-            _spriteBatch.End();
-        }
-
-        public void Draw(SpriteBatch spriteBatch, Rectangle visibleRectangle)
-        {
-            if(_renderTarget == null)
-                _renderTarget = new RenderTarget2D(_spriteBatch.GraphicsDevice, Width * TileWidth, Height * TileHeight);
-
-            using (_renderTarget.BeginDraw(_spriteBatch.GraphicsDevice, Color.Transparent))
-            {
-                Draw(visibleRectangle);
-            }
+            spriteBatch.Draw(_renderTarget, Vector2.Zero, Color.White);
         }
 
         private Func<TiledTile, Point> GetTileLocationFunction()
@@ -101,7 +108,7 @@ namespace MonoGame.Extended.Maps.Tiled
                 case TiledMapOrientation.Isometric:
                     return GetIsometricLocation;
                 case TiledMapOrientation.Staggered:
-                    throw new NotImplementedException("Staggered maps are not yet implemented");
+                    throw new NotImplementedException(@"Staggered maps are not yet implemented");
                 default:
                     throw new NotSupportedException($"{_map.Orientation} is not supported");
             }
