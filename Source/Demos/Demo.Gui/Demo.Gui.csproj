@@ -70,6 +70,7 @@
     <Content Include="Content\button-locked.png" />
     <Content Include="Content\button-normal.png" />
     <Content Include="Content\monogame-extended-logo.png" />
+    <Content Include="Content\ui-skin.xml" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

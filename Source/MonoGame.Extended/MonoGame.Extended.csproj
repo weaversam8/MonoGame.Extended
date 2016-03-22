@@ -71,6 +71,7 @@
     <Compile Include="Gui\Drawables\GuiTextureRegionDrawable.cs" />
     <Compile Include="Gui\Drawables\GuiTextureRegionDrawableExtensions.cs" />
     <Compile Include="Gui\GuiManager.cs" />
+    <Compile Include="Gui\GuiSkin.cs" />
     <Compile Include="Gui\Layouts\GuiGridLayout.cs" />
     <Compile Include="Gui\Layouts\GuiLayoutControl.cs" />
     <Compile Include="IDraw.cs" />

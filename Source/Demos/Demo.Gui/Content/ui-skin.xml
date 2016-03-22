@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<skin name="kenney-base">
+  <textureAtlases>
+    <textureAtlas source="blueSheet.xml" format="kenney-xml" />
+  </textureAtlases>
+  <resources>
+    <sprite key="blueButton" region="blue_button00.png" />
+    <ninePatch key="metalPanel" region="metalPanel.png" left="16" right="16" top="16" bottom="16" />
+  </resources>
+  <styles>
+    <style key="windowStyle" type="window" resource="metalPanel" />
+    <style key="buttonStyle" type="button" resource="blueButton" />
+  </styles>
+</skin>
