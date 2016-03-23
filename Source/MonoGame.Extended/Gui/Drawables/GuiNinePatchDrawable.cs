@@ -4,28 +4,28 @@ using MonoGame.Extended.TextureAtlases;
 
 namespace MonoGame.Extended.Gui.Drawables
 {
-    public class GuiPatchDrawable : IGuiDrawable
+    public class GuiNinePatchDrawable : IGuiDrawable
     {
-        public GuiPatchDrawable(TextureRegion2D textureRegion, int leftPadding, int topPadding, int rightPadding, int bottomPadding, Color color)
+        public GuiNinePatchDrawable(TextureRegion2D textureRegion, int leftPadding, int topPadding, int rightPadding, int bottomPadding)
         {
             TextureRegion = textureRegion;
             LeftPadding = leftPadding;
             TopPadding = topPadding;
             RightPadding = rightPadding;
             BottomPadding = bottomPadding;
-            Color = color;
+            Color = Color.White;
 
             _sourcePatches = CreatePatches(textureRegion.Bounds);
         }
 
         private readonly Rectangle[] _sourcePatches;
 
-        public TextureRegion2D TextureRegion { get; private set; }
-        public int LeftPadding { get; private set; }
-        public int TopPadding { get; private set; }
-        public int RightPadding { get; private set; }
-        public int BottomPadding { get; private set; }
-        public Color Color { get; private set; }
+        public TextureRegion2D TextureRegion { get; }
+        public int LeftPadding { get; }
+        public int TopPadding { get; }
+        public int RightPadding { get; }
+        public int BottomPadding { get; }
+        public Color Color { get; set; }
         
         private  Rectangle[] CreatePatches(Rectangle rectangle)
         {
@@ -54,10 +54,7 @@ namespace MonoGame.Extended.Gui.Drawables
             return patches;
         }
 
-        public Size DesiredSize
-        {
-            get { return Size.MaxValue; }
-        }
+        public Size DesiredSize => Size.MaxValue;
 
         public void Draw(SpriteBatch spriteBatch, Rectangle rectangle)
         {

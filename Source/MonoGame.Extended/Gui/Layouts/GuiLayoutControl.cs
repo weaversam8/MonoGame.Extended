@@ -18,10 +18,7 @@ namespace MonoGame.Extended.Gui.Layouts
             _parent = parent;
         }
 
-        public Size DesiredSize
-        {
-            get { return new Size(int.MaxValue, int.MaxValue); }
-        }
+        public Size DesiredSize => new Size(int.MaxValue, int.MaxValue);
 
         public void Draw(SpriteBatch spriteBatch, Rectangle rectangle)
         {
@@ -37,7 +34,7 @@ namespace MonoGame.Extended.Gui.Layouts
             Children = new List<GuiControl>();
         }
 
-        public List<GuiControl> Children { get; private set; }
+        public List<GuiControl> Children { get; }
 
         protected override IGuiDrawable GetCurrentDrawable()
         {
@@ -89,7 +86,7 @@ namespace MonoGame.Extended.Gui.Layouts
                     return rectangle.Left + rectangle.Width / 2 - control.Width / 2;
             }
 
-            throw new NotSupportedException(string.Format("{0} is not supported", control.HorizontalAlignment));
+            throw new NotSupportedException($"{control.HorizontalAlignment} is not supported");
         }
 
         protected int GetVerticalAlignment(GuiControl control, Rectangle rectangle)
@@ -105,7 +102,7 @@ namespace MonoGame.Extended.Gui.Layouts
                     return rectangle.Top + rectangle.Height / 2 - control.Height / 2;
             }
 
-            throw new NotSupportedException(string.Format("{0} is not supported", control.VerticalAlignment));
+            throw new NotSupportedException($"{control.VerticalAlignment} is not supported");
         }
     }
 }

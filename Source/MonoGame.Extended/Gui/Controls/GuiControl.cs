@@ -44,21 +44,18 @@ namespace MonoGame.Extended.Gui.Controls
 
         public Point Location { get; set; }
         public bool IsHovered { get; private set; }
-        public int Left { get { return Location.X; } }
-        public int Top { get { return Location.Y; } }
-        public int Right { get { return Location.X + Width; } }
-        public int Bottom {  get { return Location.Y + Height; } }
-        public int Width { get { return DesiredSize.Width; } }
-        public int Height { get { return DesiredSize.Height; } }
+        public int Left => Location.X;
+        public int Top => Location.Y;
+        public int Right => Location.X + Width;
+        public int Bottom => Location.Y + Height;
+        public int Width => DesiredSize.Width;
+        public int Height => DesiredSize.Height;
         public int MinWidth { get; set; }
         public int MinHeight { get; set; }
         public Size ActualSize {  get; private set; }
         public Rectangle Margin { get; set; }
 
-        public Rectangle BoundingRectangle
-        {
-            get { return new Rectangle(Location, ActualSize); }
-        }
+        public Rectangle BoundingRectangle => new Rectangle(Location, ActualSize);
 
         public virtual Size DesiredSize
         {

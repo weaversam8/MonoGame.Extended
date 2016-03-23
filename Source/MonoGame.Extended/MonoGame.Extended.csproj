@@ -66,10 +66,11 @@
     <Compile Include="Gui\Controls\GuiLabel.cs" />
     <Compile Include="Gui\Controls\GuiLabelStyle.cs" />
     <Compile Include="Gui\Controls\GuiVerticalAlignment.cs" />
-    <Compile Include="Gui\Drawables\GuiPatchDrawable.cs" />
+    <Compile Include="Gui\Drawables\GuiNinePatchDrawable.cs" />
     <Compile Include="Gui\Drawables\GuiTextDrawable.cs" />
     <Compile Include="Gui\Drawables\GuiTextureRegionDrawable.cs" />
     <Compile Include="Gui\Drawables\GuiTextureRegionDrawableExtensions.cs" />
+    <Compile Include="Gui\Drawables\IGuiDrawable.cs" />
     <Compile Include="Gui\GuiManager.cs" />
     <Compile Include="Gui\GuiSkin.cs" />
     <Compile Include="Gui\Layouts\GuiGridLayout.cs" />

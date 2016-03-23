@@ -13,9 +13,11 @@ namespace MonoGame.Extended.Gui.Controls
         {
             CheckedOn = checkedOn;
             CheckedOff = checkedOff;
+            Hovered = hovered;
         }
 
         public IGuiDrawable CheckedOn { get; set; }
         public IGuiDrawable CheckedOff { get; set; }
+        public IGuiDrawable Hovered { get; set; }
     }
 }

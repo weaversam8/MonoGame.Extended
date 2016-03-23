@@ -4,12 +4,6 @@ using MonoGame.Extended.BitmapFonts;
 
 namespace MonoGame.Extended.Gui.Drawables
 {
-    public interface IGuiDrawable
-    {
-        Size DesiredSize { get; }
-        void Draw(SpriteBatch spriteBatch, Rectangle rectangle);
-    }
-
     public class GuiTextDrawable : IGuiDrawable
     {
         public GuiTextDrawable(BitmapFont font, string text, Color color)
@@ -19,14 +13,11 @@ namespace MonoGame.Extended.Gui.Drawables
             Color = color;
         }
 
-        public BitmapFont Font { get; private set; }
-        public string Text { get; private set; }
-        public Color Color { get; private set; }
+        public BitmapFont Font { get; }
+        public string Text { get; }
+        public Color Color { get; }
 
-        public Size DesiredSize
-        {
-            get { return Font.GetSize(Text); }
-        }
+        public Size DesiredSize => Font.GetSize(Text);
 
         public void Draw(SpriteBatch spriteBatch, Rectangle rectangle)
         {
