@@ -63,6 +63,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\blue_button07.png" />
+    <Content Include="Assets\blue_button08.png" />
+    <Content Include="Assets\blue_checkmark.png" />
+    <Content Include="Assets\blue_circle.png" />
+    <Content Include="Assets\blue_panel.png" />
+    <Content Include="Assets\blue_tick.png" />
+    <Content Include="Assets\green_button07.png" />
+    <Content Include="Assets\green_button08.png" />
+    <Content Include="Assets\grey_arrowDownGrey.png" />
+    <Content Include="Assets\grey_box.png" />
+    <Content Include="Assets\grey_button06.png" />
+    <Content Include="Assets\grey_button07.png" />
+    <Content Include="Assets\grey_button11.png" />
+    <Content Include="Assets\grey_circle.png" />
+    <Content Include="Assets\grey_crossWhite.png" />
+    <Content Include="Assets\grey_panel.png" />
+    <Content Include="Assets\grey_sliderUp.png" />
+    <Content Include="Assets\red_button04.png" />
+    <Content Include="Assets\red_button05.png" />
+    <Content Include="Assets\red_circle.png" />
     <Content Include="Content\9patch-1.png" />
     <Content Include="Content\9patch-2.png" />
     <Content Include="Content\button-clicked.png" />
@@ -70,6 +90,7 @@
     <Content Include="Content\button-locked.png" />
     <Content Include="Content\button-normal.png" />
     <Content Include="Content\monogame-extended-logo.png" />
+    <Content Include="Content\ui-skin-texture.png" />
     <Content Include="Content\ui-skin.xml" />
     <Content Include="Icon.ico" />
   </ItemGroup>
@@ -78,6 +99,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Assets\ui-skin.tps" />
+    <None Include="Content\ui-skin-atlas.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
