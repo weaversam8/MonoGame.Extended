@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using MonoGame.Extended.BitmapFonts;
 using MonoGame.Extended.Gui.Drawables;
 using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended.ViewportAdapters;
@@ -93,11 +94,20 @@ namespace Demo.Gui
             _camera = new Camera2D(_viewportAdapter);
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            var font = Content.Load<BitmapFont>("montserrat-32");
             var textureAtlas = Content.Load<TextureAtlas>("ui-skin-atlas");
             var panelDrawable = new GuiNinePatchDrawable(textureAtlas["grey_panel"], 16, 16, 16, 16);
-            var buttonUpDrawable = new GuiNinePatchDrawable(textureAtlas["blue_button07"], 5, 5, 5, 9);
-            var buttonDownDrawable = new GuiNinePatchDrawable(textureAtlas["blue_button08"], 5, 5, 5, 5);
-
+            var buttonUpDrawable = new GuiLayeredDrawable
+            {
+                new GuiNinePatchDrawable(textureAtlas["blue_button07"], 5, 5, 5, 9),
+                new GuiTextureRegionDrawable(textureAtlas["grey_crossWhite"]),
+                new GuiTextDrawable(font, "hello", Color.White)
+            };
+            var buttonDownDrawable = new GuiLayeredDrawable
+            {
+                new GuiNinePatchDrawable(textureAtlas["blue_button08"], 5, 5, 5, 5),
+                new GuiTextureRegionDrawable(textureAtlas["grey_box"])
+            };
             _panel = new GuiPanel(panelDrawable)
             {
                 Location = new Point(100, 100),

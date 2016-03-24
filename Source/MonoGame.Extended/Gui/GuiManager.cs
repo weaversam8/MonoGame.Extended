@@ -31,13 +31,9 @@ namespace MonoGame.Extended.Gui
 
         private void OnMouseMoved(object sender, MouseEventArgs args)
         {
-            if (_focusedControl != null)
-                _focusedControl.OnMouseLeave(this, args);
-
+            _focusedControl?.OnMouseLeave(this, args);
             _focusedControl = FindControlAtPoint(Layout, args.Position);
-
-            if (_focusedControl != null)
-                _focusedControl.OnMouseEnter(this, args);
+            _focusedControl?.OnMouseEnter(this, args);
 
             Layout.OnMouseMoved(this, args);
         }

@@ -66,6 +66,7 @@
     <Compile Include="Gui\Controls\GuiLabel.cs" />
     <Compile Include="Gui\Controls\GuiLabelStyle.cs" />
     <Compile Include="Gui\Controls\GuiVerticalAlignment.cs" />
+    <Compile Include="Gui\Drawables\GuiLayeredDrawable.cs" />
     <Compile Include="Gui\Drawables\GuiNinePatchDrawable.cs" />
     <Compile Include="Gui\Drawables\GuiTextDrawable.cs" />
     <Compile Include="Gui\Drawables\GuiTextureRegionDrawable.cs" />
