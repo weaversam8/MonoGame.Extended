@@ -50,19 +50,20 @@ namespace MonoGame.Extended.Gui.Controls
         public int Bottom => Location.Y + Height;
         public int Width => DesiredSize.Width;
         public int Height => DesiredSize.Height;
+        public Vector2 Center => new Vector2(Location.X + Width*0.5f, Location.Y + Height*0.5f);
         public int MinWidth { get; set; }
         public int MinHeight { get; set; }
         public Size ActualSize {  get; private set; }
         public Rectangle Margin { get; set; }
-
         public Rectangle BoundingRectangle => new Rectangle(Location, ActualSize);
+        
 
         public virtual Size DesiredSize
         {
             get
             {
                 var currentDrawable = GetCurrentDrawable();
-                return currentDrawable.DesiredSize;
+                return currentDrawable.CalculateDesiredSize(this);
             }
         }
 
@@ -73,7 +74,7 @@ namespace MonoGame.Extended.Gui.Controls
             var currentDrawable = GetCurrentDrawable();
 
             ActualSize = new Size(actualWidth, actualHeight);
-            currentDrawable.Draw(spriteBatch, BoundingRectangle);
+            currentDrawable.Draw(spriteBatch, this);
         }
         
         public bool Contains(Vector2 point)

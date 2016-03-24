@@ -44,7 +44,7 @@ namespace MonoGame.Extended.Gui.Controls
         {
             if (_propertyChanged)
             {
-                _drawable = new GuiTextDrawable(Style.Font, Text, Style.Color);
+                _drawable = new GuiTextDrawable(Style.Font);
                 _propertyChanged = false;
             }
 

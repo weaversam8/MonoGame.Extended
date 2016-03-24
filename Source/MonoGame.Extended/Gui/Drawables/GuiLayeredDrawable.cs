@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Gui.Controls;
 
 namespace MonoGame.Extended.Gui.Drawables
 {
@@ -11,25 +12,22 @@ namespace MonoGame.Extended.Gui.Drawables
         {
         }
 
-        public Size DesiredSize
+        public Size CalculateDesiredSize(GuiControl control)
         {
-            get
+            if (this.Any())
             {
-                if (this.Any())
-                {
-                    var width = this.Max(i => i.DesiredSize.Width);
-                    var height = this.Max(i => i.DesiredSize.Height);
-                    return new Size(width, height);
-                }
-
-                return Size.Empty;
+                var width = this.Max(i => i.CalculateDesiredSize(control).Width);
+                var height = this.Max(i => i.CalculateDesiredSize(control).Height);
+                return new Size(width, height);
             }
+
+            return Size.Empty;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Rectangle rectangle)
+        public void Draw(SpriteBatch spriteBatch, GuiControl control)
         {
             foreach (var drawable in this)
-                drawable.Draw(spriteBatch, rectangle);
+                drawable.Draw(spriteBatch, control);
         }
     }
 }

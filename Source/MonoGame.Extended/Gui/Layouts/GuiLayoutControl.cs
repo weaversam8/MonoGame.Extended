@@ -18,12 +18,15 @@ namespace MonoGame.Extended.Gui.Layouts
             _parent = parent;
         }
 
-        public Size DesiredSize => new Size(int.MaxValue, int.MaxValue);
+        public Size CalculateDesiredSize(GuiControl control)
+        {
+            return Size.MaxValue;
+        }
 
-        public void Draw(SpriteBatch spriteBatch, Rectangle rectangle)
+        public void Draw(SpriteBatch spriteBatch, GuiControl control)
         {
             foreach (var child in _parent.Children)
-                child.Draw(spriteBatch, rectangle);
+                child.Draw(spriteBatch, control.BoundingRectangle);
         }
     }
 

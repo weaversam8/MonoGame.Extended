@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Gui.Controls;
 using MonoGame.Extended.TextureAtlases;
 
 namespace MonoGame.Extended.Gui.Drawables
@@ -54,11 +55,14 @@ namespace MonoGame.Extended.Gui.Drawables
             return patches;
         }
 
-        public Size DesiredSize => Size.MaxValue;
-
-        public void Draw(SpriteBatch spriteBatch, Rectangle rectangle)
+        public Size CalculateDesiredSize(GuiControl control)
         {
-            var destinationPatches = CreatePatches(rectangle);
+            return Size.MaxValue;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, GuiControl control)
+        {
+            var destinationPatches = CreatePatches(control.BoundingRectangle);
 
             for (var i = 0; i < _sourcePatches.Length; i++)
             {
