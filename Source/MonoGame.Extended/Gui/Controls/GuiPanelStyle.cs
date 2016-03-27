@@ -4,11 +4,11 @@ namespace MonoGame.Extended.Gui.Controls
 {
     public class GuiPanelStyle : GuiControlStyle
     {
-        public GuiPanelStyle(IGuiDrawable normal)
+        public GuiPanelStyle(IGuiControlTemplate normal)
         {
             Normal = normal;
         }
 
-        public IGuiDrawable Normal { get; }
+        public IGuiControlTemplate Normal { get; }
     }
 }

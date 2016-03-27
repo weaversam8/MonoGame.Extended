@@ -5,11 +5,11 @@ using MonoGame.Extended.TextureAtlases;
 
 namespace MonoGame.Extended.Gui.Drawables
 {
-    public class GuiTextureRegionDrawable : IGuiDrawable
+    public class GuiTextureRegionTemplate : IGuiControlTemplate
     {
         private readonly TextureRegion2D _region;
 
-        public GuiTextureRegionDrawable(TextureRegion2D region)
+        public GuiTextureRegionTemplate(TextureRegion2D region)
         {
             _region = region;
 

@@ -1,10 +1,11 @@
 using System;
+using Microsoft.Xna.Framework;
 using MonoGame.Extended.Gui.Drawables;
 using MonoGame.Extended.InputListeners;
 
 namespace MonoGame.Extended.Gui.Controls
 {
-    public class GuiButton : GuiControl
+    public class GuiButton : GuiControl, IGuiTextControl
     {
         private readonly GuiButtonStyle _style;
 
@@ -12,13 +13,17 @@ namespace MonoGame.Extended.Gui.Controls
         {
             _style = style;
             IsPressed = false;
+            Text = string.Empty;
+            TextColor = Color.White;
         }
 
+        public string Text { get; set; }
+        public Color TextColor { get; set; }
         public bool IsPressed { get; private set; }
 
         public event EventHandler<MouseEventArgs> Clicked;
 
-        protected override IGuiDrawable GetCurrentDrawable()
+        protected override IGuiControlTemplate GetCurrentTemplate()
         {
             if (IsPressed)
                 return _style.Pressed;

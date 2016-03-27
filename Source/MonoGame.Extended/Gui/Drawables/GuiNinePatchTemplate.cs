@@ -5,9 +5,9 @@ using MonoGame.Extended.TextureAtlases;
 
 namespace MonoGame.Extended.Gui.Drawables
 {
-    public class GuiNinePatchDrawable : IGuiDrawable
+    public class GuiNinePatchTemplate : IGuiControlTemplate
     {
-        public GuiNinePatchDrawable(TextureRegion2D textureRegion, int leftPadding, int topPadding, int rightPadding, int bottomPadding)
+        public GuiNinePatchTemplate(TextureRegion2D textureRegion, int leftPadding, int topPadding, int rightPadding, int bottomPadding)
         {
             TextureRegion = textureRegion;
             LeftPadding = leftPadding;

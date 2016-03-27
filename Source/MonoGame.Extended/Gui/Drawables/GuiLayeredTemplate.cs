@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Gui.Controls;
 
 namespace MonoGame.Extended.Gui.Drawables
 {
-    public class GuiLayeredDrawable : List<IGuiDrawable>, IGuiDrawable
+    public class GuiLayeredTemplate : List<IGuiControlTemplate>, IGuiControlTemplate
     {
-        public GuiLayeredDrawable()
+        public GuiLayeredTemplate()
         {
         }
 

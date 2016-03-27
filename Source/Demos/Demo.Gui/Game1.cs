@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.BitmapFonts;
+using MonoGame.Extended.Gui;
 using MonoGame.Extended.Gui.Controls;
 using MonoGame.Extended.Gui.Drawables;
 using MonoGame.Extended.TextureAtlases;
@@ -11,65 +12,6 @@ using MonoGame.Extended.ViewportAdapters;
 
 namespace Demo.Gui
 {
-    //public abstract class GuiControlBase
-    //{
-    //    protected GuiControlBase()
-    //    {
-    //        Children = new List<GuiControlBase>();
-    //    }
-
-    //    public int Top => Location.Y;
-    //    public int Left => Location.X;
-    //    public int Right => Location.X + Width;
-    //    public int Bottom => Location.Y + Height;
-    //    public int Width => Size.Width;
-    //    public int Height => Size.Height;
-    //    public Rectangle Rectangle => new Rectangle(Location, Size);
-    //    public Point Location { get; set; }
-    //    public Size Size { get; set; }
-    //    public bool IsHovered { get; set; }
-
-    //    public List<GuiControlBase> Children { get; }
-
-    //    public abstract void Draw(SpriteBatch spriteBatch);
-    //}
-
-    //public class GuiPanel : GuiControlBase
-    //{
-    //    public GuiPanel(IGuiDrawable style)
-    //    {
-    //        Style = style;
-    //    }
-
-    //    public IGuiDrawable Style { get; }
-
-    //    public override void Draw(SpriteBatch spriteBatch)
-    //    {
-    //        Style.Draw(spriteBatch, this);
-    //    }
-    //}
-
-    //public class GuiButtonControl : GuiControlBase
-    //{
-    //    public GuiButtonControl(IGuiDrawable upStyle, IGuiDrawable downStyle)
-    //    {
-    //        UpStyle = upStyle;
-    //        DownStyle = downStyle;
-    //    }
-
-    //    public IGuiDrawable UpStyle { get; }
-    //    public IGuiDrawable DownStyle { get; }
-        
-    //    public override void Draw(SpriteBatch spriteBatch)
-    //    {
-    //        if (IsHovered)
-    //            DownStyle.Draw(spriteBatch, Rectangle);
-    //        else
-    //            UpStyle.Draw(spriteBatch, Rectangle);
-    //    }
-    //}
-
-
     public class Game1 : Game
     {
         // ReSharper disable once NotAccessedField.Local
@@ -78,6 +20,7 @@ namespace Demo.Gui
         private ViewportAdapter _viewportAdapter;
         private Camera2D _camera;
         private GuiPanel _panel;
+        private GuiManager _guiManager;
 
         public Game1()
         {
@@ -93,37 +36,37 @@ namespace Demo.Gui
             _camera = new Camera2D(_viewportAdapter);
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            _guiManager = new GuiManager(_viewportAdapter);
+
             var font = Content.Load<BitmapFont>("montserrat-32");
             var textureAtlas = Content.Load<TextureAtlas>("ui-skin-atlas");
-            var panelDrawable = new GuiNinePatchDrawable(textureAtlas["grey_panel"], 16, 16, 16, 16);
-            var buttonUpDrawable = new GuiLayeredDrawable
+            var panelTemplate = new GuiNinePatchTemplate(textureAtlas["grey_panel"], 16, 16, 16, 16);
+            var buttonUpTemplate = new GuiLayeredTemplate
             {
-                new GuiNinePatchDrawable(textureAtlas["blue_button07"], 5, 5, 5, 9),
-                new GuiTextureRegionDrawable(textureAtlas["grey_crossWhite"]),
-                new GuiTextDrawable(font)
+                new GuiNinePatchTemplate(textureAtlas["blue_button07"], 5, 5, 5, 9),
+                new GuiTextureRegionTemplate(textureAtlas["grey_crossWhite"]),
+                new GuiTextTemplate(font)
             };
-            var buttonDownDrawable = new GuiLayeredDrawable
+            var buttonDownTemplate = new GuiLayeredTemplate
             {
-                new GuiNinePatchDrawable(textureAtlas["blue_button08"], 5, 5, 5, 5),
-                new GuiTextureRegionDrawable(textureAtlas["grey_box"])
+                new GuiNinePatchTemplate(textureAtlas["blue_button08"], 5, 5, 5, 5),
+                new GuiTextureRegionTemplate(textureAtlas["grey_box"]),
+                new GuiTextTemplate(font)
             };
-            var panelStyle = new GuiPanelStyle(panelDrawable);
+            var panelStyle = new GuiPanelStyle(panelTemplate);
+            var buttonStyle = new GuiButtonStyle(buttonUpTemplate, buttonDownTemplate, buttonDownTemplate);
 
             _panel = new GuiPanel(panelStyle)
             {
                 Location = new Point(100, 100),
-                MinWidth = 100,
-                MinHeight = 100
-                //Size = new Size(600, 260),
-                //Children =
-                //{
-                //    new GuiButtonControl(buttonUpDrawable, buttonDownDrawable)
-                //    {
-                //        Location = new Point(520, 300),
-                //        Size = new Size(170, 50)
-                //    }
-                //}
+                Size = new Size(600, 320),
+                Controls =
+                {
+                     new GuiButton(buttonStyle) { Location = new Point(200, 200), Size = new Size(220, 148), Text = "Hello" }
+                }
             };
+
+            _guiManager.Controls.Add(_panel);
         }
 
         protected override void UnloadContent()
@@ -139,11 +82,7 @@ namespace Demo.Gui
             if (keyboardState.IsKeyDown(Keys.Escape))
                 Exit();
 
-            //foreach (var child in _panel.Children)
-            //    child.IsHovered = child.Rectangle.Contains(mouseState.X, mouseState.Y) && mouseState.LeftButton == ButtonState.Pressed;
-
-
-            //_guiManager.Update(gameTime);
+            _guiManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -153,14 +92,8 @@ namespace Demo.Gui
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin(transformMatrix: _camera.GetViewMatrix());
-
-            _panel.Draw(_spriteBatch, _viewportAdapter.BoundingRectangle);
-
-            //foreach (var child in _panel.Children)
-            //    child.Draw(_spriteBatch);
-
+            _spriteBatch.Draw(_guiManager);
             _spriteBatch.End();
-            //_guiManager.Draw(gameTime);
 
             base.Draw(gameTime);
         }

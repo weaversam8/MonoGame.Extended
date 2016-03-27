@@ -1,98 +1,81 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Gui.Controls;
-using MonoGame.Extended.Gui.Layouts;
 using MonoGame.Extended.InputListeners;
 using MonoGame.Extended.ViewportAdapters;
 
 namespace MonoGame.Extended.Gui
 {
-    public class GuiManager : IDraw, IUpdate
+    public class GuiManager : IUpdate
     {
-        private readonly ViewportAdapter _viewportAdapter;
         private readonly InputListenerManager _inputManager;
-        private readonly SpriteBatch _spriteBatch;
         private GuiControl _focusedControl;
 
-        public GuiManager(ViewportAdapter viewportAdapter, GraphicsDevice graphicsDevice)
+        public GuiManager(ViewportAdapter viewportAdapter)
         {
-            Layout = new GuiGridLayout();
+            Controls = new List<GuiControl>();
 
-            _viewportAdapter = viewportAdapter;
             _inputManager = new InputListenerManager(viewportAdapter);
-            _spriteBatch = new SpriteBatch(graphicsDevice);
 
             var mouseListener = _inputManager.AddListener<MouseListener>();
             mouseListener.MouseMoved += OnMouseMoved;
-            mouseListener.MouseDown += (sender, args) => Layout.OnMouseDown(this, args);
-            mouseListener.MouseUp += (sender, args) => Layout.OnMouseUp(this, args);
+            mouseListener.MouseDown += (sender, args) => _focusedControl?.OnMouseDown(sender, args);
+            mouseListener.MouseUp += (sender, args) => _focusedControl?.OnMouseUp(sender, args);
         }
+
+        public List<GuiControl> Controls { get; }
 
         private void OnMouseMoved(object sender, MouseEventArgs args)
         {
-            _focusedControl?.OnMouseLeave(this, args);
-            _focusedControl = FindControlAtPoint(Layout, args.Position);
-            _focusedControl?.OnMouseEnter(this, args);
+            var currentControl = FindControlAtPoint(Controls, args.Position);
 
-            Layout.OnMouseMoved(this, args);
-        }
-
-        private GuiLayoutControl _layout;
-        public GuiLayoutControl Layout
-        {
-            get { return _layout; }
-            set
+            if (_focusedControl != currentControl)
             {
-                if (value == null)
-                    throw new InvalidOperationException("Layout must not be null");
-
-                _layout = value;
+                _focusedControl?.OnMouseLeave(this, args);
+                _focusedControl = currentControl;
+                _focusedControl?.OnMouseEnter(this, args);
             }
-        }
-        
-        public void Draw(GameTime gameTime)
-        {
-            _spriteBatch.Begin(transformMatrix: _viewportAdapter.GetScaleMatrix());
-            Layout.Draw(_spriteBatch, _viewportAdapter.BoundingRectangle);
-            _spriteBatch.End();
+
+            //ForEachChildAtPoint(args.Position, c => c.OnMouseMoved(this, args));
         }
 
         public void Update(GameTime gameTime)
         {
             _inputManager.Update(gameTime);
-            Layout.Update(gameTime);
+
+            foreach (var control in Controls)
+                control.Update(gameTime);
         }
 
-        public void PerformLayout()
+        private void ForEachChildAtPoint(Point point, Action<GuiControl> action)
         {
-            Layout.LayoutChildren(_viewportAdapter.BoundingRectangle);
+            foreach (var control in Controls.Where(c => c.Contains(point)))
+                action(control);
         }
 
-        private static GuiControl FindControlAtPoint(GuiControl control, Point point)
+        private static GuiControl FindControlAtPoint(IList<GuiControl> controls, Point point)
         {
-            var layoutControl = control as GuiLayoutControl;
-
-            if (layoutControl != null)
+            for (var i = controls.Count - 1; i >= 0; i--)
             {
-                var children = layoutControl.Children;
+                var child = controls[i];
 
-                for(var i = children.Count - 1; i >= 0; i--)
+                if (child.Contains(point))
                 {
-                    var child = children[i];
+                    var containerControl = child as GuiContainerControl;
 
-                    if (!child.Contains(point))
-                        continue;
+                    if (containerControl != null)
+                    {
+                        var c = FindControlAtPoint(containerControl.Controls, point);
 
-                    var c = FindControlAtPoint(child, point);
+                        if (c != null)
+                            return c;
+                    }
 
-                    if (c != null)
-                        return c;
+                    return child;
                 }
             }
-
-            if (control.Contains(point))
-                return control;
 
             return null;
         }

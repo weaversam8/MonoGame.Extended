@@ -15,7 +15,7 @@ namespace MonoGame.Extended.Gui.Controls
             Text = text;
         }
 
-        private GuiTextDrawable _drawable;
+        private GuiTextTemplate _template;
         private bool _propertyChanged;
 
         private GuiLabelStyle _style;
@@ -40,15 +40,15 @@ namespace MonoGame.Extended.Gui.Controls
             }
         }
 
-        protected override IGuiDrawable GetCurrentDrawable()
+        protected override IGuiControlTemplate GetCurrentTemplate()
         {
             if (_propertyChanged)
             {
-                _drawable = new GuiTextDrawable(Style.Font);
+                _template = new GuiTextTemplate(Style.Font);
                 _propertyChanged = false;
             }
 
-            return _drawable;
+            return _template;
         }
     }
 }

@@ -37,7 +37,7 @@ namespace MonoGame.Extended.Gui.Controls
             base.OnMouseUp(sender, args);
         }
 
-        protected override IGuiDrawable GetCurrentDrawable()
+        protected override IGuiControlTemplate GetCurrentTemplate()
         {
             return IsChecked ? _style.CheckedOn : _style.CheckedOff;
         }

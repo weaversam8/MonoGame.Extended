@@ -11,9 +11,9 @@ namespace MonoGame.Extended.Gui.Drawables
         Color TextColor { get; }
     }
 
-    public class GuiTextDrawable : IGuiDrawable
+    public class GuiTextTemplate : IGuiControlTemplate
     {
-        public GuiTextDrawable(BitmapFont font)
+        public GuiTextTemplate(BitmapFont font)
         {
             Font = font;
         }
@@ -31,7 +31,12 @@ namespace MonoGame.Extended.Gui.Drawables
             var textControl = control as IGuiTextControl;
 
             if (textControl != null)
-                spriteBatch.DrawString(Font, textControl.Text, control.Location.ToVector2(), textControl.TextColor);
+            {
+                var halfSize = new Vector2(control.Size.Width, control.Size.Height) * 0.5f;
+                var textSize = Font.MeasureString(textControl.Text);
+                var position = control.Location.ToVector2() + halfSize - textSize * 0.5f;
+                spriteBatch.DrawString(Font, textControl.Text, position, textControl.TextColor);
+            }
         }
     }
 }

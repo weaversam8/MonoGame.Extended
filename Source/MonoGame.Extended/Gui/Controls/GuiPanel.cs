@@ -2,7 +2,7 @@ using MonoGame.Extended.Gui.Drawables;
 
 namespace MonoGame.Extended.Gui.Controls
 {
-    public class GuiPanel : GuiControl
+    public class GuiPanel : GuiContainerControl
     {
         public GuiPanel(GuiPanelStyle style)
         {
@@ -11,7 +11,7 @@ namespace MonoGame.Extended.Gui.Controls
 
         public GuiPanelStyle Style { get; }
 
-        protected override IGuiDrawable GetCurrentDrawable()
+        protected override IGuiControlTemplate GetCurrentTemplate()
         {
             return Style.Normal;
         }

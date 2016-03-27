@@ -4,20 +4,20 @@ namespace MonoGame.Extended.Gui.Controls
 {
     public class GuiCheckBoxStyle : GuiControlStyle
     {
-        public GuiCheckBoxStyle(IGuiDrawable checkedOn, IGuiDrawable checkedOff)
+        public GuiCheckBoxStyle(IGuiControlTemplate checkedOn, IGuiControlTemplate checkedOff)
            : this(checkedOn, checkedOff, checkedOn)
         {
         }
 
-        public GuiCheckBoxStyle(IGuiDrawable checkedOn, IGuiDrawable checkedOff, IGuiDrawable hovered)
+        public GuiCheckBoxStyle(IGuiControlTemplate checkedOn, IGuiControlTemplate checkedOff, IGuiControlTemplate hovered)
         {
             CheckedOn = checkedOn;
             CheckedOff = checkedOff;
             Hovered = hovered;
         }
 
-        public IGuiDrawable CheckedOn { get; set; }
-        public IGuiDrawable CheckedOff { get; set; }
-        public IGuiDrawable Hovered { get; set; }
+        public IGuiControlTemplate CheckedOn { get; set; }
+        public IGuiControlTemplate CheckedOff { get; set; }
+        public IGuiControlTemplate Hovered { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace MonoGame.Extended.Gui.Controls
         public event EventHandler<MouseEventArgs> MouseUp;
         public event EventHandler<MouseEventArgs> MouseMoved;
 
-        protected abstract IGuiDrawable GetCurrentDrawable();
+        protected abstract IGuiControlTemplate GetCurrentTemplate();
         public virtual void Update(GameTime gameTime) { }
 
         public virtual void LayoutChildren(Rectangle boundingRectangle)
@@ -43,6 +43,7 @@ namespace MonoGame.Extended.Gui.Controls
         public GuiVerticalAlignment VerticalAlignment { get; set; }
 
         public Point Location { get; set; }
+        public Size Size { get; set; }
         public bool IsHovered { get; private set; }
         public int Left => Location.X;
         public int Top => Location.Y;
@@ -51,29 +52,25 @@ namespace MonoGame.Extended.Gui.Controls
         public int Width => DesiredSize.Width;
         public int Height => DesiredSize.Height;
         public Vector2 Center => new Vector2(Location.X + Width*0.5f, Location.Y + Height*0.5f);
-        public int MinWidth { get; set; }
-        public int MinHeight { get; set; }
-        public Size ActualSize {  get; private set; }
         public Rectangle Margin { get; set; }
-        public Rectangle BoundingRectangle => new Rectangle(Location, ActualSize);
+        public Rectangle BoundingRectangle => new Rectangle(Location, Size);
         
-
         public virtual Size DesiredSize
         {
             get
             {
-                var currentDrawable = GetCurrentDrawable();
+                var currentDrawable = GetCurrentTemplate();
                 return currentDrawable.CalculateDesiredSize(this);
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, Rectangle rectangle)
+        public virtual void Draw(SpriteBatch spriteBatch, Rectangle rectangle)
         {
-            var actualWidth = DesiredSize.Width > rectangle.Width ? rectangle.Width : DesiredSize.Width;
-            var actualHeight = DesiredSize.Height > rectangle.Height ? rectangle.Height : DesiredSize.Height;
-            var currentDrawable = GetCurrentDrawable();
+            //var actualWidth = DesiredSize.Width > rectangle.Width ? rectangle.Width : DesiredSize.Width;
+            //var actualHeight = DesiredSize.Height > rectangle.Height ? rectangle.Height : DesiredSize.Height;
+            var currentDrawable = GetCurrentTemplate();
 
-            ActualSize = new Size(actualWidth, actualHeight);
+            //ActualSize = new Size(actualWidth, actualHeight);
             currentDrawable.Draw(spriteBatch, this);
         }
         
