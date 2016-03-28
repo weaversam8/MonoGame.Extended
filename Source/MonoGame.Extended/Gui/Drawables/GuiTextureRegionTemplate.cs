@@ -18,11 +18,6 @@ namespace MonoGame.Extended.Gui.Drawables
 
         public Color Color { get; set; }
 
-        public void Draw(SpriteBatch spriteBatch, Rectangle rectangle)
-        {
-
-        }
-
         public Size CalculateDesiredSize(GuiControl control)
         {
             return new Size(_region.Width, _region.Height);

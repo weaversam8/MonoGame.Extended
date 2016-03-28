@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Gui.Controls;
+using MonoGame.Extended.Sprites;
 using MonoGame.Extended.TextureAtlases;
 
 namespace MonoGame.Extended.Gui.Drawables
@@ -9,50 +10,16 @@ namespace MonoGame.Extended.Gui.Drawables
     {
         public GuiNinePatchTemplate(TextureRegion2D textureRegion, int leftPadding, int topPadding, int rightPadding, int bottomPadding)
         {
-            TextureRegion = textureRegion;
-            LeftPadding = leftPadding;
-            TopPadding = topPadding;
-            RightPadding = rightPadding;
-            BottomPadding = bottomPadding;
+            _ninePatch = new NinePatch(textureRegion, leftPadding, topPadding, rightPadding, bottomPadding);
             Color = Color.White;
-
-            _sourcePatches = CreatePatches(textureRegion.Bounds);
         }
 
-        private readonly Rectangle[] _sourcePatches;
+        private readonly NinePatch _ninePatch;
 
-        public TextureRegion2D TextureRegion { get; }
-        public int LeftPadding { get; }
-        public int TopPadding { get; }
-        public int RightPadding { get; }
-        public int BottomPadding { get; }
-        public Color Color { get; set; }
-        
-        private  Rectangle[] CreatePatches(Rectangle rectangle)
+        public Color Color
         {
-            var x = rectangle.X;
-            var y = rectangle.Y;
-            var w = rectangle.Width;
-            var h = rectangle.Height;
-            var middleWidth = w - LeftPadding - RightPadding;
-            var middleHeight = h - TopPadding - BottomPadding;
-            var bottomY = y + h - BottomPadding;
-            var rightX = x + w - RightPadding;
-            var leftX = x + LeftPadding;
-            var topY = y + TopPadding;
-            var patches = new[]
-            {
-                new Rectangle(x,      y,        LeftPadding,  TopPadding),      // top left
-                new Rectangle(leftX,  y,        middleWidth,  TopPadding),      // top middle
-                new Rectangle(rightX, y,        RightPadding, TopPadding),      // top right
-                new Rectangle(x,      topY,     LeftPadding,  middleHeight),    // left middle
-                new Rectangle(leftX,  topY,     middleWidth,  middleHeight),    // middle
-                new Rectangle(rightX, topY,     RightPadding, middleHeight),    // right middle
-                new Rectangle(x,      bottomY,  LeftPadding,  BottomPadding),   // bottom left
-                new Rectangle(leftX,  bottomY,  middleWidth,  BottomPadding),   // bottom middle
-                new Rectangle(rightX, bottomY,  RightPadding, BottomPadding)    // bottom right
-            };
-            return patches;
+            get { return _ninePatch.Color; }
+            set { _ninePatch.Color = value; }
         }
 
         public Size CalculateDesiredSize(GuiControl control)
@@ -62,13 +29,7 @@ namespace MonoGame.Extended.Gui.Drawables
 
         public void Draw(SpriteBatch spriteBatch, GuiControl control)
         {
-            var destinationPatches = CreatePatches(control.BoundingRectangle);
-
-            for (var i = 0; i < _sourcePatches.Length; i++)
-            {
-                spriteBatch.Draw(TextureRegion.Texture, sourceRectangle: _sourcePatches[i],
-                    destinationRectangle: destinationPatches[i], color: Color);
-            }
+            _ninePatch.Draw(spriteBatch, control.BoundingRectangle);
         }
     }
 }

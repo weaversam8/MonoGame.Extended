@@ -38,7 +38,7 @@ namespace Demo.Gui
 
             _guiManager = new GuiManager(_viewportAdapter);
 
-            var font = Content.Load<BitmapFont>("montserrat-32");
+            var font = Content.Load<BitmapFont>("kenney-future-12");
             var textureAtlas = Content.Load<TextureAtlas>("ui-skin-atlas");
             var panelTemplate = new GuiNinePatchTemplate(textureAtlas["grey_panel"], 16, 16, 16, 16);
             var buttonUpTemplate = new GuiLayeredTemplate
@@ -55,6 +55,7 @@ namespace Demo.Gui
             };
             var panelStyle = new GuiPanelStyle(panelTemplate);
             var buttonStyle = new GuiButtonStyle(buttonUpTemplate, buttonDownTemplate, buttonDownTemplate);
+            var labelStyle = new GuiLabelStyle(font);
 
             _panel = new GuiPanel(panelStyle)
             {
@@ -62,7 +63,8 @@ namespace Demo.Gui
                 Size = new Size(600, 320),
                 Controls =
                 {
-                     new GuiButton(buttonStyle) { Location = new Point(200, 200), Size = new Size(220, 148), Text = "Hello" }
+                     new GuiButton(buttonStyle) { Location = new Point(200, 200), Size = new Size(122, 48), Text = "Hello" },
+                     new GuiLabel(labelStyle, "Name") { Location = new Point(300, 300), Size = new Size(200, 48) }
                 }
             };
 
@@ -91,7 +93,7 @@ namespace Demo.Gui
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin(transformMatrix: _camera.GetViewMatrix());
+            _spriteBatch.Begin(transformMatrix: _camera.GetViewMatrix(), samplerState: SamplerState.PointClamp);
             _spriteBatch.Draw(_guiManager);
             _spriteBatch.End();
 

@@ -31,12 +31,12 @@
 /processorParam:TextureFormat=Color
 /build:ui-skin-texture.png
 
-#begin montserrat-32.fnt
+#begin kenney-future-12.fnt
 /importer:BitmapFontImporter
 /processor:BitmapFontProcessor
-/build:montserrat-32.fnt
+/build:kenney-future-12.fnt
 
-#begin montserrat-32_0.png
+#begin kenney-future-12_0.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -46,5 +46,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:montserrat-32_0.png
+/build:kenney-future-12_0.png
 

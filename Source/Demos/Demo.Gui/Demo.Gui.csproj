@@ -83,8 +83,8 @@
     <Content Include="Assets\red_button04.png" />
     <Content Include="Assets\red_button05.png" />
     <Content Include="Assets\red_circle.png" />
+    <Content Include="Content\kenney-future-12_0.png" />
     <Content Include="Content\monogame-extended-logo.png" />
-    <Content Include="Content\montserrat-32_0.png" />
     <Content Include="Content\ui-skin-texture.png" />
     <Content Include="Content\ui-skin.xml" />
     <Content Include="Icon.ico" />
@@ -95,7 +95,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Assets\ui-skin.tps" />
-    <None Include="Content\montserrat-32.fnt" />
+    <None Include="Content\kenney-future-12.fnt" />
     <None Include="Content\ui-skin-atlas.json" />
     <None Include="packages.config" />
   </ItemGroup>
