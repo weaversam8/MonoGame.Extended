@@ -5,7 +5,7 @@ using MonoGame.Extended.InputListeners;
 
 namespace MonoGame.Extended.Gui.Controls
 {
-    public class GuiButton : GuiControl, IGuiTextControl
+    public class GuiButton : GuiContentControl, IGuiTextControl
     {
         private readonly GuiButtonStyle _style;
 
@@ -32,6 +32,17 @@ namespace MonoGame.Extended.Gui.Controls
                 return _style.Hovered;
 
             return _style.Normal;
+        }
+
+        public override IGuiControlTemplate GetCurrentContentTemplate()
+        {
+            if (IsPressed && _style.PressedContentTemplate != null)
+                return _style.PressedContentTemplate;
+
+            if (IsHovered && _style.HoveredContentTemplate != null)
+                return _style.HoveredContentTemplate;
+
+            return _style.ContentTemplate;
         }
 
         public override void OnMouseDown(object sender, MouseEventArgs args)

@@ -25,8 +25,7 @@ namespace MonoGame.Extended.Gui.Drawables
 
         public void Draw(SpriteBatch spriteBatch, GuiControl control)
         {
-            var position = control.Center - new Vector2(_region.Width * 0.5f, _region.Height * 0.5f);
-            spriteBatch.Draw(_region, position, Color);
+            spriteBatch.Draw(_region, control.BoundingRectangle, Color);
         }
     }
 }

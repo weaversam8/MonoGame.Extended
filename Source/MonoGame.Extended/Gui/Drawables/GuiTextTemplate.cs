@@ -8,7 +8,6 @@ namespace MonoGame.Extended.Gui.Drawables
     public interface IGuiTextControl
     {
         string Text { get; }
-        Color TextColor { get; }
     }
 
     public class GuiTextTemplate : IGuiControlTemplate
@@ -16,9 +15,11 @@ namespace MonoGame.Extended.Gui.Drawables
         public GuiTextTemplate(BitmapFont font)
         {
             Font = font;
+            Color = Color.White;
         }
 
         public BitmapFont Font { get; }
+        public Color Color { get; set; }
 
         public Size CalculateDesiredSize(GuiControl control)
         {
@@ -35,7 +36,7 @@ namespace MonoGame.Extended.Gui.Drawables
                 var halfSize = new Vector2(control.Size.Width, control.Size.Height) * 0.5f;
                 var textSize = Font.MeasureString(textControl.Text);
                 var position = control.Location.ToVector2() + halfSize - textSize * 0.5f;
-                spriteBatch.DrawString(Font, textControl.Text, position, textControl.TextColor);
+                spriteBatch.DrawString(Font, textControl.Text, position, Color);
             }
         }
     }

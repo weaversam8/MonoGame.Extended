@@ -66,11 +66,7 @@ namespace MonoGame.Extended.Gui.Controls
 
         public virtual void Draw(SpriteBatch spriteBatch, Rectangle rectangle)
         {
-            //var actualWidth = DesiredSize.Width > rectangle.Width ? rectangle.Width : DesiredSize.Width;
-            //var actualHeight = DesiredSize.Height > rectangle.Height ? rectangle.Height : DesiredSize.Height;
             var currentDrawable = GetCurrentTemplate();
-
-            //ActualSize = new Size(actualWidth, actualHeight);
             currentDrawable.Draw(spriteBatch, this);
         }
         

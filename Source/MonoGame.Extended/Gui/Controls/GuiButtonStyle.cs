@@ -24,5 +24,8 @@ namespace MonoGame.Extended.Gui.Controls
         public IGuiControlTemplate Normal { get; set; }
         public IGuiControlTemplate Pressed { get; set; }
         public IGuiControlTemplate Hovered { get; set; }
+        public IGuiControlTemplate ContentTemplate { get; set; }
+        public IGuiControlTemplate HoveredContentTemplate { get; set; }
+        public IGuiControlTemplate PressedContentTemplate { get; set; }
     }
 }
