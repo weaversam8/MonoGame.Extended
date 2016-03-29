@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq.Expressions;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
@@ -8,7 +6,6 @@ using MonoGame.Extended.BitmapFonts;
 using MonoGame.Extended.Gui;
 using MonoGame.Extended.Gui.Controls;
 using MonoGame.Extended.Gui.Drawables;
-using MonoGame.Extended.Sprites;
 using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended.ViewportAdapters;
 
@@ -21,7 +18,7 @@ namespace Demo.Gui
         private SpriteBatch _spriteBatch;
         private ViewportAdapter _viewportAdapter;
         private Camera2D _camera;
-        private GuiPanel _panel;
+        //private GuiPanel _panel;
         private GuiManager _guiManager;
 
         public Game1()
@@ -42,35 +39,6 @@ namespace Demo.Gui
 
             var font = Content.Load<BitmapFont>("kenney-future-12");
             var textureAtlas = Content.Load<TextureAtlas>("ui-skin-atlas");
-            //var panelTemplate = new GuiNinePatchTemplate(textureAtlas["grey_panel"], 16, 16, 16, 16);
-            //var buttonUpTemplate = new GuiLayeredTemplate
-            //{
-            //    new GuiNinePatchTemplate(textureAtlas["blue_button07"], 5, 5, 5, 9),
-            //    new GuiTextureRegionTemplate(textureAtlas["grey_crossWhite"]),
-            //    new GuiTextTemplate(font)
-            //};
-            //var buttonDownTemplate = new GuiLayeredTemplate
-            //{
-            //    new GuiNinePatchTemplate(textureAtlas["blue_button08"], 5, 5, 5, 5),
-            //    new GuiTextureRegionTemplate(textureAtlas["grey_box"]),
-            //    new GuiTextTemplate(font)
-            //};
-            //var panelStyle = new GuiPanelStyle(panelTemplate);
-            //var buttonStyle = new GuiButtonStyle(buttonUpTemplate, buttonDownTemplate, buttonDownTemplate);
-            //var labelStyle = new GuiLabelStyle(font);
-
-            //_panel = new GuiPanel(panelStyle)
-            //{
-            //    Location = new Point(100, 100),
-            //    Size = new Size(600, 320),
-            //    Controls =
-            //    {
-            //         new GuiButton(buttonStyle) { Location = new Point(200, 200), Size = new Size(122, 48), Text = "Hello" },
-            //         new GuiLabel(labelStyle, "Name") { Location = new Point(300, 300), Size = new Size(200, 48) }
-            //    }
-            //};
-
-            //_guiManager.Controls.Add(_panel);
 
             var buttonStyle = new GuiButtonStyle(
                 normal: new GuiNinePatchTemplate(textureAtlas["blue_button07"], 5, 5, 5, 9),
@@ -88,6 +56,14 @@ namespace Demo.Gui
                 Text = "Hello"
             };
             _guiManager.Controls.Add(button);
+
+            var labelStyle = new GuiLabelStyle(font);
+            var label = new GuiLabel(labelStyle, "World!")
+            {
+                Location = new Point(10, 10),
+                Size = new Size(100, 100)
+            };
+            _guiManager.Controls.Add(label);
         }
 
         protected override void UnloadContent()
