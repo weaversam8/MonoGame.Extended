@@ -94,5 +94,9 @@ namespace MonoGame.Extended.Gui.Controls
         {
             IsHovered = false;
         }
+
+        public virtual void OnKeyTyped(object sender, KeyboardEventArgs args)
+        {
+        }
     }
 }

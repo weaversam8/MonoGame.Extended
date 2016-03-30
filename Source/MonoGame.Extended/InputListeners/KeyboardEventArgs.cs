@@ -28,7 +28,7 @@ namespace MonoGame.Extended.InputListeners
 
         private static char? ToChar(Keys key, KeyboardModifiers modifiers = KeyboardModifiers.None)
         {
-            var isShiftDown = ((modifiers & KeyboardModifiers.Shift) == KeyboardModifiers.Shift);
+            var isShiftDown = (modifiers & KeyboardModifiers.Shift) == KeyboardModifiers.Shift;
 
             if (key == Keys.A) { return isShiftDown ? 'A' : 'a'; }
             if (key == Keys.B) { return isShiftDown ? 'B' : 'b'; }

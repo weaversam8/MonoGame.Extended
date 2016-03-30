@@ -96,6 +96,7 @@ namespace Demo.Gui
                 Text = "+"
             };
             _guiManager.Controls.Add(roundPlusButton);
+
             var roundMinusButton = new GuiButton(roundButtonStyle)
             {
                 Location = new Point(350, 300),
@@ -103,6 +104,17 @@ namespace Demo.Gui
                 Text = "-"
             };
             _guiManager.Controls.Add(roundMinusButton);
+
+            var textBoxStyle = new GuiTextBoxStyle(
+                boxTemplate: new GuiNinePatchTemplate(textureAtlas["grey_button06"], 5, 5, 5, 5),
+                textTemplate: new GuiTextTemplate(font, Color.Black));
+            var textBox = new GuiTextBox(textBoxStyle)
+            {
+                Location = new Point(400, 400),
+                Size = new Size(200, 40),
+                Text = "What?|"
+            };
+            _guiManager.Controls.Add(textBox);
         }
 
         protected override void UnloadContent()

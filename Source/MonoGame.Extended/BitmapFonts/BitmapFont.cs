@@ -27,7 +27,7 @@ namespace MonoGame.Extended.BitmapFonts
         public Size GetSize(string text)
         {
             var width = 0;
-            var height = 0;
+            var height = LineHeight;
 
             foreach (var c in text)
             {

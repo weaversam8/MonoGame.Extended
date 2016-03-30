@@ -23,6 +23,9 @@ namespace MonoGame.Extended.Gui
             mouseListener.MouseMoved += OnMouseMoved;
             mouseListener.MouseDown += (sender, args) => _focusedControl?.OnMouseDown(sender, args);
             mouseListener.MouseUp += (sender, args) => _focusedControl?.OnMouseUp(sender, args);
+
+            var keyboardListener = _inputManager.AddListener<KeyboardListener>();
+            keyboardListener.KeyTyped += (sender, args) => _focusedControl?.OnKeyTyped(sender, args);
         }
 
         public List<GuiControl> Controls { get; }
