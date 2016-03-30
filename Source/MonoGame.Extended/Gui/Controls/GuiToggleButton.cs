@@ -3,11 +3,11 @@ using MonoGame.Extended.InputListeners;
 
 namespace MonoGame.Extended.Gui.Controls
 {
-    public class GuiCheckBox : GuiControl
+    public class GuiToggleButton : GuiControl
     {
-        private readonly GuiCheckBoxStyle _style;
+        private readonly GuiToggleButtonStyle _style;
 
-        public GuiCheckBox(GuiCheckBoxStyle style)
+        public GuiToggleButton(GuiToggleButtonStyle style)
         {
             _style = style;
         }

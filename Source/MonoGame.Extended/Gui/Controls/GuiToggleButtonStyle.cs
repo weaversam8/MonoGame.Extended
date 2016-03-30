@@ -2,14 +2,14 @@ using MonoGame.Extended.Gui.Drawables;
 
 namespace MonoGame.Extended.Gui.Controls
 {
-    public class GuiCheckBoxStyle : GuiControlStyle
+    public class GuiToggleButtonStyle : GuiControlStyle
     {
-        public GuiCheckBoxStyle(IGuiControlTemplate checkedOn, IGuiControlTemplate checkedOff)
+        public GuiToggleButtonStyle(IGuiControlTemplate checkedOn, IGuiControlTemplate checkedOff)
            : this(checkedOn, checkedOff, checkedOn)
         {
         }
 
-        public GuiCheckBoxStyle(IGuiControlTemplate checkedOn, IGuiControlTemplate checkedOff, IGuiControlTemplate hovered)
+        public GuiToggleButtonStyle(IGuiControlTemplate checkedOn, IGuiControlTemplate checkedOff, IGuiControlTemplate hovered)
         {
             CheckedOn = checkedOn;
             CheckedOff = checkedOff;

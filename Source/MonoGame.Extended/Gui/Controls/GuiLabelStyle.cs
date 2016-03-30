@@ -1,22 +1,17 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.BitmapFonts;
+using MonoGame.Extended.Gui.Drawables;
 
 namespace MonoGame.Extended.Gui.Controls
 {
     public class GuiLabelStyle : GuiControlStyle
     {
-        public GuiLabelStyle(BitmapFont font)
-            : this(font, Color.White)
+        public GuiLabelStyle(GuiTextTemplate template)
         {
+            Template = template;
         }
 
-        public GuiLabelStyle(BitmapFont font, Color color)
-        {
-            Font = font;
-            Color = color;
-        }
-
-        public BitmapFont Font { get; set; }
-        public Color Color { get; set; }
+        public GuiTextTemplate Template { get; }
     }
 }

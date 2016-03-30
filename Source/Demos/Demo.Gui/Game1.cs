@@ -40,6 +40,14 @@ namespace Demo.Gui
             var font = Content.Load<BitmapFont>("kenney-future-12");
             var textureAtlas = Content.Load<TextureAtlas>("ui-skin-atlas");
 
+            var panelStyle = new GuiPanelStyle(new GuiNinePatchTemplate(textureAtlas["grey_panel"], 5, 5, 5, 5));
+            var panel = new GuiPanel(panelStyle)
+            {
+                Location = new Point(50, 50),
+                Size = new Size(580, 400)
+            };
+            _guiManager.Controls.Add(panel);
+
             var buttonStyle = new GuiButtonStyle(
                 normal: new GuiNinePatchTemplate(textureAtlas["blue_button07"], 5, 5, 5, 9),
                 pressed: new GuiNinePatchTemplate(textureAtlas["red_button04"], 5, 5, 5, 9),
@@ -57,13 +65,44 @@ namespace Demo.Gui
             };
             _guiManager.Controls.Add(button);
 
-            var labelStyle = new GuiLabelStyle(font);
+            var labelStyle = new GuiLabelStyle(new GuiTextTemplate(font) { Color = Color.Gray });
             var label = new GuiLabel(labelStyle, "World!")
             {
-                Location = new Point(10, 10),
+                Location = new Point(60, 30),
                 Size = new Size(100, 100)
             };
             _guiManager.Controls.Add(label);
+
+            var toggleButtonStyle = new GuiToggleButtonStyle(
+                checkedOn: new GuiTextureRegionTemplate(textureAtlas["blue_boxCheckmark"]),
+                checkedOff: new GuiTextureRegionTemplate(textureAtlas["grey_box"]));
+            var toggleButton = new GuiToggleButton(toggleButtonStyle)
+            {
+                Location = new Point(200, 200),
+                Size = textureAtlas["grey_box"].Size
+            };
+            _guiManager.Controls.Add(toggleButton);
+
+            var roundButtonStyle = new GuiButtonStyle(
+                normal: new GuiTextureRegionTemplate(textureAtlas["blue_circle"]),
+                pressed: new GuiTextureRegionTemplate(textureAtlas["red_circle"]))
+            {
+                ContentTemplate = new GuiTextTemplate(font)
+            };
+            var roundPlusButton = new GuiButton(roundButtonStyle)
+            {
+                Location = new Point(300, 300),
+                Size = textureAtlas["blue_circle"].Size,
+                Text = "+"
+            };
+            _guiManager.Controls.Add(roundPlusButton);
+            var roundMinusButton = new GuiButton(roundButtonStyle)
+            {
+                Location = new Point(350, 300),
+                Size = textureAtlas["blue_circle"].Size,
+                Text = "-"
+            };
+            _guiManager.Controls.Add(roundMinusButton);
         }
 
         protected override void UnloadContent()
@@ -72,8 +111,8 @@ namespace Demo.Gui
 
         protected override void Update(GameTime gameTime)
         {
-            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            var mouseState = Mouse.GetState();
+            //var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //var mouseState = Mouse.GetState();
             var keyboardState = Keyboard.GetState();
 
             if (keyboardState.IsKeyDown(Keys.Escape))
@@ -86,7 +125,7 @@ namespace Demo.Gui
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.DarkBlue);
 
             _spriteBatch.Begin(transformMatrix: _camera.GetViewMatrix(), samplerState: SamplerState.PointClamp);
             _spriteBatch.Draw(_guiManager);
