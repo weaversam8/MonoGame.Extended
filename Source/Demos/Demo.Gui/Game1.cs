@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
@@ -59,29 +60,29 @@ namespace Demo.Gui
             };
             var button = new GuiButton(buttonStyle)
             {
-                Location = new Point(100, 100),
+                Location = new Point(5, 5),
                 Size = new Size(150, 42),
                 Text = "Hello"
             };
-            _guiManager.Controls.Add(button);
+            panel.Controls.Add(button);
 
             var labelStyle = new GuiLabelStyle(new GuiTextTemplate(font) { Color = Color.Gray });
             var label = new GuiLabel(labelStyle, "World!")
             {
-                Location = new Point(60, 30),
-                Size = new Size(100, 100)
+                Location = new Point(5, 50),
+                Size = new Size(150, 42)
             };
-            _guiManager.Controls.Add(label);
+            panel.Controls.Add(label);
 
             var toggleButtonStyle = new GuiToggleButtonStyle(
                 checkedOn: new GuiTextureRegionTemplate(textureAtlas["blue_boxCheckmark"]),
                 checkedOff: new GuiTextureRegionTemplate(textureAtlas["grey_box"]));
             var toggleButton = new GuiToggleButton(toggleButtonStyle)
             {
-                Location = new Point(200, 200),
+                Location = new Point(5, 100),
                 Size = textureAtlas["grey_box"].Size
             };
-            _guiManager.Controls.Add(toggleButton);
+            panel.Controls.Add(toggleButton);
 
             var roundButtonStyle = new GuiButtonStyle(
                 normal: new GuiTextureRegionTemplate(textureAtlas["blue_circle"]),
@@ -91,30 +92,35 @@ namespace Demo.Gui
             };
             var roundPlusButton = new GuiButton(roundButtonStyle)
             {
-                Location = new Point(300, 300),
+                Location = new Point(5, 300),
                 Size = textureAtlas["blue_circle"].Size,
                 Text = "+"
             };
-            _guiManager.Controls.Add(roundPlusButton);
+            panel.Controls.Add(roundPlusButton);
 
             var roundMinusButton = new GuiButton(roundButtonStyle)
             {
-                Location = new Point(350, 300),
+                Location = new Point(50, 300),
                 Size = textureAtlas["blue_circle"].Size,
                 Text = "-"
             };
-            _guiManager.Controls.Add(roundMinusButton);
+            panel.Controls.Add(roundMinusButton);
 
             var textBoxStyle = new GuiTextBoxStyle(
                 boxTemplate: new GuiNinePatchTemplate(textureAtlas["grey_button06"], 5, 5, 5, 5),
                 textTemplate: new GuiTextTemplate(font, Color.Black));
             var textBox = new GuiTextBox(textBoxStyle)
             {
-                Location = new Point(400, 400),
+                Location = new Point(5, 100),
                 Size = new Size(200, 40),
                 Text = "What?|"
             };
-            _guiManager.Controls.Add(textBox);
+            panel.Controls.Add(textBox);
+
+            var secondPanel = new GuiPanel(panelStyle) {Location = new Point(300, 200), Size = new Size(200, 100)};
+            var secondTextBox = new GuiTextBox(textBoxStyle) {Location = new Point(5, 5), Size = new Size(180, 42)};
+            secondPanel.Controls.Add(secondTextBox);
+            _guiManager.Controls.Add(secondPanel);
         }
 
         protected override void UnloadContent()

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -8,17 +7,25 @@ namespace MonoGame.Extended.Gui.Controls
     {
         protected GuiContainerControl()
         {
-            Controls = new List<GuiControl>();
+            Controls = new GuiControlCollection(this);
         }
 
-        public List<GuiControl> Controls { get; }
+        public GuiControlCollection Controls { get; }
 
-        public override void Draw(SpriteBatch spriteBatch, Rectangle rectangle)
+        public override void Update(GameTime gameTime)
         {
-            base.Draw(spriteBatch, rectangle);
+            base.Update(gameTime);
 
             foreach (var control in Controls)
-                control.Draw(spriteBatch, rectangle);
+                control.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            foreach (var control in Controls)
+                control.Draw(spriteBatch);
         }
     }
 }

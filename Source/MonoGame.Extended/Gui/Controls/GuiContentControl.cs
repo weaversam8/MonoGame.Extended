@@ -8,9 +8,9 @@ namespace MonoGame.Extended.Gui.Controls
     {
         public abstract IGuiControlTemplate GetCurrentContentTemplate();
 
-        public override void Draw(SpriteBatch spriteBatch, Rectangle rectangle)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch, rectangle);
+            base.Draw(spriteBatch);
 
             var contentTemplate = GetCurrentContentTemplate();
             contentTemplate?.Draw(spriteBatch, this);

@@ -20,10 +20,8 @@ namespace MonoGame.Extended.Gui.Controls
         protected abstract IGuiControlTemplate GetCurrentTemplate();
         public virtual void Update(GameTime gameTime) { }
 
-        public virtual void LayoutChildren(Rectangle boundingRectangle)
-        {
-        }
-        
+        public GuiContainerControl Parent { get; internal set; }
+
         public virtual void OnMouseMoved(object sender, MouseEventArgs args)
         {
             MouseMoved.Raise(this, args);
@@ -42,6 +40,7 @@ namespace MonoGame.Extended.Gui.Controls
         public GuiHorizontalAlignment HorizontalAlignment { get; set; }
         public GuiVerticalAlignment VerticalAlignment { get; set; }
 
+        public Point ScreenLocation => CalculateScreenLocation();
         public Point Location { get; set; }
         public Size Size { get; set; }
         public bool IsHovered { get; private set; }
@@ -53,7 +52,7 @@ namespace MonoGame.Extended.Gui.Controls
         public int Height => DesiredSize.Height;
         public Vector2 Center => new Vector2(Location.X + Width*0.5f, Location.Y + Height*0.5f);
         public Rectangle Margin { get; set; }
-        public Rectangle BoundingRectangle => new Rectangle(Location, Size);
+        public Rectangle BoundingRectangle => new Rectangle(ScreenLocation, Size);
         
         public virtual Size DesiredSize
         {
@@ -64,7 +63,21 @@ namespace MonoGame.Extended.Gui.Controls
             }
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch, Rectangle rectangle)
+        private Point CalculateScreenLocation()
+        {
+            var screenLocation = Location;
+            var parent = Parent;
+
+            while (parent != null)
+            {
+                screenLocation += parent.Location;
+                parent = parent.Parent;
+            }
+
+            return screenLocation;
+        }
+
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             var currentDrawable = GetCurrentTemplate();
             currentDrawable.Draw(spriteBatch, this);

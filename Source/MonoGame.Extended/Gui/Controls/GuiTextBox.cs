@@ -17,6 +17,7 @@ namespace MonoGame.Extended.Gui.Controls
         public GuiTextBox(GuiTextBoxStyle style)
         {
             _style = style;
+            Text = string.Empty;
         }
 
         protected override IGuiControlTemplate GetCurrentTemplate()
@@ -61,9 +62,9 @@ namespace MonoGame.Extended.Gui.Controls
             }
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Rectangle rectangle)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch, rectangle);
+            base.Draw(spriteBatch);
 
             if (_isCursorVisible)
             {

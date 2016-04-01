@@ -9,7 +9,7 @@ namespace MonoGame.Extended.Gui.Drawables
     {
         string Text { get; }
         Size Size { get; }
-        Point Location { get; }
+        Point ScreenLocation { get; }
     }
 
     public class GuiTextTemplate : IGuiControlTemplate
@@ -38,7 +38,7 @@ namespace MonoGame.Extended.Gui.Drawables
         {
             var halfSize = new Vector2(control.Size.Width, control.Size.Height) * 0.5f;
             var textSize = Font.MeasureString(control.Text);
-            var position = control.Location.ToVector2() + halfSize - textSize * 0.5f;
+            var position = control.ScreenLocation.ToVector2() + halfSize - textSize * 0.5f;
             return position;
         }
 
