@@ -53,7 +53,8 @@ namespace MonoGame.Extended.Gui.Controls
         public Vector2 Center => new Vector2(Location.X + Width*0.5f, Location.Y + Height*0.5f);
         public Rectangle Margin { get; set; }
         public Rectangle BoundingRectangle => new Rectangle(ScreenLocation, Size);
-        
+        public bool IsFocused { get; internal set; }
+
         public virtual Size DesiredSize
         {
             get

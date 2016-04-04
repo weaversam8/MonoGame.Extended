@@ -113,7 +113,7 @@ namespace Demo.Gui
             {
                 Location = new Point(5, 100),
                 Size = new Size(200, 40),
-                Text = "What?|"
+                Text = "edit me."
             };
             panel.Controls.Add(textBox);
 

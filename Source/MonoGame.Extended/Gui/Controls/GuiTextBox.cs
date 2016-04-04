@@ -53,12 +53,15 @@ namespace MonoGame.Extended.Gui.Controls
 
             var deltaTime = gameTime.GetElapsedSeconds();
 
-            _cursorBlinkDelay -= deltaTime;
-
-            if (_cursorBlinkDelay <= 0)
+            if (IsFocused)
             {
-                _isCursorVisible = !_isCursorVisible;
-                _cursorBlinkDelay = _cursorBlankRate;
+                _cursorBlinkDelay -= deltaTime;
+
+                if (_cursorBlinkDelay <= 0)
+                {
+                    _isCursorVisible = !_isCursorVisible;
+                    _cursorBlinkDelay = _cursorBlankRate;
+                }
             }
         }
 
@@ -66,7 +69,7 @@ namespace MonoGame.Extended.Gui.Controls
         {
             base.Draw(spriteBatch);
 
-            if (_isCursorVisible)
+            if (_isCursorVisible && IsFocused)
             {
                 var font = _style.TextTemplate.Font;
                 var location = font.MeasureString(Text);

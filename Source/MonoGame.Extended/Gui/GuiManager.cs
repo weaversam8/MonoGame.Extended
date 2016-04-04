@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Gui.Controls;
 using MonoGame.Extended.InputListeners;
@@ -11,6 +9,7 @@ namespace MonoGame.Extended.Gui
     public class GuiManager : IUpdate
     {
         private readonly InputListenerManager _inputManager;
+        private GuiControl _hoveredControl;
         private GuiControl _focusedControl;
 
         public GuiManager(ViewportAdapter viewportAdapter)
@@ -20,9 +19,10 @@ namespace MonoGame.Extended.Gui
             _inputManager = new InputListenerManager(viewportAdapter);
 
             var mouseListener = _inputManager.AddListener<MouseListener>();
+            mouseListener.MouseClicked += OnMouseClicked;
             mouseListener.MouseMoved += OnMouseMoved;
-            mouseListener.MouseDown += (sender, args) => _focusedControl?.OnMouseDown(sender, args);
-            mouseListener.MouseUp += (sender, args) => _focusedControl?.OnMouseUp(sender, args);
+            mouseListener.MouseDown += (sender, args) => _hoveredControl?.OnMouseDown(sender, args);
+            mouseListener.MouseUp += (sender, args) => _hoveredControl?.OnMouseUp(sender, args);
 
             var keyboardListener = _inputManager.AddListener<KeyboardListener>();
             keyboardListener.KeyTyped += (sender, args) => _focusedControl?.OnKeyTyped(sender, args);
@@ -32,16 +32,32 @@ namespace MonoGame.Extended.Gui
 
         private void OnMouseMoved(object sender, MouseEventArgs args)
         {
-            var currentControl = FindControlAtPoint(Controls, args.Position);
+            var hoveredControl = FindControlAtPoint(Controls, args.Position);
 
-            if (_focusedControl != currentControl)
+            if (_hoveredControl != hoveredControl)
             {
-                _focusedControl?.OnMouseLeave(this, args);
-                _focusedControl = currentControl;
-                _focusedControl?.OnMouseEnter(this, args);
+                _hoveredControl?.OnMouseLeave(this, args);
+                _hoveredControl = hoveredControl;
+                _hoveredControl?.OnMouseEnter(this, args);
             }
 
             //ForEachChildAtPoint(args.Position, c => c.OnMouseMoved(this, args));
+        }
+
+        private void OnMouseClicked(object sender, MouseEventArgs mouseEventArgs)
+        {
+            var focusedControl = FindControlAtPoint(Controls, mouseEventArgs.Position);
+
+            if (_focusedControl != focusedControl)
+            {
+                if (_focusedControl != null)
+                    _focusedControl.IsFocused = false;
+
+                _focusedControl = focusedControl;
+
+                if (_focusedControl != null)
+                    _focusedControl.IsFocused = true;
+            }
         }
 
         public void Update(GameTime gameTime)
@@ -52,11 +68,11 @@ namespace MonoGame.Extended.Gui
                 control.Update(gameTime);
         }
 
-        private void ForEachChildAtPoint(Point point, Action<GuiControl> action)
-        {
-            foreach (var control in Controls.Where(c => c.Contains(point)))
-                action(control);
-        }
+        //private void ForEachChildAtPoint(Point point, Action<GuiControl> action)
+        //{
+        //    foreach (var control in Controls.Where(c => c.Contains(point)))
+        //        action(control);
+        //}
 
         private static GuiControl FindControlAtPoint(IList<GuiControl> controls, Point point)
         {
