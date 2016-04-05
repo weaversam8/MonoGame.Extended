@@ -8,12 +8,14 @@ namespace MonoGame.Extended.Gui
 {
     public class GuiManager : IUpdate
     {
+        private readonly ViewportAdapter _viewportAdapter;
         private readonly InputListenerManager _inputManager;
         private GuiControl _hoveredControl;
         private GuiControl _focusedControl;
 
         public GuiManager(ViewportAdapter viewportAdapter)
         {
+            _viewportAdapter = viewportAdapter;
             Controls = new List<GuiControl>();
 
             _inputManager = new InputListenerManager(viewportAdapter);
@@ -97,6 +99,25 @@ namespace MonoGame.Extended.Gui
             }
 
             return null;
+        }
+
+        public void PerformLayout()
+        {
+            foreach (var control in Controls)
+            {
+                PlaceControl(control, new Rectangle(0, 0, _viewportAdapter.VirtualWidth, _viewportAdapter.VirtualHeight));
+            }
+        }
+
+        private static void PlaceControl(GuiControl control, Rectangle rectangle)
+        {
+            var margin = control.Margin;
+            var x = rectangle.X + margin.Left;
+            var y = rectangle.Y + margin.Top;
+            var width = rectangle.Width - control.Left - margin.Right * 2;
+            var height = rectangle.Height - control.Top - margin.Bottom * 2;
+            control.Location = new Point(x, y);
+            control.Size = new Size(width, height);
         }
     }
 }

@@ -79,13 +79,10 @@ namespace Demo.Gui
             var skin = LoadSkin();
 
             var panelStyle = skin.GetStyle<GuiPanelStyle>();
-            var panel = new GuiPanel(panelStyle)
-            {
-                Location = new Point(50, 50),
-                Size = new Size(580, 400)
-            };
+            var panel = new GuiPanel(panelStyle) {Margin = new GuiMargin(10)};
+
             _guiManager.Controls.Add(panel);
-            
+
             var button = new GuiButton(skin.GetStyle<GuiButtonStyle>())
             {
                 Location = new Point(5, 5),
@@ -94,47 +91,49 @@ namespace Demo.Gui
             };
             panel.Controls.Add(button);
 
-            var label = new GuiLabel(skin.GetStyle<GuiLabelStyle>(), "World!")
-            {
-                Location = new Point(5, 50),
-                Size = new Size(150, 42)
-            };
-            panel.Controls.Add(label);
+            _guiManager.PerformLayout();
 
-            var toggleButton = new GuiToggleButton(skin.GetStyle<GuiToggleButtonStyle>())
-            {
-                Location = new Point(5, 200),
-            };
-            panel.Controls.Add(toggleButton);
-            
-            var roundButtonStyle = skin.GetStyle<GuiButtonStyle>("round-button");
-            var roundPlusButton = new GuiButton(roundButtonStyle)
-            {
-                Location = new Point(5, 300),
-                Text = "+"
-            };
-            panel.Controls.Add(roundPlusButton);
+            //var label = new GuiLabel(skin.GetStyle<GuiLabelStyle>(), "World!")
+            //{
+            //    Location = new Point(5, 50),
+            //    Size = new Size(150, 42)
+            //};
+            //panel.Controls.Add(label);
 
-            var roundMinusButton = new GuiButton(roundButtonStyle)
-            {
-                Location = new Point(50, 300),
-                Text = "-"
-            };
-            panel.Controls.Add(roundMinusButton);
+            //var toggleButton = new GuiToggleButton(skin.GetStyle<GuiToggleButtonStyle>())
+            //{
+            //    Location = new Point(5, 200),
+            //};
+            //panel.Controls.Add(toggleButton);
 
-            var textBoxStyle = skin.GetStyle<GuiTextBoxStyle>();
-            var textBox = new GuiTextBox(textBoxStyle)
-            {
-                Location = new Point(5, 100),
-                Size = new Size(200, 40),
-                Text = "edit me."
-            };
-            panel.Controls.Add(textBox);
+            //var roundButtonStyle = skin.GetStyle<GuiButtonStyle>("round-button");
+            //var roundPlusButton = new GuiButton(roundButtonStyle)
+            //{
+            //    Location = new Point(5, 300),
+            //    Text = "+"
+            //};
+            //panel.Controls.Add(roundPlusButton);
 
-            var secondPanel = new GuiPanel(panelStyle) {Location = new Point(300, 200), Size = new Size(200, 100)};
-            var secondTextBox = new GuiTextBox(textBoxStyle) {Location = new Point(5, 5), Size = new Size(180, 42)};
-            secondPanel.Controls.Add(secondTextBox);
-            _guiManager.Controls.Add(secondPanel);
+            //var roundMinusButton = new GuiButton(roundButtonStyle)
+            //{
+            //    Location = new Point(50, 300),
+            //    Text = "-"
+            //};
+            //panel.Controls.Add(roundMinusButton);
+
+            //var textBoxStyle = skin.GetStyle<GuiTextBoxStyle>();
+            //var textBox = new GuiTextBox(textBoxStyle)
+            //{
+            //    Location = new Point(5, 100),
+            //    Size = new Size(200, 40),
+            //    Text = "edit me."
+            //};
+            //panel.Controls.Add(textBox);
+
+            //var secondPanel = new GuiPanel(panelStyle) {Location = new Point(300, 200), Size = new Size(200, 100)};
+            //var secondTextBox = new GuiTextBox(textBoxStyle) {Location = new Point(5, 5), Size = new Size(180, 42)};
+            //secondPanel.Controls.Add(secondTextBox);
+            //_guiManager.Controls.Add(secondPanel);
         }
 
         protected override void UnloadContent()

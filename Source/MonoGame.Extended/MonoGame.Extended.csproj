@@ -59,6 +59,7 @@
     <Compile Include="Gui\Controls\GuiButton.cs" />
     <Compile Include="Gui\Controls\GuiButtonStyle.cs" />
     <Compile Include="Gui\Controls\GuiControlCollection.cs" />
+    <Compile Include="Gui\Controls\GuiMargin.cs" />
     <Compile Include="Gui\Controls\GuiTextBox.cs" />
     <Compile Include="Gui\Controls\GuiTextBoxStyle.cs" />
     <Compile Include="Gui\Controls\GuiToggleButton.cs" />
