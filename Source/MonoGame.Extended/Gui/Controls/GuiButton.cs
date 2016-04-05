@@ -15,6 +15,7 @@ namespace MonoGame.Extended.Gui.Controls
             IsPressed = false;
             Text = string.Empty;
             TextColor = Color.White;
+            Size = style.Normal.CalculateDesiredSize(this);
         }
 
         public string Text { get; set; }

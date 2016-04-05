@@ -10,6 +10,7 @@ namespace MonoGame.Extended.Gui.Controls
         public GuiToggleButton(GuiToggleButtonStyle style)
         {
             _style = style;
+            Size = _style.CheckedOff.CalculateDesiredSize(this);
         }
 
         public bool IsChecked { get; set; }

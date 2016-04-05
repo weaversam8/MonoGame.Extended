@@ -30,6 +30,44 @@ namespace Demo.Gui
             Window.AllowUserResizing = true;
         }
 
+        private GuiSkin LoadSkin()
+        {
+            var font = Content.Load<BitmapFont>("kenney-future-12");
+            var textureAtlas = Content.Load<TextureAtlas>("ui-skin-atlas");
+            var skin = new GuiSkin();
+
+            skin.AddStyle(new GuiPanelStyle(new GuiNinePatchTemplate(textureAtlas["grey_panel"], 5, 5, 5, 5)));
+
+            skin.AddStyle(new GuiButtonStyle(
+                normal: new GuiNinePatchTemplate(textureAtlas["blue_button07"], 5, 5, 5, 9),
+                pressed: new GuiNinePatchTemplate(textureAtlas["red_button04"], 5, 5, 5, 9),
+                hovered: new GuiNinePatchTemplate(textureAtlas["blue_button07"], 5, 5, 5, 9) { Color = Color.LightBlue })
+            {
+                ContentTemplate = new GuiTextTemplate(font),
+                HoveredContentTemplate = new GuiTextTemplate(font) { Color = Color.Orange },
+                PressedContentTemplate = new GuiTextTemplate(font) { Color = Color.White }
+            });
+
+            skin.AddStyle(new GuiLabelStyle(new GuiTextTemplate(font) { Color = Color.Gray }));
+
+            skin.AddStyle(new GuiToggleButtonStyle(
+                checkedOn: new GuiTextureRegionTemplate(textureAtlas["blue_boxCheckmark"]),
+                checkedOff: new GuiTextureRegionTemplate(textureAtlas["grey_box"])));
+
+            skin.AddStyle("round-button", new GuiButtonStyle(
+                normal: new GuiTextureRegionTemplate(textureAtlas["blue_circle"]),
+                pressed: new GuiTextureRegionTemplate(textureAtlas["red_circle"]))
+            {
+                ContentTemplate = new GuiTextTemplate(font)
+            });
+
+            skin.AddStyle(new GuiTextBoxStyle(
+                boxTemplate: new GuiNinePatchTemplate(textureAtlas["grey_button06"], 5, 5, 5, 5),
+                textTemplate: new GuiTextTemplate(font, Color.Black)));
+            
+            return skin;
+        }
+
         protected override void LoadContent()
         {
             _viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 800, 480);
@@ -38,27 +76,17 @@ namespace Demo.Gui
 
             _guiManager = new GuiManager(_viewportAdapter);
 
-            var font = Content.Load<BitmapFont>("kenney-future-12");
-            var textureAtlas = Content.Load<TextureAtlas>("ui-skin-atlas");
+            var skin = LoadSkin();
 
-            var panelStyle = new GuiPanelStyle(new GuiNinePatchTemplate(textureAtlas["grey_panel"], 5, 5, 5, 5));
+            var panelStyle = skin.GetStyle<GuiPanelStyle>();
             var panel = new GuiPanel(panelStyle)
             {
                 Location = new Point(50, 50),
                 Size = new Size(580, 400)
             };
             _guiManager.Controls.Add(panel);
-
-            var buttonStyle = new GuiButtonStyle(
-                normal: new GuiNinePatchTemplate(textureAtlas["blue_button07"], 5, 5, 5, 9),
-                pressed: new GuiNinePatchTemplate(textureAtlas["red_button04"], 5, 5, 5, 9),
-                hovered: new GuiNinePatchTemplate(textureAtlas["blue_button07"], 5, 5, 5, 9) { Color = Color.LightBlue })
-            {
-                ContentTemplate = new GuiTextTemplate(font),
-                HoveredContentTemplate = new GuiTextTemplate(font) { Color = Color.Orange },
-                PressedContentTemplate = new GuiTextTemplate(font) { Color = Color.White }
-            };
-            var button = new GuiButton(buttonStyle)
+            
+            var button = new GuiButton(skin.GetStyle<GuiButtonStyle>())
             {
                 Location = new Point(5, 5),
                 Size = new Size(150, 42),
@@ -66,34 +94,23 @@ namespace Demo.Gui
             };
             panel.Controls.Add(button);
 
-            var labelStyle = new GuiLabelStyle(new GuiTextTemplate(font) { Color = Color.Gray });
-            var label = new GuiLabel(labelStyle, "World!")
+            var label = new GuiLabel(skin.GetStyle<GuiLabelStyle>(), "World!")
             {
                 Location = new Point(5, 50),
                 Size = new Size(150, 42)
             };
             panel.Controls.Add(label);
 
-            var toggleButtonStyle = new GuiToggleButtonStyle(
-                checkedOn: new GuiTextureRegionTemplate(textureAtlas["blue_boxCheckmark"]),
-                checkedOff: new GuiTextureRegionTemplate(textureAtlas["grey_box"]));
-            var toggleButton = new GuiToggleButton(toggleButtonStyle)
+            var toggleButton = new GuiToggleButton(skin.GetStyle<GuiToggleButtonStyle>())
             {
-                Location = new Point(5, 100),
-                Size = textureAtlas["grey_box"].Size
+                Location = new Point(5, 200),
             };
             panel.Controls.Add(toggleButton);
-
-            var roundButtonStyle = new GuiButtonStyle(
-                normal: new GuiTextureRegionTemplate(textureAtlas["blue_circle"]),
-                pressed: new GuiTextureRegionTemplate(textureAtlas["red_circle"]))
-            {
-                ContentTemplate = new GuiTextTemplate(font)
-            };
+            
+            var roundButtonStyle = skin.GetStyle<GuiButtonStyle>("round-button");
             var roundPlusButton = new GuiButton(roundButtonStyle)
             {
                 Location = new Point(5, 300),
-                Size = textureAtlas["blue_circle"].Size,
                 Text = "+"
             };
             panel.Controls.Add(roundPlusButton);
@@ -101,14 +118,11 @@ namespace Demo.Gui
             var roundMinusButton = new GuiButton(roundButtonStyle)
             {
                 Location = new Point(50, 300),
-                Size = textureAtlas["blue_circle"].Size,
                 Text = "-"
             };
             panel.Controls.Add(roundMinusButton);
 
-            var textBoxStyle = new GuiTextBoxStyle(
-                boxTemplate: new GuiNinePatchTemplate(textureAtlas["grey_button06"], 5, 5, 5, 5),
-                textTemplate: new GuiTextTemplate(font, Color.Black));
+            var textBoxStyle = skin.GetStyle<GuiTextBoxStyle>();
             var textBox = new GuiTextBox(textBoxStyle)
             {
                 Location = new Point(5, 100),

@@ -1,35 +1,42 @@
 using System.Collections.Generic;
-using MonoGame.Extended.TextureAtlases;
+using MonoGame.Extended.Gui.Controls;
 
 namespace MonoGame.Extended.Gui
 {
-    public class GuiSkinElement
-    {
-        public string Name { get; set; }
-    }
-
-    public class GuiSpriteSkinElement
-    {
-        public string RegionName { get; set; }
-    }
-
-    public class GuiNinePatchElement
-    {
-        public string RegionName { get; set; }
-        public int Top { get; set; }
-        public int Left { get; set; }
-        public int Right { get; set; }
-        public int Bottom { get; set; }
-    }
-
     public class GuiSkin
     {
         public GuiSkin()
         {
-            Elements = new List<GuiSkinElement>();
+            _styles = new Dictionary<string, GuiControlStyle>();
         }
 
-        public TextureAtlas TextureAtlas { get; set; }
-        public List<GuiSkinElement> Elements { get; }
+        private readonly Dictionary<string, GuiControlStyle> _styles;
+
+        public void AddStyle(string name, GuiControlStyle style)
+        {
+            _styles.Add(name, style);
+        }
+
+        public void AddStyle(GuiControlStyle style)
+        {
+            var name = style.GetType().Name;
+            AddStyle(name, style);
+        }
+
+        public T GetStyle<T>(string name) where T : GuiControlStyle
+        {
+            GuiControlStyle style;
+
+            if (_styles.TryGetValue(name, out style))
+                return (T) style;
+
+            throw new KeyNotFoundException($"Style '{name}' not found");
+        }
+
+        public T GetStyle<T>() where T : GuiControlStyle
+        {
+            var name = typeof (T).Name;
+            return GetStyle<T>(name);
+        }
     }
 }
