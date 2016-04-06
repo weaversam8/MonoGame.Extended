@@ -65,6 +65,8 @@ namespace MonoGame.Extended.Gui.Controls
             }
         }
 
+        public override Size DesiredSize => _style.TextTemplate.CalculateDesiredSize(this);
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);

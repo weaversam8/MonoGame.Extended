@@ -14,12 +14,21 @@ namespace MonoGame.Extended.Gui.Controls
             _style = style;
             IsPressed = false;
             Text = string.Empty;
-            TextColor = Color.White;
             Size = style.Normal.CalculateDesiredSize(this);
         }
 
+        public override Size DesiredSize
+        {
+            get
+            {
+                var contentSize = _style.ContentTemplate.CalculateDesiredSize(this);
+                var width = contentSize.Width + Padding.Left + Padding.Right;
+                var height = contentSize.Height + Padding.Top + Padding.Bottom;
+                return new Size(width, height);
+            }
+        }
+
         public string Text { get; set; }
-        public Color TextColor { get; set; }
         public bool IsPressed { get; private set; }
 
         public event EventHandler<MouseEventArgs> Clicked;

@@ -44,6 +44,11 @@ namespace MonoGame.Extended
             return Width == other.Width && Height == other.Height;
         }
 
+        public static implicit operator Size(Point size)
+        {
+            return new Size(size.X, size.Y);
+        }
+
         public static implicit operator Point(Size size)
         {
             return new Point(size.Width, size.Height);

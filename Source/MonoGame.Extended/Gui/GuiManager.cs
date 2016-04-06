@@ -129,51 +129,65 @@ namespace MonoGame.Extended.Gui
             }
         }
 
-        private static void PlaceControl(GuiControl control, Rectangle rectangle)
+        private static Rectangle GetMarginRectangle(GuiControl control, Rectangle clientRectangle)
         {
             var margin = control.Margin;
-            var x = rectangle.X + margin.Left;
-            var y = rectangle.Y + margin.Top;
-            var width = rectangle.Width - control.Left - margin.Right * 2;
-            var height = rectangle.Height - control.Top - margin.Bottom * 2;
-
-            //if (control.HorizontalAlignment != GuiHorizontalAlignment.Stretch)
-            //    width = control.Width;
-
-            control.Location = new Point(x, y);
-            control.Size = new Size(width, height);
+            var x = clientRectangle.X + margin.Left;
+            var y = clientRectangle.Y + margin.Top;
+            var width = clientRectangle.Width - control.Left - margin.Right * 2;
+            var height = clientRectangle.Height - control.Top - margin.Bottom * 2;
+            return new Rectangle(x, y, width, height);
         }
 
-        protected int GetHorizontalAlignment(GuiControl control, Rectangle rectangle)
+        private static Size GetDesiredSize(GuiControl control, Rectangle targetRectangle)
         {
-            switch (control.HorizontalAlignment)
+            var desiredSize = control.DesiredSize;
+            var width = control.HorizontalAlignment == GuiHorizontalAlignment.Stretch ? targetRectangle.Size.X : desiredSize.Width;
+            var height = control.VerticalAlignment == GuiVerticalAlignment.Stretch ? targetRectangle.Size.Y : desiredSize.Height;
+            return new Size(width, height);
+        }
+
+        private static void PlaceControl(GuiControl control, Rectangle rectangle)
+        {
+            var targetRectangle = GetMarginRectangle(control, rectangle);
+            var desiredSize = GetDesiredSize(control, targetRectangle);
+            var x = GetHorizontalAlignment(control.HorizontalAlignment, desiredSize, targetRectangle);
+            var y = GetVerticalAlignment(control.VerticalAlignment, desiredSize, targetRectangle);
+            
+            control.Location = new Point(x, y);
+            control.Size = desiredSize;
+        }
+
+        private static int GetHorizontalAlignment(GuiHorizontalAlignment alignment, Size size, Rectangle rectangle)
+        {
+            switch (alignment)
             {
                 case GuiHorizontalAlignment.Stretch:
                 case GuiHorizontalAlignment.Left:
                     return rectangle.Left;
                 case GuiHorizontalAlignment.Right:
-                    return rectangle.Right - control.Width;
+                    return rectangle.Right - size.Width;
                 case GuiHorizontalAlignment.Center:
-                    return rectangle.Left + rectangle.Width / 2 - control.Width / 2;
+                    return rectangle.Left + rectangle.Width / 2 - size.Width / 2;
             }
 
-            throw new NotSupportedException($"{control.HorizontalAlignment} is not supported");
+            throw new NotSupportedException($"{alignment} is not supported");
         }
 
-        protected int GetVerticalAlignment(GuiControl control, Rectangle rectangle)
+        private static int GetVerticalAlignment(GuiVerticalAlignment alignment, Size size, Rectangle rectangle)
         {
-            switch (control.VerticalAlignment)
+            switch (alignment)
             {
                 case GuiVerticalAlignment.Stretch:
                 case GuiVerticalAlignment.Top:
                     return rectangle.Top;
                 case GuiVerticalAlignment.Bottom:
-                    return rectangle.Bottom - control.Height;
+                    return rectangle.Bottom - size.Height;
                 case GuiVerticalAlignment.Center:
-                    return rectangle.Top + rectangle.Height / 2 - control.Height / 2;
+                    return rectangle.Top + rectangle.Height / 2 - size.Height / 2;
             }
 
-            throw new NotSupportedException($"{control.VerticalAlignment} is not supported");
+            throw new NotSupportedException($"{alignment} is not supported");
         }
     }
 }

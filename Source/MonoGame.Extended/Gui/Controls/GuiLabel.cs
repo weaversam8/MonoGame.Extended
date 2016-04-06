@@ -22,5 +22,7 @@ namespace MonoGame.Extended.Gui.Controls
         {
             return Style.Template;
         }
+
+        public override Size DesiredSize => Style.Template.CalculateDesiredSize(this);
     }
 }

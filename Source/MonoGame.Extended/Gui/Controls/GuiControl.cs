@@ -55,14 +55,7 @@ namespace MonoGame.Extended.Gui.Controls
         public Rectangle BoundingRectangle => new Rectangle(ScreenLocation, Size);
         public bool IsFocused { get; internal set; }
 
-        //public virtual Size DesiredSize
-        //{
-        //    get
-        //    {
-        //        var currentDrawable = GetCurrentTemplate();
-        //        return currentDrawable.CalculateDesiredSize(this);
-        //    }
-        //}
+        public abstract Size DesiredSize { get; }
 
         private Point CalculateScreenLocation()
         {

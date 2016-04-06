@@ -81,28 +81,23 @@ namespace Demo.Gui
             var panelStyle = skin.GetStyle<GuiPanelStyle>();
             var panel = new GuiPanel(panelStyle)
             {
-                Margin = new GuiThickness(100, 30),
-                Padding = new GuiThickness(50)
+                Margin = new GuiThickness(200, 30),
+                Padding = new GuiThickness(10)
             };
 
             _guiManager.Controls.Add(panel);
 
             var button = new GuiButton(skin.GetStyle<GuiButtonStyle>())
             {
-                //Location = new Point(5, 5),
-                //Size = new Size(150, 42),
-                Text = "Hello"
+                VerticalAlignment = GuiVerticalAlignment.Bottom,
+                Text = "Okay"
             };
             panel.Controls.Add(button);
 
-            _guiManager.PerformLayout();
+            var label = new GuiLabel(skin.GetStyle<GuiLabelStyle>(), "Hello World!");
+            panel.Controls.Add(label);
 
-            //var label = new GuiLabel(skin.GetStyle<GuiLabelStyle>(), "World!")
-            //{
-            //    Location = new Point(5, 50),
-            //    Size = new Size(150, 42)
-            //};
-            //panel.Controls.Add(label);
+            _guiManager.PerformLayout();
 
             //var toggleButton = new GuiToggleButton(skin.GetStyle<GuiToggleButtonStyle>())
             //{

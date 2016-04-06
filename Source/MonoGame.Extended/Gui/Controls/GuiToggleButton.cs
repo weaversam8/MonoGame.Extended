@@ -17,6 +17,8 @@ namespace MonoGame.Extended.Gui.Controls
 
         private bool _isMouseDown;
 
+        public override Size DesiredSize => _style.CheckedOff.CalculateDesiredSize(this);
+
         public override void OnMouseLeave(object sender, MouseEventArgs args)
         {
             _isMouseDown = false;
