@@ -7,10 +7,13 @@ namespace MonoGame.Extended.Gui.Controls
     {
         protected GuiContainerControl()
         {
+            HorizontalAlignment = GuiHorizontalAlignment.Stretch;
+            VerticalAlignment = GuiVerticalAlignment.Stretch;
             Controls = new GuiControlCollection(this);
         }
 
         public GuiControlCollection Controls { get; }
+        public GuiThickness Padding { get; set; }
 
         public override void Update(GameTime gameTime)
         {

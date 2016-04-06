@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Gui.Controls;
 using MonoGame.Extended.InputListeners;
@@ -103,9 +104,28 @@ namespace MonoGame.Extended.Gui
 
         public void PerformLayout()
         {
-            foreach (var control in Controls)
+            var screenRectangle = new Rectangle(0, 0, _viewportAdapter.VirtualWidth, _viewportAdapter.VirtualHeight);
+            PlaceControlCollection(Controls, screenRectangle);
+        }
+
+        private static void PlaceControlCollection(IEnumerable<GuiControl> controls, Rectangle rectangle)
+        {
+            foreach (var control in controls)
             {
-                PlaceControl(control, new Rectangle(0, 0, _viewportAdapter.VirtualWidth, _viewportAdapter.VirtualHeight));
+                PlaceControl(control, rectangle);
+
+                var containerControl = control as GuiContainerControl;
+
+                if (containerControl != null)
+                {
+                    var padding = containerControl.Padding;
+                    var x = padding.Left;
+                    var y = padding.Top;
+                    var width = containerControl.Width - padding.Right - padding.Left;
+                    var height = containerControl.Height - padding.Bottom - padding.Top;
+                    var childRectangle = new Rectangle(x, y, width, height);
+                    PlaceControlCollection(containerControl.Controls, childRectangle);
+                }
             }
         }
 
@@ -116,8 +136,44 @@ namespace MonoGame.Extended.Gui
             var y = rectangle.Y + margin.Top;
             var width = rectangle.Width - control.Left - margin.Right * 2;
             var height = rectangle.Height - control.Top - margin.Bottom * 2;
+
+            //if (control.HorizontalAlignment != GuiHorizontalAlignment.Stretch)
+            //    width = control.Width;
+
             control.Location = new Point(x, y);
             control.Size = new Size(width, height);
+        }
+
+        protected int GetHorizontalAlignment(GuiControl control, Rectangle rectangle)
+        {
+            switch (control.HorizontalAlignment)
+            {
+                case GuiHorizontalAlignment.Stretch:
+                case GuiHorizontalAlignment.Left:
+                    return rectangle.Left;
+                case GuiHorizontalAlignment.Right:
+                    return rectangle.Right - control.Width;
+                case GuiHorizontalAlignment.Center:
+                    return rectangle.Left + rectangle.Width / 2 - control.Width / 2;
+            }
+
+            throw new NotSupportedException($"{control.HorizontalAlignment} is not supported");
+        }
+
+        protected int GetVerticalAlignment(GuiControl control, Rectangle rectangle)
+        {
+            switch (control.VerticalAlignment)
+            {
+                case GuiVerticalAlignment.Stretch:
+                case GuiVerticalAlignment.Top:
+                    return rectangle.Top;
+                case GuiVerticalAlignment.Bottom:
+                    return rectangle.Bottom - control.Height;
+                case GuiVerticalAlignment.Center:
+                    return rectangle.Top + rectangle.Height / 2 - control.Height / 2;
+            }
+
+            throw new NotSupportedException($"{control.VerticalAlignment} is not supported");
         }
     }
 }

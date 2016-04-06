@@ -79,14 +79,18 @@ namespace Demo.Gui
             var skin = LoadSkin();
 
             var panelStyle = skin.GetStyle<GuiPanelStyle>();
-            var panel = new GuiPanel(panelStyle) {Margin = new GuiMargin(10)};
+            var panel = new GuiPanel(panelStyle)
+            {
+                Margin = new GuiThickness(100, 30),
+                Padding = new GuiThickness(50)
+            };
 
             _guiManager.Controls.Add(panel);
 
             var button = new GuiButton(skin.GetStyle<GuiButtonStyle>())
             {
-                Location = new Point(5, 5),
-                Size = new Size(150, 42),
+                //Location = new Point(5, 5),
+                //Size = new Size(150, 42),
                 Text = "Hello"
             };
             panel.Controls.Add(button);

@@ -1,18 +1,18 @@
 namespace MonoGame.Extended.Gui.Controls
 {
-    public struct GuiMargin
+    public struct GuiThickness
     {
-        public GuiMargin(int all)
+        public GuiThickness(int all)
             : this(all, all, all, all)
         {
         }
 
-        public GuiMargin(int leftRight, int topBottom)
+        public GuiThickness(int leftRight, int topBottom)
             : this(leftRight, topBottom, leftRight, topBottom)
         {
         }
 
-        public GuiMargin(int left, int top, int right, int bottom)
+        public GuiThickness(int left, int top, int right, int bottom)
         {
             Left = left;
             Top = top;

@@ -48,21 +48,21 @@ namespace MonoGame.Extended.Gui.Controls
         public int Top => Location.Y;
         public int Right => Location.X + Width;
         public int Bottom => Location.Y + Height;
-        public int Width => DesiredSize.Width;
-        public int Height => DesiredSize.Height;
+        public int Width => Size.Width;
+        public int Height => Size.Height;
         public Vector2 Center => new Vector2(Location.X + Width*0.5f, Location.Y + Height*0.5f);
-        public GuiMargin Margin { get; set; }
+        public GuiThickness Margin { get; set; }
         public Rectangle BoundingRectangle => new Rectangle(ScreenLocation, Size);
         public bool IsFocused { get; internal set; }
 
-        public virtual Size DesiredSize
-        {
-            get
-            {
-                var currentDrawable = GetCurrentTemplate();
-                return currentDrawable.CalculateDesiredSize(this);
-            }
-        }
+        //public virtual Size DesiredSize
+        //{
+        //    get
+        //    {
+        //        var currentDrawable = GetCurrentTemplate();
+        //        return currentDrawable.CalculateDesiredSize(this);
+        //    }
+        //}
 
         private Point CalculateScreenLocation()
         {
