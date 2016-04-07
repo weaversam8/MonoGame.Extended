@@ -2,7 +2,7 @@ using MonoGame.Extended.Gui.Drawables;
 
 namespace MonoGame.Extended.Gui.Controls
 {
-    public class GuiLabel : GuiControl, IGuiTextControl
+    public class GuiLabel : GuiContentControl, IGuiTextControl
     {
         public GuiLabel(GuiLabelStyle style)
             : this(style, string.Empty)
@@ -20,9 +20,17 @@ namespace MonoGame.Extended.Gui.Controls
 
         protected override IGuiControlTemplate GetCurrentTemplate()
         {
-            return Style.Template;
+            return null;
         }
 
-        public override Size DesiredSize => Style.Template.CalculateDesiredSize(this);
+        public override IGuiControlTemplate GetCurrentContentTemplate()
+        {
+            return Style.TextTemplate;
+        }
+
+        public override string ToString()
+        {
+            return Text;
+        }
     }
 }

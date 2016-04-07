@@ -4,11 +4,11 @@ namespace MonoGame.Extended.Gui.Controls
 {
     public class GuiLabelStyle : GuiControlStyle
     {
-        public GuiLabelStyle(GuiTextTemplate template)
+        public GuiLabelStyle(GuiTextTemplate textTemplate)
         {
-            Template = template;
+            TextTemplate = textTemplate;
         }
 
-        public GuiTextTemplate Template { get; }
+        public GuiTextTemplate TextTemplate { get; }
     }
 }

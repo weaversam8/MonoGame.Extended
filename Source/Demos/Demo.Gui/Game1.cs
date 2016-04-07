@@ -7,6 +7,7 @@ using MonoGame.Extended.BitmapFonts;
 using MonoGame.Extended.Gui;
 using MonoGame.Extended.Gui.Controls;
 using MonoGame.Extended.Gui.Drawables;
+using MonoGame.Extended.Gui.Layouts;
 using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended.ViewportAdapters;
 
@@ -87,16 +88,27 @@ namespace Demo.Gui
 
             _guiManager.Controls.Add(panel);
 
-            var button = new GuiButton(skin.GetStyle<GuiButtonStyle>())
+            var horizontalStack = new GuiStackLayout
             {
+                Orientation = GuiOrientation.Horizontal,
                 VerticalAlignment = GuiVerticalAlignment.Bottom,
-                Text = "Okay"
+                HorizontalAlignment = GuiHorizontalAlignment.Right
             };
-            panel.Controls.Add(button);
 
-            var label = new GuiLabel(skin.GetStyle<GuiLabelStyle>(), "Hello World!");
-            panel.Controls.Add(label);
+            horizontalStack.Controls.Add(new GuiButton(skin.GetStyle<GuiButtonStyle>()) { Width = 100, Text = "Okay" });
+            horizontalStack.Controls.Add(new GuiButton(skin.GetStyle<GuiButtonStyle>()) { Width = 100, Text = "Cancel" });
+            panel.Controls.Add(horizontalStack);
 
+            var stackLayout = new GuiStackLayout();
+
+            for (var i = 0; i < 8; i++)
+            {
+                var label = new GuiLabel(skin.GetStyle<GuiLabelStyle>(), $"Label {i + 1}");
+                stackLayout.Controls.Add(label);
+                //stackLayout.Controls.Add(new GuiButton(skin.GetStyle<GuiButtonStyle>()) { Text = $"Hello World! {i}" });
+            }
+            
+            panel.Controls.Add(stackLayout);
             _guiManager.PerformLayout();
 
             //var toggleButton = new GuiToggleButton(skin.GetStyle<GuiToggleButtonStyle>())

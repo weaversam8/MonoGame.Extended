@@ -85,11 +85,11 @@ namespace MonoGame.Extended.Gui
 
                 if (child.Contains(point))
                 {
-                    var containerControl = child as GuiContainerControl;
+                    var layoutControl = child as GuiLayoutControl;
 
-                    if (containerControl != null)
+                    if (layoutControl != null)
                     {
-                        var c = FindControlAtPoint(containerControl.Controls, point);
+                        var c = FindControlAtPoint(layoutControl.Controls, point);
 
                         if (c != null)
                             return c;
@@ -114,17 +114,19 @@ namespace MonoGame.Extended.Gui
             {
                 PlaceControl(control, rectangle);
 
-                var containerControl = control as GuiContainerControl;
+                var layoutControl = control as GuiLayoutControl;
 
-                if (containerControl != null)
+                if (layoutControl != null)
                 {
-                    var padding = containerControl.Padding;
+
+                    var padding = layoutControl.Padding;
                     var x = padding.Left;
                     var y = padding.Top;
-                    var width = containerControl.Width - padding.Right - padding.Left;
-                    var height = containerControl.Height - padding.Bottom - padding.Top;
+                    var width = layoutControl.Width - padding.Right - padding.Left;
+                    var height = layoutControl.Height - padding.Bottom - padding.Top;
                     var childRectangle = new Rectangle(x, y, width, height);
-                    PlaceControlCollection(containerControl.Controls, childRectangle);
+                    PlaceControlCollection(layoutControl.Controls, childRectangle);
+                    layoutControl.PerformLayout();
                 }
             }
         }

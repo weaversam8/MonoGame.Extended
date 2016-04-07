@@ -1,5 +1,4 @@
 using System;
-using Microsoft.Xna.Framework;
 using MonoGame.Extended.Gui.Drawables;
 using MonoGame.Extended.InputListeners;
 
@@ -14,18 +13,8 @@ namespace MonoGame.Extended.Gui.Controls
             _style = style;
             IsPressed = false;
             Text = string.Empty;
+            Padding = style.Padding;
             Size = style.Normal.CalculateDesiredSize(this);
-        }
-
-        public override Size DesiredSize
-        {
-            get
-            {
-                var contentSize = _style.ContentTemplate.CalculateDesiredSize(this);
-                var width = contentSize.Width + Padding.Left + Padding.Right;
-                var height = contentSize.Height + Padding.Top + Padding.Bottom;
-                return new Size(width, height);
-            }
         }
 
         public string Text { get; set; }

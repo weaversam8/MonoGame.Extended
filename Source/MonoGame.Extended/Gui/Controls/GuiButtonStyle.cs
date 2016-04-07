@@ -19,6 +19,7 @@ namespace MonoGame.Extended.Gui.Controls
             Normal = normal;
             Pressed = pressed;
             Hovered = hovered;
+            Padding = new GuiThickness(15, 10);
         }
 
         public IGuiControlTemplate Normal { get; set; }
@@ -27,5 +28,6 @@ namespace MonoGame.Extended.Gui.Controls
         public IGuiControlTemplate ContentTemplate { get; set; }
         public IGuiControlTemplate HoveredContentTemplate { get; set; }
         public IGuiControlTemplate PressedContentTemplate { get; set; }
+        public GuiThickness Padding { get; set; }
     }
 }

@@ -5,13 +5,13 @@ namespace MonoGame.Extended.Gui.Controls
 {
     public class GuiControlCollection : IList<GuiControl>
     {
-        public GuiControlCollection(GuiContainerControl parent)
+        public GuiControlCollection(GuiLayoutControl parent)
         {
             _parent = parent;
             _list = new List<GuiControl>();
         }
 
-        private readonly GuiContainerControl _parent;
+        private readonly GuiLayoutControl _parent;
         private readonly List<GuiControl> _list;
 
         public IEnumerator<GuiControl> GetEnumerator()

@@ -3,7 +3,7 @@ using MonoGame.Extended.Gui.Drawables;
 
 namespace MonoGame.Extended.Gui.Controls
 {
-    public class GuiPanel : GuiContainerControl
+    public class GuiPanel : GuiLayoutControl
     {
         public GuiPanel(GuiPanelStyle style)
         {
@@ -25,6 +25,10 @@ namespace MonoGame.Extended.Gui.Controls
                 var height = Controls.Max(c => c.Height);
                 return new Size(width, height);
             }
+        }
+
+        public override void PerformLayout()
+        {
         }
     }
 }

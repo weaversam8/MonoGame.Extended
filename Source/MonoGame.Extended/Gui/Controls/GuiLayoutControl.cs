@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoGame.Extended.Gui.Controls
 {
-    public abstract class GuiContainerControl : GuiControl
+    public abstract class GuiLayoutControl : GuiControl
     {
-        protected GuiContainerControl()
+        protected GuiLayoutControl()
         {
             HorizontalAlignment = GuiHorizontalAlignment.Stretch;
             VerticalAlignment = GuiVerticalAlignment.Stretch;
@@ -14,6 +14,8 @@ namespace MonoGame.Extended.Gui.Controls
 
         public GuiControlCollection Controls { get; }
         public GuiThickness Padding { get; set; }
+
+        public abstract void PerformLayout();
 
         public override void Update(GameTime gameTime)
         {
