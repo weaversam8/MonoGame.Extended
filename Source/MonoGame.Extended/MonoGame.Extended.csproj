@@ -79,11 +79,11 @@
     <Compile Include="Gui\Drawables\GuiTextTemplate.cs" />
     <Compile Include="Gui\Drawables\GuiTextureRegionTemplate.cs" />
     <Compile Include="Gui\Drawables\IGuiControlTemplate.cs" />
+    <Compile Include="Gui\Layouts\GuiContainerLayout.cs" />
     <Compile Include="Gui\Layouts\GuiOrientation.cs" />
     <Compile Include="Sprites\NinePatch.cs" />
     <Compile Include="Gui\GuiManager.cs" />
     <Compile Include="Gui\GuiSkin.cs" />
-    <Compile Include="Gui\Layouts\GuiGridLayout.cs" />
     <Compile Include="Gui\Layouts\GuiStackLayout.cs" />
     <Compile Include="Gui\SpriteBatchExtensions.cs" />
     <Compile Include="IDraw.cs" />

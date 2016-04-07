@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Gui.Controls;
+using MonoGame.Extended.Gui.Layouts;
 using MonoGame.Extended.InputListeners;
 using MonoGame.Extended.ViewportAdapters;
 
@@ -17,7 +17,7 @@ namespace MonoGame.Extended.Gui
         public GuiManager(ViewportAdapter viewportAdapter)
         {
             _viewportAdapter = viewportAdapter;
-            Controls = new List<GuiControl>();
+            _rootLayout = new GuiContainerLayout();
 
             _inputManager = new InputListenerManager(viewportAdapter);
 
@@ -31,7 +31,8 @@ namespace MonoGame.Extended.Gui
             keyboardListener.KeyTyped += (sender, args) => _focusedControl?.OnKeyTyped(sender, args);
         }
 
-        public List<GuiControl> Controls { get; }
+        private readonly GuiContainerLayout _rootLayout;
+        public GuiControlCollection Controls => _rootLayout.Controls;
 
         private void OnMouseMoved(object sender, MouseEventArgs args)
         {
@@ -104,92 +105,9 @@ namespace MonoGame.Extended.Gui
 
         public void PerformLayout()
         {
-            var screenRectangle = new Rectangle(0, 0, _viewportAdapter.VirtualWidth, _viewportAdapter.VirtualHeight);
-            PlaceControlCollection(Controls, screenRectangle);
-        }
-
-        private static void PlaceControlCollection(IEnumerable<GuiControl> controls, Rectangle rectangle)
-        {
-            foreach (var control in controls)
-            {
-                PlaceControl(control, rectangle);
-
-                var layoutControl = control as GuiLayoutControl;
-
-                if (layoutControl != null)
-                {
-
-                    var padding = layoutControl.Padding;
-                    var x = padding.Left;
-                    var y = padding.Top;
-                    var width = layoutControl.Width - padding.Right - padding.Left;
-                    var height = layoutControl.Height - padding.Bottom - padding.Top;
-                    var childRectangle = new Rectangle(x, y, width, height);
-                    PlaceControlCollection(layoutControl.Controls, childRectangle);
-                    layoutControl.PerformLayout();
-                }
-            }
-        }
-
-        private static Rectangle GetMarginRectangle(GuiControl control, Rectangle clientRectangle)
-        {
-            var margin = control.Margin;
-            var x = clientRectangle.X + margin.Left;
-            var y = clientRectangle.Y + margin.Top;
-            var width = clientRectangle.Width - control.Left - margin.Right * 2;
-            var height = clientRectangle.Height - control.Top - margin.Bottom * 2;
-            return new Rectangle(x, y, width, height);
-        }
-
-        private static Size GetDesiredSize(GuiControl control, Rectangle targetRectangle)
-        {
-            var desiredSize = control.DesiredSize;
-            var width = control.HorizontalAlignment == GuiHorizontalAlignment.Stretch ? targetRectangle.Size.X : desiredSize.Width;
-            var height = control.VerticalAlignment == GuiVerticalAlignment.Stretch ? targetRectangle.Size.Y : desiredSize.Height;
-            return new Size(width, height);
-        }
-
-        private static void PlaceControl(GuiControl control, Rectangle rectangle)
-        {
-            var targetRectangle = GetMarginRectangle(control, rectangle);
-            var desiredSize = GetDesiredSize(control, targetRectangle);
-            var x = GetHorizontalAlignment(control.HorizontalAlignment, desiredSize, targetRectangle);
-            var y = GetVerticalAlignment(control.VerticalAlignment, desiredSize, targetRectangle);
-            
-            control.Location = new Point(x, y);
-            control.Size = desiredSize;
-        }
-
-        private static int GetHorizontalAlignment(GuiHorizontalAlignment alignment, Size size, Rectangle rectangle)
-        {
-            switch (alignment)
-            {
-                case GuiHorizontalAlignment.Stretch:
-                case GuiHorizontalAlignment.Left:
-                    return rectangle.Left;
-                case GuiHorizontalAlignment.Right:
-                    return rectangle.Right - size.Width;
-                case GuiHorizontalAlignment.Center:
-                    return rectangle.Left + rectangle.Width / 2 - size.Width / 2;
-            }
-
-            throw new NotSupportedException($"{alignment} is not supported");
-        }
-
-        private static int GetVerticalAlignment(GuiVerticalAlignment alignment, Size size, Rectangle rectangle)
-        {
-            switch (alignment)
-            {
-                case GuiVerticalAlignment.Stretch:
-                case GuiVerticalAlignment.Top:
-                    return rectangle.Top;
-                case GuiVerticalAlignment.Bottom:
-                    return rectangle.Bottom - size.Height;
-                case GuiVerticalAlignment.Center:
-                    return rectangle.Top + rectangle.Height / 2 - size.Height / 2;
-            }
-
-            throw new NotSupportedException($"{alignment} is not supported");
+            _rootLayout.Location = new Point(0, 0);
+            _rootLayout.Size = new Size(_viewportAdapter.VirtualWidth, _viewportAdapter.VirtualHeight);
+            _rootLayout.PerformLayout();
         }
     }
 }
