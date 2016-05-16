@@ -22,9 +22,9 @@ namespace Demo.Blackjack.Entities
         public Rank Rank { get; }
         public Suit Suit { get; }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            spriteBatch.Draw(_frontRegion, Vector2.Zero, Color.White);
+            spriteBatch.Draw(_backRegion, position, Color.White);
         }
 
         public override string ToString()

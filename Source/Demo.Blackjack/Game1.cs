@@ -16,11 +16,16 @@ namespace Demo.Blackjack
         private SpriteBatch _spriteBatch;
         private Sprite _sprite;
         private Camera2D _camera;
-        private Deck<Card> _deck; 
+        private Deck<Card> _deck;
+        private Table _table;
 
         public Game1()
         {
-            _graphicsDeviceManager = new GraphicsDeviceManager(this);
+            _graphicsDeviceManager = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = 1280,
+                PreferredBackBufferHeight = 960
+            };
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
@@ -30,9 +35,10 @@ namespace Demo.Blackjack
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 800, 480);
+            var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 
+                _graphicsDeviceManager.PreferredBackBufferWidth, _graphicsDeviceManager.PreferredBackBufferHeight);
             _camera = new Camera2D(viewportAdapter);
-
+            
             var cardAtlas = Content.Load<TextureAtlas>("cards-atlas");
 
             _deck = NewDeck(cardAtlas);
@@ -42,6 +48,9 @@ namespace Demo.Blackjack
             {
                 Position = viewportAdapter.Center.ToVector2()
             };
+
+            _table = new Table(viewportAdapter.VirtualWidth, viewportAdapter.VirtualHeight,
+                new Size(cardAtlas[0].Width, cardAtlas[0].Height));
         }
 
         private static Deck<Card> NewDeck(TextureAtlas cardAtlas)
@@ -87,7 +96,10 @@ namespace Demo.Blackjack
 
             _spriteBatch.Begin(blendState: BlendState.AlphaBlend, transformMatrix: _camera.GetViewMatrix());
 
-            _deck[0].Draw(_spriteBatch);
+            _table.Draw(_spriteBatch);
+
+            for(var i = 0; i < 8; i++)
+                _deck[0].Draw(_spriteBatch, _table.DrawSlot);
 
             _spriteBatch.End();
 
