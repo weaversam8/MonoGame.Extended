@@ -75,7 +75,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Particles", "Demos\Dem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Animations", "Demos\Demo.Animations\Demo.Animations.csproj", "{1C21F12C-FA6A-4759-B66F-EA2F67003BF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Blackjack", "Demo.Blackjack\Demo.Blackjack.csproj", "{B9CB513F-0F2F-49D3-AAB0-6FF58F9997A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Solitare", "Demo.Blackjack\Demo.Solitare.csproj", "{B9CB513F-0F2F-49D3-AAB0-6FF58F9997A5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{28CD24BD-432C-4987-9E9D-65CFCF120EA0} = {28CD24BD-432C-4987-9E9D-65CFCF120EA0}
 	EndProjectSection

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Shapes;
 
-namespace Demo.Blackjack.Entities
+namespace Demo.Solitare.Entities
 {
     public class Table
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{B9CB513F-0F2F-49D3-AAB0-6FF58F9997A5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Demo.Blackjack</RootNamespace>
-    <AssemblyName>Demo.Blackjack</AssemblyName>
+    <RootNamespace>Demo.Solitare</RootNamespace>
+    <AssemblyName>Demo.Solitare</AssemblyName>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />

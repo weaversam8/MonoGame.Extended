@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Demo.Blackjack
+namespace Demo.Solitare
 {
     internal static class Program
     {

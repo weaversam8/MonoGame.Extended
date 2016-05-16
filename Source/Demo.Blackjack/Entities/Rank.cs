@@ -1,4 +1,4 @@
-﻿namespace Demo.Blackjack.Entities
+﻿namespace Demo.Solitare.Entities
 {
     public class Rank
     {

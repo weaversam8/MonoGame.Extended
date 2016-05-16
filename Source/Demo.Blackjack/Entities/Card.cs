@@ -1,10 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
-using MonoGame.Extended.SceneGraphs;
 using MonoGame.Extended.TextureAtlases;
 
-namespace Demo.Blackjack.Entities
+namespace Demo.Solitare.Entities
 {
     public class Card 
     {

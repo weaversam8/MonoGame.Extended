@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Demo.Blackjack.Entities
+namespace Demo.Solitare.Entities
 {
     public class Deck<T> : List<T>
     {

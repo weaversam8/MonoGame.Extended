@@ -1,4 +1,4 @@
-﻿using Demo.Blackjack.Entities;
+﻿using Demo.Solitare.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -7,7 +7,7 @@ using MonoGame.Extended.Sprites;
 using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended.ViewportAdapters;
 
-namespace Demo.Blackjack
+namespace Demo.Solitare
 {
     public class Game1 : Game
     {
