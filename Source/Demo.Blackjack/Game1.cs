@@ -1,8 +1,12 @@
-﻿using Demo.Solitare.Entities;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Demo.Solitare.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using MonoGame.Extended.Animations;
+using MonoGame.Extended.Animations.Tweens;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended.ViewportAdapters;
@@ -14,10 +18,10 @@ namespace Demo.Solitare
         // ReSharper disable once NotAccessedField.Local
         private readonly GraphicsDeviceManager _graphicsDeviceManager;
         private SpriteBatch _spriteBatch;
-        private Sprite _sprite;
         private Camera2D _camera;
         private Deck<Card> _deck;
         private Table _table;
+        private List<Card> _allCards; 
 
         public Game1()
         {
@@ -29,6 +33,8 @@ namespace Demo.Solitare
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
+
+            Components.Add(new AnimationComponent(this));
         }
 
         protected override void LoadContent()
@@ -41,19 +47,37 @@ namespace Demo.Solitare
             
             var cardAtlas = Content.Load<TextureAtlas>("cards-atlas");
 
+            _allCards = new List<Card>();
+
+            _table = new Table(cardAtlas[0].Size);
             _deck = NewDeck(cardAtlas);
 
-            var logoTexture = Content.Load<Texture2D>("logo-square-128");
-            _sprite = new Sprite(logoTexture)
-            {
-                Position = viewportAdapter.Center.ToVector2()
-            };
-
-            _table = new Table(viewportAdapter.VirtualWidth, viewportAdapter.VirtualHeight,
-                new Size(cardAtlas[0].Width, cardAtlas[0].Height));
+            Deal();
         }
 
-        private static Deck<Card> NewDeck(TextureAtlas cardAtlas)
+        private void Deal()
+        {
+            var delay = 2.0f;
+
+            for (var k = 0; k < _table.TableauSlots.Length; k++)
+            {
+                for (var i = k; i < _table.TableauSlots.Length; i++)
+                {
+                    var tableauSlot = _table.TableauSlots[i];
+                    var card = _deck.Draw();
+                    card.CreateTweenChain()
+                        .Delay(delay)
+                        .MoveTo(tableauSlot + new Vector2(0, k * 40), 0.2f, EasingFunctions.SineEaseInOut);
+
+                    if (i == k)
+                        card.Flip();
+
+                    delay += 0.2f;
+                }
+            }
+        }
+
+        private Deck<Card> NewDeck(TextureAtlas cardAtlas)
         {
             var backRegion = cardAtlas["cardBack_blue5"];
             var deck = new Deck<Card>();
@@ -65,8 +89,9 @@ namespace Demo.Solitare
                 foreach (var rank in ranks)
                 {
                     var frontRegion = cardAtlas[$"card{suit}{rank}"];
-                    var card = new Card(new Rank(rank), suit, frontRegion, backRegion);
-                    deck.Add(card);
+                    var card = new Card(new Rank(rank), suit, frontRegion, backRegion) { Position = _table.DrawSlot };
+                    deck.Push(card);
+                    _allCards.Add(card);
                 }
             }
 
@@ -79,13 +104,11 @@ namespace Demo.Solitare
 
         protected override void Update(GameTime gameTime)
         {
-            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var keyboardState = Keyboard.GetState();
 
             if (keyboardState.IsKeyDown(Keys.Escape))
                 Exit();
-
-            _sprite.Rotation += deltaTime;
 
             base.Update(gameTime);
         }
@@ -98,8 +121,11 @@ namespace Demo.Solitare
 
             _table.Draw(_spriteBatch);
 
-            for(var i = 0; i < 8; i++)
-                _deck[0].Draw(_spriteBatch, _table.DrawSlot);
+            for (var i = _allCards.Count - 1; i >= 0; i--)
+            {
+                var card = _allCards[i];
+                card.Draw(_spriteBatch);
+            }
 
             _spriteBatch.End();
 

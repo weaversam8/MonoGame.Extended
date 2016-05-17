@@ -45,20 +45,24 @@ namespace MonoGame.Extended.Animations.Tweens
             if (!_initialValue.HasValue)
                 _initialValue = _getValue();
 
-            _currentMultiplier = EasingFunction(CurrentTime / Duration);
+            var isComplete = CurrentTime >= Duration;
 
-            if (CurrentTime >= Duration)
+            if (isComplete)
             {
                 CurrentTime = Duration;
                 _currentMultiplier = 1.0f;
-                return true;
+                IsComplete = true;
+            }
+            else
+            {
+                _currentMultiplier = EasingFunction(CurrentTime / Duration);
             }
 
             var difference = Subtract(TargetValue, _initialValue.Value);
             var multiply = Multiply(difference, _currentMultiplier);
             var newValue = Add(_initialValue.Value, multiply);
             _setValue(newValue);
-            return false;
+            return isComplete;
         }
     }
 }

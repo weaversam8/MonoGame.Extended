@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
 
 namespace Demo.Solitare.Entities
 {
-    public class Card 
+    public class Card : IMovable
     {
         public Card(Rank rank, Suit suit, TextureRegion2D frontRegion, TextureRegion2D backRegion)
         {
@@ -20,9 +21,18 @@ namespace Demo.Solitare.Entities
         public Rank Rank { get; }
         public Suit Suit { get; }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position)
+        public Vector2 Position { get; set; }
+
+        private bool _isFlipped;
+
+        public void Flip()
         {
-            spriteBatch.Draw(_backRegion, position, Color.White);
+            _isFlipped = !_isFlipped;
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(_isFlipped ? _frontRegion : _backRegion, Position, Color.White);
         }
 
         public override string ToString()

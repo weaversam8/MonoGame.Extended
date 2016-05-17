@@ -11,19 +11,18 @@ namespace Demo.Solitare.Entities
         private readonly int _offset;
         private readonly Size _cardSize;
         private readonly Vector2[] _foundationSlots;
-        private readonly Vector2[] _tableauSlots;
-        private readonly Vector2 _drawSlot;
 
-        public Table(int width, int height, Size cardSize)
+        public Table(Size cardSize)
         {
             _offset = cardSize.Width + _margin;
             _cardSize = cardSize;
             _foundationSlots = SetupFoundationSlots(4);
-            _tableauSlots = SetupTableauSlots(7);
-            _drawSlot = new Vector2(_margin, _margin);
+            TableauSlots = SetupTableauSlots(7);
+            DrawSlot = new Vector2(_margin, _margin);
         }
 
-        public Vector2 DrawSlot => _drawSlot;
+        public Vector2 DrawSlot { get; }
+        public Vector2[] TableauSlots { get; }
 
         private Vector2[] SetupTableauSlots(int count)
         {
@@ -50,10 +49,10 @@ namespace Demo.Solitare.Entities
             foreach (var foundationSlot in _foundationSlots)
                 spriteBatch.DrawRectangle(foundationSlot, _cardSize, Color.DarkGoldenrod);
 
-            foreach (var tableauSlot in _tableauSlots)
+            foreach (var tableauSlot in TableauSlots)
                 spriteBatch.DrawRectangle(tableauSlot, _cardSize, Color.DarkGoldenrod);
 
-            spriteBatch.DrawRectangle(_drawSlot, _cardSize, Color.DarkGoldenrod);
+            spriteBatch.DrawRectangle(DrawSlot, _cardSize, Color.DarkGoldenrod);
         }
     }
 }
