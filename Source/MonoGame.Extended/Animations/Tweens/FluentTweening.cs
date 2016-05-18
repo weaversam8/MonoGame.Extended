@@ -73,6 +73,12 @@ namespace MonoGame.Extended.Animations.Tweens
             return tweenAnimation;
         }
 
+        public static TweenAnimation<T> Run<T>(this TweenAnimation<T> tweenAnimation, Action action)
+        {
+            tweenAnimation.Tweens.Add(new ActionTween(action));
+            return tweenAnimation;
+        }
+
         public static TweenAnimation<T> FadeTo<T>(this TweenAnimation<T> tweenAnimation, float alpha, float duration, EasingFunction easingFunction)
             where T : IColorable
         {

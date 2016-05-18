@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Entities\Card.cs" />
+    <Compile Include="Entities\CardFacing.cs" />
     <Compile Include="Entities\Deck.cs" />
     <Compile Include="Entities\Rank.cs" />
     <Compile Include="Entities\Suit.cs" />

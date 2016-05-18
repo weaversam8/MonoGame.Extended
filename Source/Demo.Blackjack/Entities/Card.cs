@@ -22,12 +22,14 @@ namespace Demo.Solitare.Entities
 
             Suit = suit;
             Rank = rank;
+            Facing = CardFacing.Down;
         }
 
         private readonly Sprite _sprite;
 
         public Rank Rank { get; }
         public Suit Suit { get; }
+        public CardFacing Facing { get; private set; }
 
         public Vector2 Position
         {
@@ -35,20 +37,18 @@ namespace Demo.Solitare.Entities
             set { _sprite.Position = value + _positionOffset; }
         }
 
-        private bool _isFlipped;
-
         public void Flip()
         {
             const float duration = 0.1f;
-            _sprite.CreateTweenGroup(() =>
-            {
-                _isFlipped = !_isFlipped;
-                _sprite.TextureRegion = _isFlipped ? _frontRegion : _backRegion;
-                _sprite
-                    .CreateTweenGroup()
-                    .ScaleTo(Vector2.One, duration, EasingFunctions.QuadraticEaseOut);
-            })
-            .ScaleTo(new Vector2(0.0f, 1.0f), duration, EasingFunctions.QuadraticEaseIn);
+            _sprite
+                .CreateTweenChain()
+                .ScaleTo(new Vector2(0.0f, 1.0f), duration, EasingFunctions.QuadraticEaseIn)
+                .Run(() =>
+                {
+                    Facing = Facing == CardFacing.Down ? CardFacing.Up : CardFacing.Down;
+                    _sprite.TextureRegion = Facing == CardFacing.Up ? _frontRegion : _backRegion;
+                })
+                .ScaleTo(Vector2.One, duration, EasingFunctions.QuadraticEaseOut);
         }
 
         public void Draw(SpriteBatch spriteBatch)

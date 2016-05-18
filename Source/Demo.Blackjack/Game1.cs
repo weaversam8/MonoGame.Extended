@@ -66,15 +66,13 @@ namespace Demo.Solitare
                     var tableauSlot = _table.TableauSlots[i];
                     var card = _deck.Draw();
 
-                    Action onTweenComplete = () => { };
+                    var tween = card.CreateTweenChain()
+                        .Delay(delay)
+                        .MoveTo(tableauSlot + new Vector2(0, k * 40), 0.2f, EasingFunctions.CubicEaseOut);
 
                     if (i == k)
-                        onTweenComplete = card.Flip;
-                    
-                    card.CreateTweenChain(onTweenComplete)
-                        .Delay(delay)
-                        .MoveTo(tableauSlot + new Vector2(0, k * 40), 0.2f, EasingFunctions.SineEaseInOut);
-                    
+                        tween.Run(card.Flip);
+
                     delay += 0.2f;
                 }
             }
