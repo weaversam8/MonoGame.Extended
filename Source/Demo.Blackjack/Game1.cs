@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Demo.Solitare.Entities;
 using Microsoft.Xna.Framework;
@@ -7,7 +8,6 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.Animations;
 using MonoGame.Extended.Animations.Tweens;
-using MonoGame.Extended.Sprites;
 using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended.ViewportAdapters;
 
@@ -57,7 +57,7 @@ namespace Demo.Solitare
 
         private void Deal()
         {
-            var delay = 2.0f;
+            var delay = 0.4f;
 
             for (var k = 0; k < _table.TableauSlots.Length; k++)
             {
@@ -65,13 +65,16 @@ namespace Demo.Solitare
                 {
                     var tableauSlot = _table.TableauSlots[i];
                     var card = _deck.Draw();
-                    card.CreateTweenChain()
-                        .Delay(delay)
-                        .MoveTo(tableauSlot + new Vector2(0, k * 40), 0.2f, EasingFunctions.SineEaseInOut);
+
+                    Action onTweenComplete = () => { };
 
                     if (i == k)
-                        card.Flip();
-
+                        onTweenComplete = card.Flip;
+                    
+                    card.CreateTweenChain(onTweenComplete)
+                        .Delay(delay)
+                        .MoveTo(tableauSlot + new Vector2(0, k * 40), 0.2f, EasingFunctions.SineEaseInOut);
+                    
                     delay += 0.2f;
                 }
             }
@@ -106,6 +109,7 @@ namespace Demo.Solitare
         {
             //var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var keyboardState = Keyboard.GetState();
+            //var mouseState = Mouse.GetState();
 
             if (keyboardState.IsKeyDown(Keys.Escape))
                 Exit();
