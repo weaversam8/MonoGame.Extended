@@ -17,7 +17,6 @@ namespace Demo.InputListeners
         private SpriteBatch _spriteBatch;
         private Texture2D _backgroundTexture;
         private BitmapFont _bitmapFont;
-        private InputListenerManager _inputManager;
         private string _typedString = string.Empty;
         private bool _isCursorVisible = true;
         private const float _cursorBlinkDelay = 0.5f;
@@ -35,9 +34,14 @@ namespace Demo.InputListeners
 
         protected override void Initialize()
         {
-            _inputManager = new InputListenerManager();
-            var mouseListener = _inputManager.AddListener(new MouseListenerSettings());
-            var keyboardListener = _inputManager.AddListener(new KeyboardListenerSettings());
+            var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 800, 480);
+            _camera = new Camera2D(viewportAdapter);
+
+            var mouseListener = new MouseListenerComponent(this, viewportAdapter);
+            var keyboardListener = new KeyboardListenerComponent(this);
+
+            Components.Add(mouseListener);
+            Components.Add(keyboardListener);
 
             keyboardListener.KeyPressed += (sender, args) =>
             {
@@ -90,8 +94,6 @@ namespace Demo.InputListeners
 
         protected override void LoadContent()
         {
-            var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 800, 480);
-            _camera = new Camera2D(viewportAdapter);
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _backgroundTexture = Content.Load<Texture2D>("vignette");
@@ -111,8 +113,6 @@ namespace Demo.InputListeners
                 _isCursorVisible = !_isCursorVisible;
                 _cursorBlinkDelta = _cursorBlinkDelay;
             }
-
-            _inputManager.Update(gameTime);
 
             base.Update(gameTime);
         }

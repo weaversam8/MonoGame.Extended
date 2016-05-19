@@ -6,7 +6,7 @@ namespace MonoGame.Extended.InputListeners
 {
     /// <summary>
     /// This class contains all information resulting from events fired by
-    /// <see cref="GamePadListener"/>.
+    /// <see cref="GamePadListenerComponent"/>.
     /// </summary>
     public class GamePadEventArgs : EventArgs
     {

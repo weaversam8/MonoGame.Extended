@@ -2,6 +2,10 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.ViewportAdapters;
+
+#pragma warning disable 618
+#pragma warning disable 1574
 
 namespace MonoGame.Extended.InputListeners
 {
@@ -10,21 +14,41 @@ namespace MonoGame.Extended.InputListeners
     /// <para>In order to initialise it, call the <see cref="InputListenerManager.AddListener"/> method
     /// with a <see cref="GamePadListenerSettings"/> object.</para>
     /// </summary>
-    public class GamePadListener : InputListener
+    public class GamePadListenerComponent : InputListenerComponent
     {
-        internal GamePadListener(GamePadListenerSettings settings)
+        /// <summary>
+        /// Initialises a <see cref="GamePadListenerComponent"/>.
+        /// </summary>
+        /// <param name="game">The game instance</param>
+        /// <param name="viewportAdapter">The viewport adapter used for scaling input values</param>
+        /// <param name="triggerDownTreshold"></param>
+        /// <param name="thumbstickDownTreshold"></param>
+        /// <param name="repeatInitialDelay"></param>
+        /// <param name="repeatDelay"></param>
+        /// <param name="thumbStickDeltaTreshold"></param>
+        /// <param name="triggerDeltaTreshold"></param>
+        /// <param name="playerIndex">The index of the controller the listener will be tied to.</param>
+        /// <param name="vibrationEnabled">Whether vibration is enabled on the controller.</param>
+        /// <param name="vibrationStrengthLeft">General setting for the strength of the left motor.
+        /// This motor has a slow, deep, powerful rumble. This setting will modify all future vibrations through this listener.</param>
+        /// <param name="vibrationStrengthRight">General setting for the strength of the right motor.
+        /// This motor has a snappy, quick, high-pitched rumble. This setting will modify all future vibrations through this listener.</param>
+        public GamePadListenerComponent(Game game, PlayerIndex playerIndex, bool vibrationEnabled = true, float vibrationStrengthLeft = 1.0f, 
+            float vibrationStrengthRight = 1.0f, float triggerDownTreshold = 0.15f, float thumbstickDownTreshold = 0.5f, int repeatInitialDelay = 500, 
+            int repeatDelay = 50, float thumbStickDeltaTreshold = 0.0f, float triggerDeltaTreshold = 0.0f)
+            : base(game)
         {
-            PlayerIndex = settings.PlayerIndex;
-            VibrationEnabled = settings.VibrationEnabled;
-            VibrationStrengthLeft = settings.VibrationStrengthLeft;
-            VibrationStrengthRight = settings.VibrationStrengthRight;
-            ThumbStickDeltaTreshold = settings.ThumbStickDeltaTreshold;
-            ThumbstickDownTreshold = settings.ThumbstickDownTreshold;
-            TriggerDeltaTreshold = settings.TriggerDeltaTreshold;
-            TriggerDownTreshold = settings.TriggerDownTreshold;
-            RepeatInitialDelay = settings.RepeatInitialDelay;
-            RepeatDelay = settings.RepeatDelay;
-            
+            PlayerIndex = playerIndex;
+            VibrationEnabled = vibrationEnabled;
+            VibrationStrengthLeft = vibrationStrengthLeft;
+            VibrationStrengthRight = vibrationStrengthRight;
+            ThumbStickDeltaTreshold = thumbStickDeltaTreshold;
+            ThumbstickDownTreshold = thumbstickDownTreshold;
+            TriggerDeltaTreshold = triggerDeltaTreshold;
+            TriggerDownTreshold = triggerDownTreshold;
+            RepeatInitialDelay = repeatInitialDelay;
+            RepeatDelay = repeatDelay;
+
             _previousGameTime = new GameTime();
             _previousState = GamePadState.Default;
         }
@@ -64,7 +88,7 @@ namespace MonoGame.Extended.InputListeners
         /// <summary>
         /// This event fires whenever a trigger changes position.
         /// <para>The parameter governing the sensitivity of this functionality
-        /// is <see cref="GamePadListenerSettings.TriggerDeltaTreshold"/>.</para>
+        /// is <see cref="TriggerDeltaTreshold"/>.</para>
         /// </summary>
         public event EventHandler<GamePadEventArgs> TriggerMoved;
 
@@ -72,7 +96,7 @@ namespace MonoGame.Extended.InputListeners
         /// If set to true, the static event <see cref="ControllerConnectionChanged"/>
         /// will fire when any controller changes in connectivity status.
         /// <para>This functionality requires that you have one actively updating
-        /// <see cref="InputListenerManager"/>.</para> 
+        /// <see cref="GamePadListenerComponent"/>.</para> 
         /// </summary>
         public static bool CheckControllerConnections { get; set; }
 
@@ -263,7 +287,7 @@ namespace MonoGame.Extended.InputListeners
             // ...At least, that's the theory. It doesn't seem to be implemented. Disabled for now.
             //if (_lastPacketNumber == _currentState.PacketNumber)
             //    return;
-            foreach (Buttons button in Enum.GetValues(typeof (Buttons)))
+            foreach (Buttons button in Enum.GetValues(typeof(Buttons)))
             {
                 if (_excludedButtons.Contains(button))
                     break;
@@ -387,26 +411,25 @@ namespace MonoGame.Extended.InputListeners
                     ThumbStickMoved.Raise(this, MakeArgs(button, thumbStickState: curVector));
                     _lastThumbStickState = _currentState;
                 }
-            } else if (prevVector.Length() > ThumbStickDeltaTreshold)
+            }
+            else if (prevVector.Length() > ThumbStickDeltaTreshold)
             {
                 ThumbStickMoved.Raise(this, MakeArgs(button, thumbStickState: curVector));
                 _lastThumbStickState = _currentState;
             }
         }
-        
-        internal static void CheckConnections()
+
+        private void CheckConnection()
         {
             if (!CheckControllerConnections)
                 return;
 
-            foreach (PlayerIndex index in Enum.GetValues(typeof(PlayerIndex)))
+            var index = PlayerIndex;
+
+            if (GamePad.GetState(index).IsConnected ^ _gamePadConnections[(int)index])  // We need more XORs in this world
             {
-                if (GamePad.GetState(index).IsConnected ^ _gamePadConnections[(int) index])  // We need more XORs in this world
-                {
-                    _gamePadConnections[(int) index] = !_gamePadConnections[(int) index];
-                    ControllerConnectionChanged.Raise(null, 
-                        new GamePadEventArgs(GamePadState.Default, GamePad.GetState(index), TimeSpan.Zero, index));
-                }
+                _gamePadConnections[(int)index] = !_gamePadConnections[(int)index];
+                ControllerConnectionChanged.Raise(null, new GamePadEventArgs(GamePadState.Default, GamePad.GetState(index), TimeSpan.Zero, index));
             }
         }
 
@@ -418,20 +441,25 @@ namespace MonoGame.Extended.InputListeners
                 Vibrate(0, rightStrength: 0);
         }
 
-        internal override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             _gameTime = gameTime;
             _currentState = GamePad.GetState(PlayerIndex);
             CheckVibrate();
+
             if (!_currentState.IsConnected)
                 return;
+
             CheckAllButtons();
             CheckRepeatButton();
-            //_lastPacketNumber = _currentState.PacketNumber;
+
             _previousGameTime = gameTime;
             _previousState = _currentState;
+
+            CheckConnection();
         }
-        private GamePadEventArgs MakeArgs(Buttons? button, 
+
+        private GamePadEventArgs MakeArgs(Buttons? button,
             float triggerstate = 0, Vector2? thumbStickState = null)
         {
             var elapsedTime = _gameTime.TotalGameTime - _previousGameTime.TotalGameTime;
@@ -457,7 +485,7 @@ namespace MonoGame.Extended.InputListeners
         {
             _repeatedButtonTimer += _gameTime.ElapsedGameTime.Milliseconds;
 
-            if(_repeatedButtonTimer < RepeatInitialDelay || _lastButton == 0)
+            if (_repeatedButtonTimer < RepeatInitialDelay || _lastButton == 0)
                 return;
 
             if (_repeatedButtonTimer < RepeatInitialDelay + RepeatDelay)
@@ -465,7 +493,7 @@ namespace MonoGame.Extended.InputListeners
                 ButtonRepeated.Raise(this, MakeArgs(_lastButton));
                 _repeatedButtonTimer = RepeatDelay + RepeatInitialDelay;
             }
-            else if (_repeatedButtonTimer > RepeatInitialDelay + RepeatDelay*2)
+            else if (_repeatedButtonTimer > RepeatInitialDelay + RepeatDelay * 2)
             {
                 ButtonRepeated.Raise(this, MakeArgs(_lastButton));
                 _repeatedButtonTimer = RepeatDelay + RepeatInitialDelay;

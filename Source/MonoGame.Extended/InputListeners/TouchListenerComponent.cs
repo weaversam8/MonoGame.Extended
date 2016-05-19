@@ -4,15 +4,10 @@ using Microsoft.Xna.Framework.Input.Touch;
 
 namespace MonoGame.Extended.InputListeners
 {
-    public class TouchListener : InputListener
+    public class TouchListenerComponent : InputListenerComponent
     {
-        internal TouchListener()
-            : this(new TouchListenerSettings())
-        {
-        }
-
-        // ReSharper disable once UnusedParameter.Local
-        internal TouchListener(TouchListenerSettings settings)
+        public TouchListenerComponent(Game game)
+            : base(game)
         {
         }
 
@@ -21,7 +16,7 @@ namespace MonoGame.Extended.InputListeners
         public event EventHandler<TouchEventArgs> TouchMoved;
         public event EventHandler<TouchEventArgs> TouchCancelled;
 
-        internal override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
 		{
 			var touchCollection = TouchPanel.GetState();
 
