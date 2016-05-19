@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Demo.Solitare.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.Animations;
 using MonoGame.Extended.Animations.Tweens;
+using MonoGame.Extended.InputListeners;
 using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended.ViewportAdapters;
 
@@ -33,17 +33,32 @@ namespace Demo.Solitare
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
+        }
+
+        protected override void Initialize()
+        {
+            var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 
+                _graphicsDeviceManager.PreferredBackBufferWidth, _graphicsDeviceManager.PreferredBackBufferHeight);
+            _camera = new Camera2D(viewportAdapter);
+
+            var mouseListener = new MouseListenerComponent(this, viewportAdapter);
+            mouseListener.MouseDragStart += MouseListenerOnMouseDragStart;
 
             Components.Add(new AnimationComponent(this));
+            Components.Add(mouseListener);
+
+            base.Initialize();
+        }
+
+        private void MouseListenerOnMouseDragStart(object sender, MouseEventArgs mouseEventArgs)
+        {
+            Trace.WriteLine("Mouse drag started");
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 
-                _graphicsDeviceManager.PreferredBackBufferWidth, _graphicsDeviceManager.PreferredBackBufferHeight);
-            _camera = new Camera2D(viewportAdapter);
             
             var cardAtlas = Content.Load<TextureAtlas>("cards-atlas");
 
