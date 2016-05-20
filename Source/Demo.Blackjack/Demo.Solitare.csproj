@@ -36,6 +36,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DragHandler.cs" />
     <Compile Include="Entities\Card.cs" />
     <Compile Include="Entities\CardFacing.cs" />
     <Compile Include="Entities\Deck.cs" />

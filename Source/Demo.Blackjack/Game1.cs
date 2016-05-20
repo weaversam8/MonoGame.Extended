@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Demo.Solitare.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,15 +22,18 @@ namespace Demo.Solitare
         private Camera2D _camera;
         private Deck<Card> _deck;
         private Table _table;
-        private List<Card> _allCards; 
+        private List<Card> _allCards;
+        private readonly DragHandler _dragHandler;
 
         public Game1()
         {
+            _dragHandler = new DragHandler();
             _graphicsDeviceManager = new GraphicsDeviceManager(this)
             {
                 PreferredBackBufferWidth = 1280,
                 PreferredBackBufferHeight = 960
             };
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
@@ -42,7 +46,9 @@ namespace Demo.Solitare
             _camera = new Camera2D(viewportAdapter);
 
             var mouseListener = new MouseListenerComponent(this, viewportAdapter);
-            mouseListener.MouseDragStart += MouseListenerOnMouseDragStart;
+            mouseListener.MouseDragStart += OnMouseDragStart;
+            mouseListener.MouseDrag += OnMouseDrag;
+            mouseListener.MouseDragEnd += OnMouseDragEnd;
 
             Components.Add(new AnimationComponent(this));
             Components.Add(mouseListener);
@@ -50,9 +56,28 @@ namespace Demo.Solitare
             base.Initialize();
         }
 
-        private void MouseListenerOnMouseDragStart(object sender, MouseEventArgs mouseEventArgs)
+        private void OnMouseDragStart(object sender, MouseEventArgs args)
         {
-            Trace.WriteLine("Mouse drag started");
+            if (args.Button == MouseButton.Left)
+            {
+                var card = _allCards.FirstOrDefault(i => i.Contains(args.Position));
+
+                if (card != null)
+                    _dragHandler.StartDrag(args.Position, card);
+            }
+        }
+
+        private void OnMouseDrag(object sender, MouseEventArgs args)
+        {
+            _dragHandler.Drag(args.Position);
+        }
+
+        private void OnMouseDragEnd(object sender, MouseEventArgs args)
+        {
+            _dragHandler.Target
+                .CreateTweenGroup()
+                .MoveTo(_dragHandler.TargetStartPosition, 0.2f, EasingFunctions.CubicEaseOut);
+            _dragHandler.EndDrag();
         }
 
         protected override void LoadContent()

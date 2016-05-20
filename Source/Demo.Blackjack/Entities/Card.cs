@@ -61,10 +61,10 @@ namespace Demo.Solitare.Entities
             return $"{Rank} {Suit}";
         }
 
-        public bool Contains(int x, int y)
+        public bool Contains(Point point)
         {
             return new Rectangle((int)Position.X, (int)Position.Y, _frontRegion.Size.Width, _frontRegion.Size.Height)
-                .Contains(x, y);
+                .Contains(point);
         }
     }
 }
