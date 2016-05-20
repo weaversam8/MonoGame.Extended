@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Demo.Solitare.Entities;
 using Microsoft.Xna.Framework;
@@ -74,9 +73,10 @@ namespace Demo.Solitare
 
         private void OnMouseDragEnd(object sender, MouseEventArgs args)
         {
-            _dragHandler.Target
+            _dragHandler.Target?
                 .CreateTweenGroup()
                 .MoveTo(_dragHandler.TargetStartPosition, 0.2f, EasingFunctions.CubicEaseOut);
+
             _dragHandler.EndDrag();
         }
 
