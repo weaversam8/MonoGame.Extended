@@ -30,6 +30,8 @@ namespace Demo.Solitare.Entities
         public Rank Rank { get; }
         public Suit Suit { get; }
         public CardFacing Facing { get; private set; }
+        public SuitColor Color => Suit.Color;
+        public int Value => Rank.Value;
 
         public Vector2 Position
         {

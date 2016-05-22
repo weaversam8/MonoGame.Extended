@@ -4,7 +4,8 @@ using MonoGame.Extended;
 
 namespace Demo.Solitare
 {
-    public class DragHandler
+    public class DragHandler<T>
+        where T : class, IMovable
     {
         public DragHandler()
         {
@@ -13,10 +14,10 @@ namespace Demo.Solitare
         private Vector2 _mouseStartPosition;
         private Vector2 _offset;
 
-        public IMovable Target { get; private set; }
+        public T Target { get; private set; }
         public Vector2 TargetStartPosition { get; private set; }
 
-        public void StartDrag(Point mousePosition, IMovable target)
+        public void StartDrag(Point mousePosition, T target)
         {
             if (target == null) throw new ArgumentNullException(nameof(target));
 

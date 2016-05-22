@@ -22,11 +22,11 @@ namespace Demo.Solitare
         private Deck<Card> _deck;
         private Table _table;
         private List<Card> _allCards;
-        private readonly DragHandler _dragHandler;
+        private readonly DragHandler<Card> _dragHandler;
 
         public Game1()
         {
-            _dragHandler = new DragHandler();
+            _dragHandler = new DragHandler<Card>();
             _graphicsDeviceManager = new GraphicsDeviceManager(this)
             {
                 PreferredBackBufferWidth = 1280,
@@ -73,9 +73,16 @@ namespace Demo.Solitare
 
         private void OnMouseDragEnd(object sender, MouseEventArgs args)
         {
-            _dragHandler.Target?
-                .CreateTweenGroup()
-                .MoveTo(_dragHandler.TargetStartPosition, 0.2f, EasingFunctions.CubicEaseOut);
+            var card = _dragHandler.Target;
+
+            if (card != null)
+            {
+                var dropTarget = _allCards.FirstOrDefault(i => i.Contains(args.Position) && i != card);
+
+                // if it's not dropped in a valid place.
+                card.CreateTweenGroup()
+                    .MoveTo(_dragHandler.TargetStartPosition, 0.2f, EasingFunctions.CubicEaseOut);
+            }
 
             _dragHandler.EndDrag();
         }
@@ -122,15 +129,13 @@ namespace Demo.Solitare
         {
             var backRegion = cardAtlas["cardBack_blue5"];
             var deck = new Deck<Card>();
-            var ranks = new[] {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
-            var suits = new[] {Suit.Clubs, Suit.Diamonds, Suit.Hearts, Suit.Spades};
 
-            foreach (var suit in suits)
+            foreach (var suit in Suit.GetAll())
             {
-                foreach (var rank in ranks)
+                foreach (var rank in Rank.GetAll())
                 {
                     var frontRegion = cardAtlas[$"card{suit}{rank}"];
-                    var card = new Card(new Rank(rank), suit, frontRegion, backRegion) { Position = _table.DrawSlot };
+                    var card = new Card(rank, suit, frontRegion, backRegion) { Position = _table.DrawSlot };
                     deck.Push(card);
                     _allCards.Add(card);
                 }
