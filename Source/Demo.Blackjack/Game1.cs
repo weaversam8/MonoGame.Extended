@@ -77,14 +77,24 @@ namespace Demo.Solitare
 
             if (card != null)
             {
-                var dropTarget = _allCards.FirstOrDefault(i => i.Contains(args.Position) && i != card);
+                var foundationSlot = TryDropOnFoundationSlots(args.Position, card);
 
-                // if it's not dropped in a valid place.
                 card.CreateTweenGroup()
-                    .MoveTo(_dragHandler.TargetStartPosition, 0.2f, EasingFunctions.CubicEaseOut);
+                    .MoveTo(foundationSlot?.Position ?? _dragHandler.TargetStartPosition, 0.2f,
+                        EasingFunctions.CubicEaseOut);
+
+                //_table
+                //var dropTarget = _allCards.FirstOrDefault(i => i.Contains(args.Position) && i != card);
             }
 
             _dragHandler.EndDrag();
+        }
+
+        private FoundationSlot TryDropOnFoundationSlots(Point position, Card card)
+        {
+            return _table.FoundationSlots
+                .Where(foundationSlot => foundationSlot.BoundingRectangle.Contains(position))
+                .FirstOrDefault(foundationSlot => foundationSlot.TryDrop(card));
         }
 
         protected override void LoadContent()

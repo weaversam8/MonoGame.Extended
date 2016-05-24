@@ -34,6 +34,16 @@ namespace Demo.Solitare.Entities
             return Name.Equals(other.Name);
         }
 
+        public static bool operator ==(Suit a, Suit b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Suit a, Suit b)
+        {
+            return !(a == b);
+        }
+
         public override string ToString()
         {
             return Name;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 
 namespace Demo.Solitare.Entities
@@ -41,6 +42,29 @@ namespace Demo.Solitare.Entities
         public bool Equals(Rank other)
         {
             return Value == other.Value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+                return false;
+
+            return obj is Rank && Equals((Rank)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
+        public static bool operator ==(Rank a, Rank b)
+        {
+            return Equals(a, b);
+        }
+
+        public static bool operator !=(Rank a, Rank b)
+        {
+            return !(a == b);
         }
 
         public override string ToString()

@@ -11,19 +11,19 @@ namespace Demo.Solitare.Entities
         private const int _margin = 30;
         private readonly int _offset;
         private readonly Size _cardSize;
-        private readonly Vector2[] _foundationSlots;
 
         public Table(Size cardSize)
         {
             _offset = cardSize.Width + _margin;
             _cardSize = cardSize;
-            _foundationSlots = SetupFoundationSlots(4);
+            FoundationSlots = SetupFoundationSlots(4);
             TableauSlots = SetupTableauSlots(7);
             DrawSlot = new Vector2(_margin, _margin);
         }
 
         public Vector2 DrawSlot { get; }
         public Vector2[] TableauSlots { get; }
+        public FoundationSlot[] FoundationSlots { get; }
 
         private Vector2[] SetupTableauSlots(int count)
         {
@@ -35,20 +35,24 @@ namespace Demo.Solitare.Entities
             return slots;
         }
 
-        private Vector2[] SetupFoundationSlots(int count)
+        private FoundationSlot[] SetupFoundationSlots(int count)
         {
-            var slots = new Vector2[count];
+            var slots = new FoundationSlot[count];
 
             for (var i = 0; i < count; i++)
-                slots[i] = new Vector2(_margin + (i + 3) * _offset, _margin);
+            {
+                var position = new Vector2(_margin + (i + 3)*_offset, _margin);
+                var size = _cardSize;
+                slots[i] = new FoundationSlot(position, size);
+            }
 
             return slots;
         }
         
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (var foundationSlot in _foundationSlots)
-                spriteBatch.DrawRectangle(foundationSlot, _cardSize, Color.DarkGoldenrod);
+            foreach (var foundationSlot in FoundationSlots)
+                spriteBatch.DrawRectangle(foundationSlot.Position, foundationSlot.Size, Color.DarkGoldenrod, 3);
 
             foreach (var tableauSlot in TableauSlots)
                 spriteBatch.DrawRectangle(tableauSlot, _cardSize, Color.DarkGoldenrod);
