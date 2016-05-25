@@ -34,6 +34,17 @@ namespace Demo.Solitare.Entities
             return Name.Equals(other.Name);
         }
 
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is Suit && Equals((Suit)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name?.GetHashCode() ?? 0;
+        }
+
         public static bool operator ==(Suit a, Suit b)
         {
             return a.Equals(b);

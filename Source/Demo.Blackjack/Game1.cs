@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Demo.Solitare.Entities;
 using Microsoft.Xna.Framework;
@@ -23,9 +24,11 @@ namespace Demo.Solitare
         private Table _table;
         private List<Card> _allCards;
         private readonly DragHandler<Card> _dragHandler;
+        private readonly Random _random;
 
         public Game1()
         {
+            _random = new Random();
             _dragHandler = new DragHandler<Card>();
             _graphicsDeviceManager = new GraphicsDeviceManager(this)
             {
@@ -108,6 +111,7 @@ namespace Demo.Solitare
 
             _table = new Table(cardAtlas[0].Size);
             _deck = NewDeck(cardAtlas);
+            _deck.Shuffle(_random);
 
             Deal();
         }
@@ -146,7 +150,7 @@ namespace Demo.Solitare
                 {
                     var frontRegion = cardAtlas[$"card{suit}{rank}"];
                     var card = new Card(rank, suit, frontRegion, backRegion) { Position = _table.DrawSlot };
-                    deck.Push(card);
+                    deck.Add(card);
                     _allCards.Add(card);
                 }
             }
