@@ -1,12 +1,12 @@
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using MonoGame.Extended.SceneGraphs;
 using MonoGame.Extended.Shapes;
 
 namespace Demo.Solitare.Entities
 {
-    public class Table
+    public class Table : ISceneEntityDrawable
     {
         private const int _margin = 30;
         private readonly int _offset;
@@ -48,8 +48,13 @@ namespace Demo.Solitare.Entities
 
             return slots;
         }
-        
-        public void Draw(SpriteBatch spriteBatch)
+
+        public RectangleF GetBoundingRectangle()
+        {
+            return RectangleF.Empty;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Vector2 offsetPosition, float offsetRotation, Vector2 offsetScale)
         {
             foreach (var foundationSlot in FoundationSlots)
                 spriteBatch.DrawRectangle(foundationSlot.Position, foundationSlot.Size, Color.DarkGoldenrod, 3);

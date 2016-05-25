@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Shapes;
-using MonoGame.Extended.TextureAtlases;
 
 namespace MonoGame.Extended.SceneGraphs
 {
@@ -10,15 +9,15 @@ namespace MonoGame.Extended.SceneGraphs
         RectangleF GetBoundingRectangle();
     }
 
-    public interface ISpriteBatchDrawable
+    public interface ISceneEntityDrawable : ISceneEntity
     {
-        bool IsVisible { get; }
-        TextureRegion2D TextureRegion { get; }
-        Vector2 Position { get; }
-        float Rotation { get; }
-        Vector2 Scale { get; }
-        Color Color { get; }
-        Vector2 Origin { get; }
-        SpriteEffects Effect { get; }
+        /// <summary>
+        /// Draws a scene entity as part of a scene graph transformed into world space.
+        /// </summary>
+        /// <param name="spriteBatch">The sprite batch to draw with</param>
+        /// <param name="offsetPosition">Add the offset position to the local position</param>
+        /// <param name="offsetRotation">Add the offset rotation to the local rotation</param>
+        /// <param name="offsetScale">Multiply the offset scale by the local scale</param>
+        void Draw(SpriteBatch spriteBatch, Vector2 offsetPosition, float offsetRotation, Vector2 offsetScale);
     }
 }

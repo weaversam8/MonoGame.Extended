@@ -93,19 +93,13 @@ namespace Demo.SceneGraphs
             var mouseState = Mouse.GetState();
 
             if (keyboardState.IsKeyDown(Keys.Escape))
-            {
                 Exit();
-            }
 
             if (keyboardState.IsKeyDown(Keys.W))
-            {
-                _speed += deltaTime * 0.5f;
-            }
+                _speed += deltaTime*0.5f;
 
             if (keyboardState.IsKeyDown(Keys.S))
-            {
-                _speed -= deltaTime * 0.5f;
-            }
+                _speed -= deltaTime*0.5f;
 
             _leftWheelNode.Rotation += _speed;
             _rightWheelNode.Rotation = _leftWheelNode.Rotation;

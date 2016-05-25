@@ -2,12 +2,14 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Animations.Tweens;
+using MonoGame.Extended.SceneGraphs;
+using MonoGame.Extended.Shapes;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.TextureAtlases;
 
 namespace Demo.Solitare.Entities
 {
-    public class Card : IMovable
+    public class Card : IMovable, ISceneEntityDrawable
     {
         private readonly TextureRegion2D _frontRegion;
         private readonly TextureRegion2D _backRegion;
@@ -53,11 +55,6 @@ namespace Demo.Solitare.Entities
                 .ScaleTo(Vector2.One, duration, EasingFunctions.QuadraticEaseOut);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(_sprite);
-        }
-
         public override string ToString()
         {
             return $"{Rank} {Suit}";
@@ -67,6 +64,16 @@ namespace Demo.Solitare.Entities
         {
             return new Rectangle((int)Position.X, (int)Position.Y, _frontRegion.Size.Width, _frontRegion.Size.Height)
                 .Contains(point);
+        }
+
+        public RectangleF GetBoundingRectangle()
+        {
+            return new RectangleF(Position, new Size(_frontRegion.Width, _frontRegion.Height));
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Vector2 offsetPosition, float offsetRotation, Vector2 offsetScale)
+        {
+            _sprite.Draw(spriteBatch, offsetPosition, offsetRotation, offsetScale);
         }
     }
 }

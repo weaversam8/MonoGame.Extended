@@ -9,6 +9,7 @@ using MonoGame.Extended;
 using MonoGame.Extended.Animations;
 using MonoGame.Extended.Animations.Tweens;
 using MonoGame.Extended.InputListeners;
+using MonoGame.Extended.SceneGraphs;
 using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended.ViewportAdapters;
 
@@ -25,10 +26,12 @@ namespace Demo.Solitare
         private List<Card> _allCards;
         private readonly DragHandler<Card> _dragHandler;
         private readonly Random _random;
+        private readonly SceneGraph _sceneGraph;
 
         public Game1()
         {
             _random = new Random();
+            _sceneGraph = new SceneGraph();
             _dragHandler = new DragHandler<Card>();
             _graphicsDeviceManager = new GraphicsDeviceManager(this)
             {
@@ -62,7 +65,8 @@ namespace Demo.Solitare
         {
             if (args.Button == MouseButton.Left)
             {
-                var card = _allCards.FirstOrDefault(i => i.Contains(args.Position));
+                var card = _sceneGraph.GetSceneNodeAt(args.Position.ToVector2()).Entities.FirstOrDefault() as Card;
+                //var card = _allCards.FirstOrDefault(i => i.Contains(args.Position));
 
                 if (card != null)
                     _dragHandler.StartDrag(args.Position, card);
@@ -107,11 +111,19 @@ namespace Demo.Solitare
             
             var cardAtlas = Content.Load<TextureAtlas>("cards-atlas");
 
-            _allCards = new List<Card>();
+            //_allCards = new List<Card>();
 
             _table = new Table(cardAtlas[0].Size);
             _deck = NewDeck(cardAtlas);
             _deck.Shuffle(_random);
+
+            _sceneGraph.RootNode.Entities.Add(_table);
+
+            foreach (var card in _deck)
+            {
+                _sceneGraph.RootNode.Entities.Add(card);
+            }
+            
 
             Deal();
         }
@@ -151,7 +163,7 @@ namespace Demo.Solitare
                     var frontRegion = cardAtlas[$"card{suit}{rank}"];
                     var card = new Card(rank, suit, frontRegion, backRegion) { Position = _table.DrawSlot };
                     deck.Add(card);
-                    _allCards.Add(card);
+                    //_allCards.Add(card);
                 }
             }
 
@@ -180,13 +192,15 @@ namespace Demo.Solitare
 
             _spriteBatch.Begin(blendState: BlendState.AlphaBlend, transformMatrix: _camera.GetViewMatrix());
 
-            _table.Draw(_spriteBatch);
+            //_table.Draw(_spriteBatch);
 
-            for (var i = _allCards.Count - 1; i >= 0; i--)
-            {
-                var card = _allCards[i];
-                card.Draw(_spriteBatch);
-            }
+            //for (var i = _allCards.Count - 1; i >= 0; i--)
+            //{
+            //    var card = _allCards[i];
+            //    card.Draw(_spriteBatch);
+            //}
+
+            _sceneGraph.Draw(_spriteBatch);
 
             _spriteBatch.End();
 

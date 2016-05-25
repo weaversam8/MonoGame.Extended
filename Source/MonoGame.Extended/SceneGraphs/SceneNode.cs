@@ -84,21 +84,11 @@ namespace MonoGame.Extended.SceneGraphs
             Vector2 offsetPosition, offsetScale;
             float offsetRotation;
             var worldTransform = GetWorldTransform();
+
             worldTransform.Decompose(out offsetPosition, out offsetRotation, out offsetScale);
 
-            foreach (var drawable in Entities.OfType<ISpriteBatchDrawable>())
-            {
-                if (drawable.IsVisible)
-                {
-                    var texture = drawable.TextureRegion.Texture;
-                    var sourceRectangle = drawable.TextureRegion.Bounds;
-                    var position = offsetPosition + drawable.Position;
-                    var rotation = offsetRotation + drawable.Rotation;
-                    var scale = offsetScale * drawable.Scale;
-
-                    spriteBatch.Draw(texture, position, sourceRectangle, drawable.Color, rotation, drawable.Origin, scale, drawable.Effect, 0);
-                }
-            }
+            foreach (var drawable in Entities.OfType<ISceneEntityDrawable>())
+                drawable.Draw(spriteBatch, offsetPosition, offsetRotation, offsetScale);
 
             foreach (var child in Children)
                 child.Draw(spriteBatch);

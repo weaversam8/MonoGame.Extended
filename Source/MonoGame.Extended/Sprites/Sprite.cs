@@ -8,7 +8,7 @@ using MonoGame.Extended.TextureAtlases;
 
 namespace MonoGame.Extended.Sprites
 {
-    public class Sprite : IMovable, IRotatable, IScalable, IColorable, ISceneEntity, ISpriteBatchDrawable
+    public class Sprite : IMovable, IRotatable, IScalable, IColorable, ISceneEntityDrawable
     {
         public Sprite(TextureRegion2D textureRegion)
         {
@@ -100,6 +100,25 @@ namespace MonoGame.Extended.Sprites
                 corners[i] += offset;
 
             return corners;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Vector2 offsetPosition, float offsetRotation, Vector2 offsetScale)
+        {
+            if (IsVisible)
+            {
+                var texture = TextureRegion.Texture;
+                var sourceRectangle = TextureRegion.Bounds;
+                var position = offsetPosition + Position;
+                var rotation = offsetRotation + Rotation;
+                var scale = offsetScale * Scale;
+
+                spriteBatch.Draw(texture, position, sourceRectangle, Color * Alpha, rotation, Origin, scale, Effect, 0);
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            Draw(spriteBatch, Vector2.Zero, 0, Vector2.One);
         }
     }
 }
