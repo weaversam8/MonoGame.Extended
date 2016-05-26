@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Animations.Tweens;
 using MonoGame.Extended.SceneGraphs;
@@ -9,25 +8,30 @@ using MonoGame.Extended.TextureAtlases;
 
 namespace Demo.Solitare.Entities
 {
-    public class Card : IMovable, ISceneEntityDrawable
+    public class Card : IMovable
     {
         private readonly TextureRegion2D _frontRegion;
         private readonly TextureRegion2D _backRegion;
-        private readonly Vector2 _positionOffset;
+        private readonly SceneNode _sceneNode;
+        private readonly Sprite _sprite;
 
-        public Card(Rank rank, Suit suit, TextureRegion2D frontRegion, TextureRegion2D backRegion)
+        public Card(SceneNode parentNode, Rank rank, Suit suit, TextureRegion2D frontRegion, TextureRegion2D backRegion)
         {
-            _frontRegion = frontRegion;
-            _backRegion = backRegion;
-            _positionOffset = new Vector2(_frontRegion.Width / 2f, _frontRegion.Height / 2f);
-            _sprite = new Sprite(backRegion);
-
             Suit = suit;
             Rank = rank;
             Facing = CardFacing.Down;
-        }
 
-        private readonly Sprite _sprite;
+            _frontRegion = frontRegion;
+            _backRegion = backRegion;
+            _sprite = new Sprite(backRegion)
+            {
+                Position = new Vector2(_frontRegion.Width / 2f, _frontRegion.Height / 2f),
+                Tag = this
+            };
+            _sceneNode = new SceneNode($"{Rank} {Suit}");
+            _sceneNode.Entities.Add(_sprite);
+            parentNode.Children.Add(_sceneNode);
+        }
 
         public Rank Rank { get; }
         public Suit Suit { get; }
@@ -37,14 +41,14 @@ namespace Demo.Solitare.Entities
 
         public Vector2 Position
         {
-            get { return _sprite.Position - _positionOffset; }
-            set { _sprite.Position = value + _positionOffset; }
+            get { return _sceneNode.Position; }
+            set { _sceneNode.Position = value; }
         }
 
         public void Flip()
         {
             const float duration = 0.1f;
-            _sprite
+            _sceneNode
                 .CreateTweenChain()
                 .ScaleTo(new Vector2(0.0f, 1.0f), duration, EasingFunctions.QuadraticEaseIn)
                 .Run(() =>
@@ -57,7 +61,7 @@ namespace Demo.Solitare.Entities
 
         public override string ToString()
         {
-            return $"{Rank} {Suit}";
+            return _sceneNode.Name;
         }
 
         public bool Contains(Point point)
@@ -69,11 +73,6 @@ namespace Demo.Solitare.Entities
         public RectangleF GetBoundingRectangle()
         {
             return new RectangleF(Position, new Size(_frontRegion.Width, _frontRegion.Height));
-        }
-
-        public void Draw(SpriteBatch spriteBatch, Vector2 offsetPosition, float offsetRotation, Vector2 offsetScale)
-        {
-            _sprite.Draw(spriteBatch, offsetPosition, offsetRotation, offsetScale);
         }
     }
 }

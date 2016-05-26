@@ -31,6 +31,7 @@ namespace MonoGame.Extended.Animations.Tweens
         private readonly Action<T> _setValue;
         private float _currentMultiplier;
         private T? _initialValue;
+        private T? _differenceValue;
 
         public T TargetValue { get; }
         public float Duration { get; }
@@ -42,8 +43,11 @@ namespace MonoGame.Extended.Animations.Tweens
 
         protected override bool OnUpdate(float deltaTime)
         {
-            if (!_initialValue.HasValue)
+            if (!_initialValue.HasValue || !_differenceValue.HasValue)
+            {
                 _initialValue = _getValue();
+                _differenceValue = Subtract(TargetValue, _initialValue.Value);
+            }
 
             var isComplete = CurrentTime >= Duration;
 
@@ -51,15 +55,13 @@ namespace MonoGame.Extended.Animations.Tweens
             {
                 CurrentTime = Duration;
                 _currentMultiplier = 1.0f;
-                IsComplete = true;
             }
             else
             {
                 _currentMultiplier = EasingFunction(CurrentTime / Duration);
             }
 
-            var difference = Subtract(TargetValue, _initialValue.Value);
-            var multiply = Multiply(difference, _currentMultiplier);
+            var multiply = Multiply(_differenceValue.Value, _currentMultiplier);
             var newValue = Add(_initialValue.Value, multiply);
             _setValue(newValue);
             return isComplete;

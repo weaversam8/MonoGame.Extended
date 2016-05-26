@@ -24,10 +24,15 @@ namespace Demo.Solitare.Entities
          
         public bool TryDrop(Card card)
         {
-            if (!_cards.Any() && card.Rank == Rank.Ace)
+            if (!_cards.Any())
             {
-                _cards.Push(card);
-                return true;
+                if (card.Rank == Rank.Ace)
+                {
+                    _cards.Push(card);
+                    return true;
+                }
+
+                return false;
             }
 
             var topCard = _cards.Peek();

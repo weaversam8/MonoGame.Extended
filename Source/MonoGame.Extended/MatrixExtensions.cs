@@ -19,9 +19,9 @@ namespace MonoGame.Extended
                 return true;
             }
 
-            position = Vector2.Zero;
-            rotation = 0;
-            scale = Vector2.One;
+            position = default(Vector2);
+            rotation = default(float);
+            scale = default(Vector2);
             return false;
         }
     }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Demo.Solitare.Entities;
 using Microsoft.Xna.Framework;
@@ -10,6 +9,7 @@ using MonoGame.Extended.Animations;
 using MonoGame.Extended.Animations.Tweens;
 using MonoGame.Extended.InputListeners;
 using MonoGame.Extended.SceneGraphs;
+using MonoGame.Extended.Sprites;
 using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended.ViewportAdapters;
 
@@ -23,7 +23,6 @@ namespace Demo.Solitare
         private Camera2D _camera;
         private Deck<Card> _deck;
         private Table _table;
-        private List<Card> _allCards;
         private readonly DragHandler<Card> _dragHandler;
         private readonly Random _random;
         private readonly SceneGraph _sceneGraph;
@@ -51,6 +50,7 @@ namespace Demo.Solitare
             _camera = new Camera2D(viewportAdapter);
 
             var mouseListener = new MouseListenerComponent(this, viewportAdapter);
+            mouseListener.MouseClicked += OnMouseClicked;
             mouseListener.MouseDragStart += OnMouseDragStart;
             mouseListener.MouseDrag += OnMouseDrag;
             mouseListener.MouseDragEnd += OnMouseDragEnd;
@@ -61,16 +61,30 @@ namespace Demo.Solitare
             base.Initialize();
         }
 
+        private void OnMouseClicked(object sender, MouseEventArgs mouseEventArgs)
+        {
+            var card = FindCardAt(mouseEventArgs.Position.ToVector2());
+
+            card?.Flip();
+        }
+
         private void OnMouseDragStart(object sender, MouseEventArgs args)
         {
             if (args.Button == MouseButton.Left)
             {
-                var card = _sceneGraph.GetSceneNodeAt(args.Position.ToVector2()).Entities.FirstOrDefault() as Card;
-                //var card = _allCards.FirstOrDefault(i => i.Contains(args.Position));
+                var position = args.Position.ToVector2();
+                var card = FindCardAt(position);
 
-                if (card != null)
+                if (card != null && card.Facing == CardFacing.Up)
                     _dragHandler.StartDrag(args.Position, card);
             }
+        }
+
+        private Card FindCardAt(Vector2 position)
+        {
+            var sceneNode = _sceneGraph.GetSceneNodeAt(position);
+            var sprite = sceneNode?.Entities.FirstOrDefault() as Sprite;
+            return sprite?.Tag as Card;
         }
 
         private void OnMouseDrag(object sender, MouseEventArgs args)
@@ -111,20 +125,13 @@ namespace Demo.Solitare
             
             var cardAtlas = Content.Load<TextureAtlas>("cards-atlas");
 
-            //_allCards = new List<Card>();
-
             _table = new Table(cardAtlas[0].Size);
             _deck = NewDeck(cardAtlas);
             _deck.Shuffle(_random);
 
-            _sceneGraph.RootNode.Entities.Add(_table);
-
-            foreach (var card in _deck)
-            {
-                _sceneGraph.RootNode.Entities.Add(card);
-            }
+            var rootNode = _sceneGraph.RootNode;
+            rootNode.Entities.Add(_table);
             
-
             Deal();
         }
 
@@ -161,9 +168,8 @@ namespace Demo.Solitare
                 foreach (var rank in Rank.GetAll())
                 {
                     var frontRegion = cardAtlas[$"card{suit}{rank}"];
-                    var card = new Card(rank, suit, frontRegion, backRegion) { Position = _table.DrawSlot };
+                    var card = new Card(_sceneGraph.RootNode, rank, suit, frontRegion, backRegion) { Position = _table.DrawSlot };
                     deck.Add(card);
-                    //_allCards.Add(card);
                 }
             }
 

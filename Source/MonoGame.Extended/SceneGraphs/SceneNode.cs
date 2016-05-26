@@ -46,23 +46,27 @@ namespace MonoGame.Extended.SceneGraphs
         {
             Vector2 position, scale;
             float rotation;
-            GetWorldTransform().Decompose(out position, out rotation, out scale);
 
-            var rectangles = Entities
-                .Select(e =>
-                {
-                    var r = e.GetBoundingRectangle();
-                    r.Offset(position);
-                    return r;
-                })
-                .Concat(Children.Select(i => i.GetBoundingRectangle()))
-                .ToArray();
-            var x0 = rectangles.Min(r => r.Left);
-            var y0 = rectangles.Min(r => r.Top);
-            var x1 = rectangles.Max(r => r.Right);
-            var y1 = rectangles.Max(r => r.Bottom);
-            
-            return new RectangleF(x0, y0, x1 - x0, y1 - y0);
+            if (GetWorldTransform().Decompose(out position, out rotation, out scale))
+            {
+                var rectangles = Entities
+                    .Select(e =>
+                    {
+                        var r = e.GetBoundingRectangle();
+                        r.Offset(position);
+                        return r;
+                    })
+                    .Concat(Children.Select(i => i.GetBoundingRectangle()))
+                    .ToArray();
+                var x0 = rectangles.Min(r => r.Left);
+                var y0 = rectangles.Min(r => r.Top);
+                var x1 = rectangles.Max(r => r.Right);
+                var y1 = rectangles.Max(r => r.Bottom);
+
+                return new RectangleF(x0, y0, x1 - x0, y1 - y0);
+            }
+
+            return RectangleF.Empty;
         }
 
         public Matrix GetWorldTransform()
@@ -85,10 +89,12 @@ namespace MonoGame.Extended.SceneGraphs
             float offsetRotation;
             var worldTransform = GetWorldTransform();
 
-            worldTransform.Decompose(out offsetPosition, out offsetRotation, out offsetScale);
+            if (worldTransform.Decompose(out offsetPosition, out offsetRotation, out offsetScale))
+            {
 
-            foreach (var drawable in Entities.OfType<ISceneEntityDrawable>())
-                drawable.Draw(spriteBatch, offsetPosition, offsetRotation, offsetScale);
+                foreach (var drawable in Entities.OfType<ISceneEntityDrawable>())
+                    drawable.Draw(spriteBatch, offsetPosition, offsetRotation, offsetScale);
+            }
 
             foreach (var child in Children)
                 child.Draw(spriteBatch);
