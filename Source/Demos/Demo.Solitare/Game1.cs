@@ -9,7 +9,6 @@ using MonoGame.Extended.Animations;
 using MonoGame.Extended.Animations.Tweens;
 using MonoGame.Extended.InputListeners;
 using MonoGame.Extended.SceneGraphs;
-using MonoGame.Extended.Sprites;
 using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended.ViewportAdapters;
 
@@ -82,9 +81,7 @@ namespace Demo.Solitare
 
         private Card FindCardAt(Vector2 position)
         {
-            var sceneNode = _sceneGraph.GetSceneNodeAt(position);
-            var sprite = sceneNode?.Entities.FirstOrDefault() as Sprite;
-            return sprite?.Tag as Card;
+            return _sceneGraph.GetSceneNodeAt(position) as Card;
         }
 
         private void OnMouseDrag(object sender, MouseEventArgs args)
@@ -98,23 +95,20 @@ namespace Demo.Solitare
 
             if (card != null)
             {
-                var foundationSlot = TryDropOnFoundationSlots(args.Position, card);
+                var foundationSlot = TryDropOnFoundationSlots(card);
 
                 card.CreateTweenGroup()
                     .MoveTo(foundationSlot?.Position ?? _dragHandler.TargetStartPosition, 0.2f,
                         EasingFunctions.CubicEaseOut);
-
-                //_table
-                //var dropTarget = _allCards.FirstOrDefault(i => i.Contains(args.Position) && i != card);
             }
 
             _dragHandler.EndDrag();
         }
 
-        private FoundationSlot TryDropOnFoundationSlots(Point position, Card card)
+        private FoundationSlot TryDropOnFoundationSlots(Card card)
         {
             return _table.FoundationSlots
-                .Where(foundationSlot => foundationSlot.BoundingRectangle.Contains(position))
+                .Where(foundationSlot => foundationSlot.BoundingRectangle.Contains(card.Center))
                 .FirstOrDefault(foundationSlot => foundationSlot.TryDrop(card));
         }
 
@@ -132,6 +126,10 @@ namespace Demo.Solitare
             var rootNode = _sceneGraph.RootNode;
             rootNode.Entities.Add(_table);
             
+            foreach (var card in _deck)
+                rootNode.Children.Add(card);
+
+
             Deal();
         }
 
@@ -168,7 +166,7 @@ namespace Demo.Solitare
                 foreach (var rank in Rank.GetAll())
                 {
                     var frontRegion = cardAtlas[$"card{suit}{rank}"];
-                    var card = new Card(_sceneGraph.RootNode, rank, suit, frontRegion, backRegion) { Position = _table.DrawSlot };
+                    var card = new Card(rank, suit, frontRegion, backRegion) { Position = _table.DrawSlot };
                     deck.Add(card);
                 }
             }
@@ -197,17 +195,7 @@ namespace Demo.Solitare
             GraphicsDevice.Clear(Color.DarkGreen);
 
             _spriteBatch.Begin(blendState: BlendState.AlphaBlend, transformMatrix: _camera.GetViewMatrix());
-
-            //_table.Draw(_spriteBatch);
-
-            //for (var i = _allCards.Count - 1; i >= 0; i--)
-            //{
-            //    var card = _allCards[i];
-            //    card.Draw(_spriteBatch);
-            //}
-
             _sceneGraph.Draw(_spriteBatch);
-
             _spriteBatch.End();
 
             base.Draw(gameTime);

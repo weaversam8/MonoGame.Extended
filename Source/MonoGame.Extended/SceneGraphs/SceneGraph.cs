@@ -24,7 +24,7 @@ namespace MonoGame.Extended.SceneGraphs
 
             while (node != null && node.GetBoundingRectangle().Contains(x, y))
             {
-                var childNode = node.Children.FirstOrDefault(c => c.GetBoundingRectangle().Contains(x, y));
+                var childNode = node.Children.LastOrDefault(c => c.GetBoundingRectangle().Contains(x, y));
 
                 if(childNode != null)
                     node = childNode;

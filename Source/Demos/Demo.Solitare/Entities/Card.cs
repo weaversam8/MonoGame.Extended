@@ -8,14 +8,14 @@ using MonoGame.Extended.TextureAtlases;
 
 namespace Demo.Solitare.Entities
 {
-    public class Card : IMovable
+    public class Card : SceneNode
     {
         private readonly TextureRegion2D _frontRegion;
         private readonly TextureRegion2D _backRegion;
-        private readonly SceneNode _sceneNode;
         private readonly Sprite _sprite;
 
-        public Card(SceneNode parentNode, Rank rank, Suit suit, TextureRegion2D frontRegion, TextureRegion2D backRegion)
+        public Card(Rank rank, Suit suit, TextureRegion2D frontRegion, TextureRegion2D backRegion)
+            : base($"{rank} {suit}")
         {
             Suit = suit;
             Rank = rank;
@@ -28,9 +28,7 @@ namespace Demo.Solitare.Entities
                 Position = new Vector2(_frontRegion.Width / 2f, _frontRegion.Height / 2f),
                 Tag = this
             };
-            _sceneNode = new SceneNode($"{Rank} {Suit}");
-            _sceneNode.Entities.Add(_sprite);
-            parentNode.Children.Add(_sceneNode);
+            Entities.Add(_sprite);
         }
 
         public Rank Rank { get; }
@@ -39,17 +37,13 @@ namespace Demo.Solitare.Entities
         public SuitColor Color => Suit.Color;
         public int Value => Rank.Value;
 
-        public Vector2 Position
-        {
-            get { return _sceneNode.Position; }
-            set { _sceneNode.Position = value; }
-        }
+        public Vector2 Center => Position + GetBoundingRectangle().Size/2f;
 
         public void Flip()
         {
             const float duration = 0.1f;
-            _sceneNode
-                .CreateTweenChain()
+            
+            this.CreateTweenChain()
                 .ScaleTo(new Vector2(0.0f, 1.0f), duration, EasingFunctions.QuadraticEaseIn)
                 .Run(() =>
                 {
@@ -59,20 +53,10 @@ namespace Demo.Solitare.Entities
                 .ScaleTo(Vector2.One, duration, EasingFunctions.QuadraticEaseOut);
         }
 
-        public override string ToString()
-        {
-            return _sceneNode.Name;
-        }
-
         public bool Contains(Point point)
         {
             return new Rectangle((int)Position.X, (int)Position.Y, _frontRegion.Size.Width, _frontRegion.Size.Height)
                 .Contains(point);
-        }
-
-        public RectangleF GetBoundingRectangle()
-        {
-            return new RectangleF(Position, new Size(_frontRegion.Width, _frontRegion.Height));
         }
     }
 }
