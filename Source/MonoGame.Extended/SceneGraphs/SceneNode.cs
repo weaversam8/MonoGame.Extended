@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Shapes;
@@ -44,6 +45,9 @@ namespace MonoGame.Extended.SceneGraphs
 
         public RectangleF GetBoundingRectangle()
         {
+            if(!Entities.Any())
+                return RectangleF.Empty;
+
             Vector2 position, scale;
             float rotation;
 
@@ -71,7 +75,8 @@ namespace MonoGame.Extended.SceneGraphs
 
         public Matrix GetWorldTransform()
         {
-            return Parent == null ? Matrix.Identity : Matrix.Multiply(GetLocalTransform(), Parent.GetWorldTransform());
+            var localTransform = GetLocalTransform();
+            return Parent == null ? localTransform : Matrix.Multiply(localTransform, Parent.GetWorldTransform());
         }
 
         public Matrix GetLocalTransform()
@@ -83,6 +88,24 @@ namespace MonoGame.Extended.SceneGraphs
             return Matrix.Multiply(tempMatrix, translationMatrix);
         }
 
+        public SceneNode FindNodeAt(float x, float y)
+        {
+            for (var i = Children.Count - 1; i >= 0; i--)
+            {
+                var childNode = Children[i].FindNodeAt(x, y);
+
+                if (childNode != null)
+                    return childNode;
+            }
+
+            return GetBoundingRectangle().Contains(x, y) ? this : null;
+        }
+
+        public SceneNode FindNodeAt(Vector2 position)
+        {
+            return FindNodeAt(position.X, position.Y);
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             Vector2 offsetPosition, offsetScale;
@@ -91,7 +114,6 @@ namespace MonoGame.Extended.SceneGraphs
 
             if (worldTransform.Decompose(out offsetPosition, out offsetRotation, out offsetScale))
             {
-
                 foreach (var drawable in Entities.OfType<ISceneEntityDrawable>())
                     drawable.Draw(spriteBatch, offsetPosition, offsetRotation, offsetScale);
             }

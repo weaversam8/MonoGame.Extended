@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using MonoGame.Extended;
 using MonoGame.Extended.Animations.Tweens;
 using MonoGame.Extended.SceneGraphs;
-using MonoGame.Extended.Shapes;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.TextureAtlases;
 

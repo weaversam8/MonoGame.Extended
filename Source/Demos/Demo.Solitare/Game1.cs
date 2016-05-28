@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Demo.Solitare.Entities;
 using Microsoft.Xna.Framework;
@@ -24,12 +25,14 @@ namespace Demo.Solitare
         private Table _table;
         private readonly DragHandler<Card> _dragHandler;
         private readonly Random _random;
-        private readonly SceneGraph _sceneGraph;
+        private readonly SceneNode _rootNode;
+
+        private TableauPile _tableauPile;
 
         public Game1()
         {
             _random = new Random();
-            _sceneGraph = new SceneGraph();
+            _rootNode = new SceneNode();
             _dragHandler = new DragHandler<Card>();
             _graphicsDeviceManager = new GraphicsDeviceManager(this)
             {
@@ -53,11 +56,48 @@ namespace Demo.Solitare
             mouseListener.MouseDragStart += OnMouseDragStart;
             mouseListener.MouseDrag += OnMouseDrag;
             mouseListener.MouseDragEnd += OnMouseDragEnd;
+            //mouseListener.MouseMoved += (sender, args) =>
+            //{
+            //    var card = FindCardAt(args.Position.ToVector2());
+
+            //    if (card != null)
+            //        Trace.WriteLine($"{card} at {args.Position}");
+            //};
 
             Components.Add(new AnimationComponent(this));
             Components.Add(mouseListener);
 
             base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            
+            var cardAtlas = Content.Load<TextureAtlas>("cards-atlas");
+
+            _table = new Table(cardAtlas[0].Size);
+            _deck = NewDeck(cardAtlas);
+            _deck.Shuffle(_random);
+
+            //_rootNode.Entities.Add(_table);
+
+            //foreach (var card in _deck)
+            //    _rootNode.Children.Add(card);
+
+            //Deal();
+
+            _tableauPile = new TableauPile(new Vector2(100, 100));
+
+            for (var i = 0; i < 5; i++)
+            {
+                var card = _deck.Draw();
+
+                if(i >= 3)
+                    card.Flip();
+
+                _tableauPile.Add(card);
+            }
         }
 
         private void OnMouseClicked(object sender, MouseEventArgs mouseEventArgs)
@@ -81,7 +121,7 @@ namespace Demo.Solitare
 
         private Card FindCardAt(Vector2 position)
         {
-            return _sceneGraph.GetSceneNodeAt(position) as Card;
+            return _tableauPile.FindCardAt(position); //_rootNode.FindNodeAt(position) as Card;
         }
 
         private void OnMouseDrag(object sender, MouseEventArgs args)
@@ -110,27 +150,6 @@ namespace Demo.Solitare
             return _table.FoundationSlots
                 .Where(foundationSlot => foundationSlot.BoundingRectangle.Contains(card.Center))
                 .FirstOrDefault(foundationSlot => foundationSlot.TryDrop(card));
-        }
-
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            
-            var cardAtlas = Content.Load<TextureAtlas>("cards-atlas");
-
-            _table = new Table(cardAtlas[0].Size);
-            _deck = NewDeck(cardAtlas);
-            _deck.Shuffle(_random);
-
-            var rootNode = _sceneGraph.RootNode;
-            rootNode.Entities.Add(_table);
-            
-            foreach (var card in _deck)
-                rootNode.Children.Add(card);
-
-
-            Deal();
         }
 
         private void Deal()
@@ -195,7 +214,8 @@ namespace Demo.Solitare
             GraphicsDevice.Clear(Color.DarkGreen);
 
             _spriteBatch.Begin(blendState: BlendState.AlphaBlend, transformMatrix: _camera.GetViewMatrix());
-            _sceneGraph.Draw(_spriteBatch);
+            //_spriteBatch.Draw(_rootNode);
+            _tableauPile.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);

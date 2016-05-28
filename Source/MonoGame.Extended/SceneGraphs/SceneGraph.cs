@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoGame.Extended.SceneGraphs
 {
+    [Obsolete("Just create a SceneNode")]
     public class SceneGraph
     {
         public SceneGraph()
@@ -20,19 +22,7 @@ namespace MonoGame.Extended.SceneGraphs
 
         public SceneNode GetSceneNodeAt(float x, float y)
         {
-            var node = RootNode;
-
-            while (node != null && node.GetBoundingRectangle().Contains(x, y))
-            {
-                var childNode = node.Children.LastOrDefault(c => c.GetBoundingRectangle().Contains(x, y));
-
-                if(childNode != null)
-                    node = childNode;
-                else
-                    return node;
-            }
-
-            return null;
+            return RootNode.FindNodeAt(x, y);
         }
 
         public SceneNode GetSceneNodeAt(Vector2 position)

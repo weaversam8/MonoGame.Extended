@@ -20,7 +20,7 @@ namespace Demo.SceneGraphs
         private SceneNode _hoveredNode;
         private SceneNode _leftWheelNode;
         private SceneNode _rightWheelNode;
-        private SceneGraph _sceneGraph;
+        private SceneNode _rootNode;
 
         private float _speed = 0.15f;
         private SpriteBatch _spriteBatch;
@@ -61,7 +61,7 @@ namespace Demo.SceneGraphs
             {
                 Zoom = 2.0f
             };
-            _sceneGraph = new SceneGraph();
+            _rootNode = new SceneNode();
 
             var carHullTexture = Content.Load<Texture2D>("car-hull");
             var carHullSprite = new Sprite(carHullTexture);
@@ -79,7 +79,7 @@ namespace Demo.SceneGraphs
 
             _carNode.Children.Add(_rightWheelNode);
             _carNode.Children.Add(_leftWheelNode);
-            _sceneGraph.RootNode.Children.Add(_carNode);
+            _rootNode.Children.Add(_carNode);
         }
 
         protected override void UnloadContent()
@@ -121,7 +121,7 @@ namespace Demo.SceneGraphs
             }
 
             var worldPosition = _camera.ScreenToWorld(mouseState.X, mouseState.Y);
-            _hoveredNode = _sceneGraph.GetSceneNodeAt(worldPosition);
+            _hoveredNode = _rootNode.FindNodeAt(worldPosition);
 
             base.Update(gameTime);
         }
@@ -131,7 +131,7 @@ namespace Demo.SceneGraphs
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.GetViewMatrix());
-            _spriteBatch.Draw(_sceneGraph);
+            _spriteBatch.Draw(_rootNode);
             _spriteBatch.FillRectangle(0, 266, 800, 240, Color.DarkOliveGreen);
             _spriteBatch.FillRectangle(200, 0, 5, 480, Color.DarkOliveGreen);
             _spriteBatch.FillRectangle(595, 0, 5, 480, Color.DarkOliveGreen);
