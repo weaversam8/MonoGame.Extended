@@ -83,19 +83,26 @@ namespace Demo.Solitare
 
             //Deal();
 
-            foreach (var tableauPile in _table.TableauPiles)
+            for (var k = 0; k < _table.TableauPiles.Length; k++)
             {
-                var card = _deck.Draw();
-                card.Flip();
-                tableauPile.Add(card);
+                for (var i = k; i < _table.TableauPiles.Length; i++)
+                {
+                    var tableauPile = _table.TableauPiles[i];
+                    var card = _deck.Draw();
+
+                    if (i == k)
+                        card.Flip();
+
+                    tableauPile.Add(card);
+                }
             }
 
-            foreach (var foundationPile in _table.FoundationPiles)
-            {
-                var card = _deck.Draw();
-                card.Flip();
-                foundationPile.Add(card);
-            }
+            //foreach (var foundationPile in _table.FoundationPiles)
+            //{
+            //    var card = _deck.Draw();
+            //    card.Flip();
+            //    foundationPile.Add(card);
+            //}
 
             for (var i = 0; i < 3; i++)
             {
