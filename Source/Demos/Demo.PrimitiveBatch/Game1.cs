@@ -47,7 +47,7 @@ namespace Demo.PrimitiveBatch
             // get a reference to the graphics device
             var graphicsDevice = GraphicsDevice;
 
-            // viewport: the dimensions and properties of the drawable surface
+            // Viewport: the dimensions and properties of the drawable surface
             var viewport = graphicsDevice.Viewport;
 
             // load the custom effect for the primitives

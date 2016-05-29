@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using Demo.Solitare.Entities;
+using Demo.Solitare.Entities.Piles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -25,14 +25,10 @@ namespace Demo.Solitare
         private Table _table;
         private readonly DragHandler<Card> _dragHandler;
         private readonly Random _random;
-        private readonly SceneNode _rootNode;
-
-        private TableauPile _tableauPile;
 
         public Game1()
         {
             _random = new Random();
-            _rootNode = new SceneNode();
             _dragHandler = new DragHandler<Card>();
             _graphicsDeviceManager = new GraphicsDeviceManager(this)
             {
@@ -87,16 +83,30 @@ namespace Demo.Solitare
 
             //Deal();
 
-            _tableauPile = new TableauPile(new Vector2(100, 100));
-
-            for (var i = 0; i < 5; i++)
+            foreach (var tableauPile in _table.TableauPiles)
             {
                 var card = _deck.Draw();
+                card.Flip();
+                tableauPile.Add(card);
+            }
 
-                if(i >= 3)
-                    card.Flip();
+            foreach (var foundationPile in _table.FoundationPiles)
+            {
+                var card = _deck.Draw();
+                card.Flip();
+                foundationPile.Add(card);
+            }
 
-                _tableauPile.Add(card);
+            for (var i = 0; i < 3; i++)
+            {
+                var card = _deck.Draw();
+                card.Flip();
+                _table.WastePile.Add(card);
+            }
+
+            foreach (var card in _deck)
+            {
+                _table.StockPile.Add(card);
             }
         }
 
@@ -121,7 +131,7 @@ namespace Demo.Solitare
 
         private Card FindCardAt(Vector2 position)
         {
-            return _tableauPile.FindCardAt(position); //_rootNode.FindNodeAt(position) as Card;
+            return _table.StockPile.FindCardAt(position); //_rootNode.FindNodeAt(position) as Card;
         }
 
         private void OnMouseDrag(object sender, MouseEventArgs args)
@@ -133,47 +143,47 @@ namespace Demo.Solitare
         {
             var card = _dragHandler.Target;
 
-            if (card != null)
-            {
-                var foundationSlot = TryDropOnFoundationSlots(card);
+            //if (card != null)
+            //{
+            //    var foundationSlot = TryDropOnFoundationSlots(card);
 
-                card.CreateTweenGroup()
-                    .MoveTo(foundationSlot?.Position ?? _dragHandler.TargetStartPosition, 0.2f,
-                        EasingFunctions.CubicEaseOut);
-            }
+            //    card.CreateTweenGroup()
+            //        .MoveTo(foundationSlot?.Position ?? _dragHandler.TargetStartPosition, 0.2f,
+            //            EasingFunctions.CubicEaseOut);
+            //}
 
             _dragHandler.EndDrag();
         }
 
-        private FoundationSlot TryDropOnFoundationSlots(Card card)
-        {
-            return _table.FoundationSlots
-                .Where(foundationSlot => foundationSlot.BoundingRectangle.Contains(card.Center))
-                .FirstOrDefault(foundationSlot => foundationSlot.TryDrop(card));
-        }
+        //private FoundationSlot TryDropOnFoundationSlots(Card card)
+        //{
+        //    return _table.FoundationSlots
+        //        .Where(foundationSlot => foundationSlot.BoundingRectangle.Contains(card.Center))
+        //        .FirstOrDefault(foundationSlot => foundationSlot.TryDrop(card));
+        //}
 
-        private void Deal()
-        {
-            var delay = 0.4f;
+        //private void Deal()
+        //{
+        //    var delay = 0.4f;
 
-            for (var k = 0; k < _table.TableauSlots.Length; k++)
-            {
-                for (var i = k; i < _table.TableauSlots.Length; i++)
-                {
-                    var tableauSlot = _table.TableauSlots[i];
-                    var card = _deck.Draw();
+        //    for (var k = 0; k < _table.TableauSlots.Length; k++)
+        //    {
+        //        for (var i = k; i < _table.TableauSlots.Length; i++)
+        //        {
+        //            var tableauSlot = _table.TableauSlots[i];
+        //            var card = _deck.Draw();
 
-                    var tween = card.CreateTweenChain()
-                        .Delay(delay)
-                        .MoveTo(tableauSlot + new Vector2(0, k * 40), 0.2f, EasingFunctions.CubicEaseOut);
+        //            var tween = card.CreateTweenChain()
+        //                .Delay(delay)
+        //                .MoveTo(tableauSlot + new Vector2(0, k * 40), 0.2f, EasingFunctions.CubicEaseOut);
 
-                    if (i == k)
-                        tween.Run(card.Flip);
+        //            if (i == k)
+        //                tween.Run(card.Flip);
 
-                    delay += 0.2f;
-                }
-            }
-        }
+        //            delay += 0.2f;
+        //        }
+        //    }
+        //}
 
         private Deck<Card> NewDeck(TextureAtlas cardAtlas)
         {
@@ -185,7 +195,7 @@ namespace Demo.Solitare
                 foreach (var rank in Rank.GetAll())
                 {
                     var frontRegion = cardAtlas[$"card{suit}{rank}"];
-                    var card = new Card(rank, suit, frontRegion, backRegion) { Position = _table.DrawSlot };
+                    var card = new Card(rank, suit, frontRegion, backRegion);// { Position = _table.DrawSlot };
                     deck.Add(card);
                 }
             }
@@ -215,7 +225,9 @@ namespace Demo.Solitare
 
             _spriteBatch.Begin(blendState: BlendState.AlphaBlend, transformMatrix: _camera.GetViewMatrix());
             //_spriteBatch.Draw(_rootNode);
-            _tableauPile.Draw(_spriteBatch);
+            //_wastePile.Draw(_spriteBatch);
+            //_tableauPile.Draw(_spriteBatch);
+            _table.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);

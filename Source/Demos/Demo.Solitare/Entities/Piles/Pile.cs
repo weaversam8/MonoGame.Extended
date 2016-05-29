@@ -4,25 +4,24 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.SceneGraphs;
 
-namespace Demo.Solitare.Entities
+namespace Demo.Solitare.Entities.Piles
 {
-    public class TableauPile
+    public abstract class Pile
     {
-        private readonly SceneNode _sceneNode = new SceneNode();
-
-        public TableauPile(Vector2 position)
+        protected Pile(Vector2 position)
         {
-            _sceneNode.Position = position;
+            SceneNode = new SceneNode() {Position = position};
         }
 
-        public void Add(Card card)
+        protected SceneNode SceneNode { get; }
+        public Vector2 Position => SceneNode.Position;
+
+        public virtual void Add(Card card)
         {
             if (card.Parent != null)
                 throw new InvalidOperationException("A card cannot be added to a pile until it's removed from another pile");
 
-            card.Position = new Vector2(0, 40* _sceneNode.Children.Count);
-
-            var children = _sceneNode.Children;
+            var children = SceneNode.Children;
 
             while (children.Any())
             {
@@ -31,15 +30,15 @@ namespace Demo.Solitare.Entities
 
             children.Add(card);
         }
-
+        
         public Card FindCardAt(Vector2 position)
         {
-            return _sceneNode.FindNodeAt(position) as Card;
+            return SceneNode.FindNodeAt(position) as Card;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            _sceneNode.Draw(spriteBatch);
+            SceneNode.Draw(spriteBatch);
         }
     }
 }

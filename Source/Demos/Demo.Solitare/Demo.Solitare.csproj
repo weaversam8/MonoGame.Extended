@@ -41,13 +41,17 @@
     <Compile Include="Entities\CardFacing.cs" />
     <Compile Include="Entities\Deck.cs" />
     <Compile Include="Entities\FoundationSlot.cs" />
+    <Compile Include="Entities\Piles\FoundationPile.cs" />
+    <Compile Include="Entities\Piles\Pile.cs" />
+    <Compile Include="Entities\Piles\StockPile.cs" />
+    <Compile Include="Entities\Piles\WastePile.cs" />
     <Compile Include="Entities\Rank.cs" />
     <Compile Include="Entities\Suit.cs" />
     <Compile Include="Entities\Table.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Entities\TableauPile.cs" />
+    <Compile Include="Entities\Piles\TableauPile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

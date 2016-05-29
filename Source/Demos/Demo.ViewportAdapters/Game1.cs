@@ -35,22 +35,22 @@ namespace Demo.ViewportAdapters
         {
             base.Initialize();
 
-            // the default viewport adapater is the simplest, it doesn't do any scaling at all
+            // the default Viewport adapater is the simplest, it doesn't do any scaling at all
             // but is used by a Camera2D if no other adapter is specified.
             // this is often useful if you have a game with a large map and you want the player to see 
             // more of the map on a bigger screen.
             _defaultViewportAdapter = new DefaultViewportAdapter(GraphicsDevice);
 
-            // the scaling viewport adapter stretches the output to fit in the viewport, ignoring the aspect ratio
+            // the scaling Viewport adapter stretches the output to fit in the Viewport, ignoring the aspect ratio
             // this works well if the aspect ratio doesn't change a lot between devices 
             // or you don't like the black bars of the boxing adapter
             _scalingViewportAdapter = new ScalingViewportAdapter(GraphicsDevice, 800, 480);
 
-            // the boxing viewport adapter uses letterboxing or pillarboxing to maintain aspect ratio
+            // the boxing Viewport adapter uses letterboxing or pillarboxing to maintain aspect ratio
             // it's a little more complicated and needs to listen to the window client size changing event
             _boxingViewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 800, 480, 88, 70);
 
-            // typically you'll only ever want to use one viewport adapter for a game, but in this sample we'll be 
+            // typically you'll only ever want to use one Viewport adapter for a game, but in this sample we'll be 
             // switching between them.
             _currentViewportAdapter = _boxingViewportAdapter;
         }
@@ -84,15 +84,15 @@ namespace Demo.ViewportAdapters
             if (keyboardState.IsKeyDown(Keys.B))
                 _currentViewportAdapter = _boxingViewportAdapter;
 
-            // if we've changed the viewport adapter mid game we need to reset the viewport back to the window size
-            // this wouldn't normally be required if you're only ever using one viewport adapter
+            // if we've changed the Viewport adapter mid game we need to reset the Viewport back to the window size
+            // this wouldn't normally be required if you're only ever using one Viewport adapter
             if (previousViewportAdapter != _currentViewportAdapter)
             {
                 GraphicsDevice.Viewport = new Viewport(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height);
                 _currentViewportAdapter.Reset();
             }
 
-            // the viewport adapters can also scale mouse and touch input to the virtual resolution
+            // the Viewport adapters can also scale mouse and touch input to the virtual resolution
             _mousePosition = _currentViewportAdapter.PointToScreen(mouseState.X, mouseState.Y);
 
             base.Update(gameTime);
@@ -103,7 +103,7 @@ namespace Demo.ViewportAdapters
             GraphicsDevice.Clear(Color.Black);
 
             // when rendering sprites, you'll always work within the bounds of the virtual width and height
-            // specified when setting up the viewport adapter. The default MonoGame window is 800x480.
+            // specified when setting up the Viewport adapter. The default MonoGame window is 800x480.
             var destinationRectangle = new Rectangle(0, 0, 800, 480);
 
             _spriteBatch.Begin(transformMatrix: _currentViewportAdapter.GetScaleMatrix());

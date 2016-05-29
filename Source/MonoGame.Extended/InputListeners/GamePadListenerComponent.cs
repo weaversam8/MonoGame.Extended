@@ -20,7 +20,7 @@ namespace MonoGame.Extended.InputListeners
         /// Initialises a <see cref="GamePadListenerComponent"/>.
         /// </summary>
         /// <param name="game">The game instance</param>
-        /// <param name="viewportAdapter">The viewport adapter used for scaling input values</param>
+        /// <param name="viewportAdapter">The Viewport adapter used for scaling input values</param>
         /// <param name="triggerDownTreshold"></param>
         /// <param name="thumbstickDownTreshold"></param>
         /// <param name="repeatInitialDelay"></param>

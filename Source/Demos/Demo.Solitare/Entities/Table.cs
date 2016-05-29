@@ -1,12 +1,12 @@
+using Demo.Solitare.Entities.Piles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using MonoGame.Extended.SceneGraphs;
 using MonoGame.Extended.Shapes;
 
 namespace Demo.Solitare.Entities
 {
-    public class Table : ISceneEntityDrawable
+    public class Table
     {
         private const int _margin = 30;
         private readonly int _offset;
@@ -16,34 +16,44 @@ namespace Demo.Solitare.Entities
         {
             _offset = cardSize.Width + _margin;
             _cardSize = cardSize;
-            FoundationSlots = SetupFoundationSlots(4);
-            TableauSlots = SetupTableauSlots(7);
-            DrawSlot = new Vector2(_margin, _margin);
+
+            FoundationPiles = SetupFoundationSlots(4);
+            TableauPiles = SetupTableauSlots(7);
+            StockPile = new StockPile(new Vector2(_margin, _margin));
+            WastePile = new WastePile(new Vector2(_margin * 2 + _cardSize.Width, _margin));
         }
 
-        public Vector2 DrawSlot { get; }
-        public Vector2[] TableauSlots { get; }
-        public FoundationSlot[] FoundationSlots { get; }
+        public StockPile StockPile { get; }
+        public FoundationPile[] FoundationPiles { get; }
+        public TableauPile[] TableauPiles { get; }
+        public WastePile WastePile { get; }
 
-        private Vector2[] SetupTableauSlots(int count)
+        //public Vector2 DrawSlot { get; }
+        //public Vector2[] TableauSlots { get; }
+        //public FoundationSlot[] FoundationSlots { get; }
+
+        private TableauPile[] SetupTableauSlots(int count)
         {
-            var slots = new Vector2[count];
+            var slots = new TableauPile[count];
 
             for (var i = 0; i < count; i++)
-                slots[i] = new Vector2(_margin + i * _offset, _margin * 2 + _cardSize.Height);
+            {
+                var position = new Vector2(_margin + i*_offset, _margin*2 + _cardSize.Height);
+                slots[i] = new TableauPile(position);
+            }
 
             return slots;
         }
 
-        private FoundationSlot[] SetupFoundationSlots(int count)
+        private FoundationPile[] SetupFoundationSlots(int count)
         {
-            var slots = new FoundationSlot[count];
+            var slots = new FoundationPile[count];
 
             for (var i = 0; i < count; i++)
             {
                 var position = new Vector2(_margin + (i + 3)*_offset, _margin);
                 var size = _cardSize;
-                slots[i] = new FoundationSlot(position, size);
+                slots[i] = new FoundationPile(position); //, size);
             }
 
             return slots;
@@ -54,15 +64,24 @@ namespace Demo.Solitare.Entities
             return RectangleF.Empty;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 offsetPosition, float offsetRotation, Vector2 offsetScale)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (var foundationSlot in FoundationSlots)
-                spriteBatch.DrawRectangle(foundationSlot.Position, foundationSlot.Size, Color.DarkGoldenrod, 3);
+            foreach (var foundationPile in FoundationPiles)
+            {
+                spriteBatch.DrawRectangle(foundationPile.Position, _cardSize, Color.DarkGoldenrod, 3);
+                foundationPile.Draw(spriteBatch);
+            }
 
-            foreach (var tableauSlot in TableauSlots)
-                spriteBatch.DrawRectangle(tableauSlot, _cardSize, Color.DarkGoldenrod);
+            foreach (var tableauPile in TableauPiles)
+            {
+                spriteBatch.DrawRectangle(tableauPile.Position, _cardSize, Color.DarkGoldenrod);
+                tableauPile.Draw(spriteBatch);
+            }
 
-            spriteBatch.DrawRectangle(DrawSlot, _cardSize, Color.DarkGoldenrod);
+            spriteBatch.DrawRectangle(StockPile.Position, _cardSize, Color.DarkGoldenrod);
+            StockPile.Draw(spriteBatch);
+
+            WastePile.Draw(spriteBatch);
         }
     }
 }
