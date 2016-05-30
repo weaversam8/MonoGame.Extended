@@ -32,8 +32,8 @@ namespace Demo.Solitare
             _dragHandler = new DragHandler<Card>();
             _graphicsDeviceManager = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1280,
-                PreferredBackBufferHeight = 960
+                PreferredBackBufferWidth = 1024,
+                PreferredBackBufferHeight = 768
             };
 
             Content.RootDirectory = "Content";
@@ -43,8 +43,7 @@ namespace Demo.Solitare
 
         protected override void Initialize()
         {
-            var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 
-                _graphicsDeviceManager.PreferredBackBufferWidth, _graphicsDeviceManager.PreferredBackBufferHeight);
+            var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 1280, 960);
             _camera = new Camera2D(viewportAdapter);
 
             var mouseListener = new MouseListenerComponent(this, viewportAdapter);
@@ -54,7 +53,7 @@ namespace Demo.Solitare
             mouseListener.MouseDragEnd += OnMouseDragEnd;
             //mouseListener.MouseMoved += (sender, args) =>
             //{
-            //    var card = FindCardAt(args.Position.ToVector2());
+            //    var card = TryDealMoreCards(args.Position.ToVector2());
 
             //    if (card != null)
             //        Trace.WriteLine($"{card} at {args.Position}");
@@ -119,9 +118,9 @@ namespace Demo.Solitare
 
         private void OnMouseClicked(object sender, MouseEventArgs mouseEventArgs)
         {
-            var card = FindCardAt(mouseEventArgs.Position.ToVector2());
+            var position = mouseEventArgs.Position.ToVector2();
 
-            card?.Flip();
+            _table.TryDealMoreCards(position);
         }
 
         private void OnMouseDragStart(object sender, MouseEventArgs args)
@@ -129,16 +128,11 @@ namespace Demo.Solitare
             if (args.Button == MouseButton.Left)
             {
                 var position = args.Position.ToVector2();
-                var card = FindCardAt(position);
+                var card = _table.FindCardAt(position);
 
                 if (card != null && card.Facing == CardFacing.Up)
                     _dragHandler.StartDrag(args.Position, card);
             }
-        }
-
-        private Card FindCardAt(Vector2 position)
-        {
-            return _table.StockPile.FindCardAt(position); //_rootNode.FindNodeAt(position) as Card;
         }
 
         private void OnMouseDrag(object sender, MouseEventArgs args)
@@ -150,14 +144,14 @@ namespace Demo.Solitare
         {
             var card = _dragHandler.Target;
 
-            //if (card != null)
-            //{
-            //    var foundationSlot = TryDropOnFoundationSlots(card);
+            if (card != null)
+            {
+                //var foundationSlot = TryDropOnFoundationSlots(card);
 
-            //    card.CreateTweenGroup()
-            //        .MoveTo(foundationSlot?.Position ?? _dragHandler.TargetStartPosition, 0.2f,
-            //            EasingFunctions.CubicEaseOut);
-            //}
+                card.CreateTweenGroup()
+                    .MoveTo(_dragHandler.TargetStartPosition, 0.2f,
+                        EasingFunctions.CubicEaseOut);
+            }
 
             _dragHandler.EndDrag();
         }

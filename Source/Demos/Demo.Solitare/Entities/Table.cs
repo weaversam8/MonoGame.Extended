@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using Demo.Solitare.Entities.Piles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,7 +22,7 @@ namespace Demo.Solitare.Entities
 
             FoundationPiles = SetupFoundationSlots(4);
             TableauPiles = SetupTableauSlots(7);
-            StockPile = new StockPile(new Vector2(_margin, _margin));
+            StockPile = new StockPile(new Vector2(_margin, _margin), cardSize);
             WastePile = new WastePile(new Vector2(_margin * 2 + _cardSize.Width, _margin));
         }
 
@@ -28,9 +31,21 @@ namespace Demo.Solitare.Entities
         public TableauPile[] TableauPiles { get; }
         public WastePile WastePile { get; }
 
-        //public Vector2 DrawSlot { get; }
-        //public Vector2[] TableauSlots { get; }
-        //public FoundationSlot[] FoundationSlots { get; }
+        public IEnumerable<Pile> Piles
+        {
+            get
+            {
+                yield return StockPile;
+
+                foreach (var foundationPile in FoundationPiles)
+                    yield return foundationPile;
+
+                foreach (var tableauPile in TableauPiles)
+                    yield return tableauPile;
+
+                yield return WastePile;
+            }
+        } 
 
         private TableauPile[] SetupTableauSlots(int count)
         {
@@ -82,6 +97,36 @@ namespace Demo.Solitare.Entities
             StockPile.Draw(spriteBatch);
 
             WastePile.Draw(spriteBatch);
+        }
+
+        public Card FindCardAt(Vector2 position)
+        {
+            return Piles.Select(pile => pile.FindCardAt(position))
+                .FirstOrDefault(card => card != null);
+        }
+
+        public bool TryDealMoreCards(Vector2 position)
+        {
+            if (StockPile.BoundingRectangle.Contains(position))
+            {
+                if (StockPile.IsEmpty)
+                {
+                    // put waste pile back into stock pile
+                }
+                else
+                {
+                    var card = StockPile.TakeTop();
+
+                    if (card != null)
+                    {
+                        card.Flip();
+                        WastePile.Add(card);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

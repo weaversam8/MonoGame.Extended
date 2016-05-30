@@ -10,7 +10,7 @@ namespace Demo.Solitare.Entities.Piles
     {
         protected Pile(Vector2 position)
         {
-            SceneNode = new SceneNode() {Position = position};
+            SceneNode = new SceneNode {Position = position};
         }
 
         protected SceneNode SceneNode { get; }
@@ -24,13 +24,33 @@ namespace Demo.Solitare.Entities.Piles
             var children = SceneNode.Children;
 
             while (children.Any())
-            {
                 children = children[0].Children;
-            }
 
             children.Add(card);
         }
-        
+
+        public Card TakeTop()
+        {
+            var children = SceneNode.Children;
+
+            while (children.Any())
+            {
+                var firstChild = children[0];
+
+                if (firstChild.Children.Any())
+                {
+                    children = firstChild.Children;
+                }
+                else
+                {
+                    children.Remove(firstChild);
+                    return firstChild as Card;
+                }
+            }
+
+            return null;
+        }
+
         public Card FindCardAt(Vector2 position)
         {
             return SceneNode.FindNodeAt(position) as Card;

@@ -13,7 +13,9 @@ namespace Demo.Solitare.Entities.Piles
 
         public override void Add(Card card)
         {
-            card.Position = new Vector2(0, 40 * SceneNode.Children.Count);
+            if(SceneNode.Children.Any())
+                card.Position = new Vector2(0, 40);
+
             base.Add(card);
         }
     }
