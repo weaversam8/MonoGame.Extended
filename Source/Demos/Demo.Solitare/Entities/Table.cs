@@ -120,7 +120,7 @@ namespace Demo.Solitare.Entities
                     if (card != null)
                     {
                         card.Flip();
-                        WastePile.Add(card);
+                        WastePile.Place(card);
                         return true;
                     }
                 }

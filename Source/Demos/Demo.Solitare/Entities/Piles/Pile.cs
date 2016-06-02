@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,17 +15,18 @@ namespace Demo.Solitare.Entities.Piles
         protected SceneNode SceneNode { get; }
         public Vector2 Position => SceneNode.Position;
 
-        public virtual void Add(Card card)
-        {
-            if (card.Parent != null)
-                throw new InvalidOperationException("A card cannot be added to a pile until it's removed from another pile");
+        protected abstract SceneNode CreateChildNode(bool firstChild);
 
+        public virtual void Place(Card card)
+        {
             var children = SceneNode.Children;
 
             while (children.Any())
                 children = children[0].Children;
 
-            children.Add(card);
+            var sceneNode = CreateChildNode(!SceneNode.Children.Any());
+            sceneNode.Attach(card);
+            children.Add(sceneNode);
         }
 
         public Card TakeTop()
@@ -44,7 +44,7 @@ namespace Demo.Solitare.Entities.Piles
                 else
                 {
                     children.Remove(firstChild);
-                    return firstChild as Card;
+                    return firstChild.Entities.FirstOrDefault() as Card;
                 }
             }
 
@@ -53,7 +53,8 @@ namespace Demo.Solitare.Entities.Piles
 
         public Card FindCardAt(Vector2 position)
         {
-            return SceneNode.FindNodeAt(position) as Card;
+            var node = SceneNode.FindNodeAt(position);
+            return node?.Entities.FirstOrDefault() as Card;
         }
 
         public void Draw(SpriteBatch spriteBatch)

@@ -69,17 +69,17 @@ namespace Demo.SceneGraphs
             var carWheelSprite = new Sprite(carWheelTexture);
 
             _carNode = new SceneNode("car-hull", viewportAdapter.Center.ToVector2());
-            _carNode.Entities.Add(carHullSprite);
+            _carNode.Attach(carHullSprite);
 
             _leftWheelNode = new SceneNode("left-wheel", new Vector2(-29, 17));
-            _leftWheelNode.Entities.Add(carWheelSprite);
+            _leftWheelNode.Attach(carWheelSprite);
 
             _rightWheelNode = new SceneNode("right-wheel", new Vector2(40, 17));
-            _rightWheelNode.Entities.Add(carWheelSprite);
+            _rightWheelNode.Attach(carWheelSprite);
 
-            _carNode.Children.Add(_rightWheelNode);
-            _carNode.Children.Add(_leftWheelNode);
-            _rootNode.Children.Add(_carNode);
+            _carNode.Attach(_rightWheelNode);
+            _carNode.Attach(_leftWheelNode);
+            _rootNode.Attach(_carNode);
         }
 
         protected override void UnloadContent()

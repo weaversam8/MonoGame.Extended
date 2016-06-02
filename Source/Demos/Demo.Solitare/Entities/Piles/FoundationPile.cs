@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended.SceneGraphs;
 
 namespace Demo.Solitare.Entities.Piles
 {
@@ -10,12 +11,9 @@ namespace Demo.Solitare.Entities.Piles
         {
         }
 
-        public override void Add(Card card)
+        protected override SceneNode CreateChildNode(bool isFirstChild)
         {
-            //if (card.Facing != CardFacing.Up)
-                //throw new InvalidOperationException("Cards in the foundation piles must be face up");
-
-            base.Add(card);
+            return new SceneNode();
         }
     }
 }

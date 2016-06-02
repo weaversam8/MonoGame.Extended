@@ -1,19 +1,21 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using MonoGame.Extended.Animations.Tweens;
 using MonoGame.Extended.SceneGraphs;
+using MonoGame.Extended.Shapes;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.TextureAtlases;
 
 namespace Demo.Solitare.Entities
 {
-    public class Card : SceneNode
+    public class Card : ISceneEntityDrawable, IMovable
     {
         private readonly TextureRegion2D _frontRegion;
         private readonly TextureRegion2D _backRegion;
         private readonly Sprite _sprite;
 
         public Card(Rank rank, Suit suit, TextureRegion2D frontRegion, TextureRegion2D backRegion)
-            : base($"{rank} {suit}")
         {
             Suit = suit;
             Rank = rank;
@@ -26,7 +28,6 @@ namespace Demo.Solitare.Entities
                 Position = new Vector2(_frontRegion.Width / 2f, _frontRegion.Height / 2f),
                 Tag = this
             };
-            Entities.Add(_sprite);
         }
 
         public Rank Rank { get; }
@@ -35,13 +36,19 @@ namespace Demo.Solitare.Entities
         public SuitColor Color => Suit.Color;
         public int Value => Rank.Value;
 
-        public Vector2 Center => Position + GetBoundingRectangle().Size/2f;
+        public Vector2 Position
+        {
+            get { return _sprite.Position; }
+            set { _sprite.Position = value; }
+        }
+
+        public Vector2 Center => _sprite.Position + GetBoundingRectangle().Size/2f;
 
         public void Flip()
         {
             const float duration = 0.1f;
             
-            this.CreateTweenChain()
+            _sprite.CreateTweenChain()
                 .ScaleTo(new Vector2(0.0f, 1.0f), duration, EasingFunctions.QuadraticEaseIn)
                 .Run(() =>
                 {
@@ -53,8 +60,18 @@ namespace Demo.Solitare.Entities
 
         public bool Contains(Point point)
         {
-            return new Rectangle((int)Position.X, (int)Position.Y, _frontRegion.Size.Width, _frontRegion.Size.Height)
+            return _sprite.GetBoundingRectangle()
                 .Contains(point);
+        }
+
+        public RectangleF GetBoundingRectangle()
+        {
+            return _sprite.GetBoundingRectangle();
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Vector2 offsetPosition, float offsetRotation, Vector2 offsetScale)
+        {
+            _sprite.Draw(spriteBatch, offsetPosition, offsetRotation, offsetScale);
         }
     }
 }

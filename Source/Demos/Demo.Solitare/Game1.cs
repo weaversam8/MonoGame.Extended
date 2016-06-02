@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Demo.Solitare.Entities;
-using Demo.Solitare.Entities.Piles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -9,7 +8,6 @@ using MonoGame.Extended;
 using MonoGame.Extended.Animations;
 using MonoGame.Extended.Animations.Tweens;
 using MonoGame.Extended.InputListeners;
-using MonoGame.Extended.SceneGraphs;
 using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended.ViewportAdapters;
 
@@ -92,7 +90,7 @@ namespace Demo.Solitare
                     if (i == k)
                         card.Flip();
 
-                    tableauPile.Add(card);
+                    tableauPile.Place(card);
                 }
             }
 
@@ -107,12 +105,12 @@ namespace Demo.Solitare
             {
                 var card = _deck.Draw();
                 card.Flip();
-                _table.WastePile.Add(card);
+                _table.WastePile.Place(card);
             }
 
             foreach (var card in _deck)
             {
-                _table.StockPile.Add(card);
+                _table.StockPile.Place(card);
             }
         }
 
@@ -146,7 +144,7 @@ namespace Demo.Solitare
 
             if (card != null)
             {
-                //var foundationSlot = TryDropOnFoundationSlots(card);
+                var pile = _table.FoundationPiles[0];
 
                 card.CreateTweenGroup()
                     .MoveTo(_dragHandler.TargetStartPosition, 0.2f,
@@ -155,13 +153,6 @@ namespace Demo.Solitare
 
             _dragHandler.EndDrag();
         }
-
-        //private FoundationSlot TryDropOnFoundationSlots(Card card)
-        //{
-        //    return _table.FoundationSlots
-        //        .Where(foundationSlot => foundationSlot.BoundingRectangle.Contains(card.Center))
-        //        .FirstOrDefault(foundationSlot => foundationSlot.TryDrop(card));
-        //}
 
         //private void Deal()
         //{

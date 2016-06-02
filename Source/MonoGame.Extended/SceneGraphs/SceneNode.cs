@@ -43,6 +43,26 @@ namespace MonoGame.Extended.SceneGraphs
         public SceneEntityCollection Entities { get; }
         public object Tag { get; set; }
 
+        public void Attach(SceneNode sceneNode)
+        {
+            Children.Add(sceneNode);
+        }
+
+        public void Attach(ISceneEntity entity)
+        {
+            Entities.Add(entity);
+        }
+
+        public void Detach(SceneNode sceneNode)
+        {
+            Children.Remove(sceneNode);
+        }
+
+        public void Detach(ISceneEntity entity)
+        {
+            Entities.Remove(entity);
+        }
+
         public RectangleF GetBoundingRectangle()
         {
             if(!Entities.Any())

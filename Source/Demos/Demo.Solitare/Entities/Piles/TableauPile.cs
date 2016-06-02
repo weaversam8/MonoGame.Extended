@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended.SceneGraphs;
 
 namespace Demo.Solitare.Entities.Piles
 {
@@ -11,12 +12,9 @@ namespace Demo.Solitare.Entities.Piles
         {
         }
 
-        public override void Add(Card card)
+        protected override SceneNode CreateChildNode(bool isFirstChild)
         {
-            if(SceneNode.Children.Any())
-                card.Position = new Vector2(0, 40);
-
-            base.Add(card);
+            return new SceneNode {Position = new Vector2(0, isFirstChild ? 0 : 40)};
         }
     }
 }

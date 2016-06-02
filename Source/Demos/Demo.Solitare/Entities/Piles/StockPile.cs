@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
+using MonoGame.Extended.SceneGraphs;
 using MonoGame.Extended.Shapes;
 
 namespace Demo.Solitare.Entities.Piles
@@ -16,15 +17,9 @@ namespace Demo.Solitare.Entities.Piles
             _size = size;
         }
 
-        public override void Add(Card card)
+        protected override SceneNode CreateChildNode(bool isFirstChild)
         {
-            if (card.Facing != CardFacing.Down)
-                throw new InvalidOperationException("Cards in the stock pile must be face down");
-
-            if(SceneNode.Children.Any())
-                card.Position += new Vector2(0.25f, 0.25f);
-
-            base.Add(card);
+            return new SceneNode {Position = new Vector2(0.25f, 0.25f)};
         }
 
         public RectangleF BoundingRectangle => new RectangleF(Position, _size);
