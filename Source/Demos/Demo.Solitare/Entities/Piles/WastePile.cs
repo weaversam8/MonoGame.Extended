@@ -10,7 +10,7 @@ namespace Demo.Solitare.Entities.Piles
         {
         }
 
-        protected override SceneNode CreateChildNode(bool isFirstChild)
+        protected override SceneNode CreateChildNode()
         {
             return new SceneNode();
         }

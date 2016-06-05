@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.SceneGraphs;
+using MonoGame.Extended.Shapes;
 
 namespace Demo.Solitare.Entities.Piles
 {
@@ -11,7 +12,7 @@ namespace Demo.Solitare.Entities.Piles
         {
         }
 
-        protected override SceneNode CreateChildNode(bool isFirstChild)
+        protected override SceneNode CreateChildNode()
         {
             return new SceneNode();
         }

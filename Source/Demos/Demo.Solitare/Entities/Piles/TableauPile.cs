@@ -12,9 +12,9 @@ namespace Demo.Solitare.Entities.Piles
         {
         }
 
-        protected override SceneNode CreateChildNode(bool isFirstChild)
+        protected override SceneNode CreateChildNode()
         {
-            return new SceneNode {Position = new Vector2(0, isFirstChild ? 0 : 40)};
+            return new SceneNode {Position = new Vector2(0, 40)};
         }
     }
 }

@@ -9,13 +9,13 @@ using MonoGame.Extended.TextureAtlases;
 
 namespace Demo.Solitare.Entities
 {
-    public class Card : ISceneEntityDrawable, IMovable
+    public class Card : ISceneEntityDrawable//, IMovable
     {
         private readonly TextureRegion2D _frontRegion;
         private readonly TextureRegion2D _backRegion;
-        private readonly Sprite _sprite;
+        private TextureRegion2D _currentRegion;
 
-        public Card(Rank rank, Suit suit, TextureRegion2D frontRegion, TextureRegion2D backRegion)
+        public Card(SceneNode sceneNode, Rank rank, Suit suit, TextureRegion2D frontRegion, TextureRegion2D backRegion)
         {
             Suit = suit;
             Rank = rank;
@@ -23,55 +23,47 @@ namespace Demo.Solitare.Entities
 
             _frontRegion = frontRegion;
             _backRegion = backRegion;
-            _sprite = new Sprite(backRegion)
-            {
-                Position = new Vector2(_frontRegion.Width / 2f, _frontRegion.Height / 2f),
-                Tag = this
-            };
+            _currentRegion = _backRegion;
         }
-
+        
         public Rank Rank { get; }
         public Suit Suit { get; }
         public CardFacing Facing { get; private set; }
         public SuitColor Color => Suit.Color;
         public int Value => Rank.Value;
 
-        public Vector2 Position
-        {
-            get { return _sprite.Position; }
-            set { _sprite.Position = value; }
-        }
-
-        public Vector2 Center => _sprite.Position + GetBoundingRectangle().Size/2f;
-
         public void Flip()
         {
             const float duration = 0.1f;
-            
-            _sprite.CreateTweenChain()
-                .ScaleTo(new Vector2(0.0f, 1.0f), duration, EasingFunctions.QuadraticEaseIn)
-                .Run(() =>
-                {
-                    Facing = Facing == CardFacing.Down ? CardFacing.Up : CardFacing.Down;
-                    _sprite.TextureRegion = Facing == CardFacing.Up ? _frontRegion : _backRegion;
-                })
-                .ScaleTo(Vector2.One, duration, EasingFunctions.QuadraticEaseOut);
+
+            Facing = Facing == CardFacing.Down ? CardFacing.Up : CardFacing.Down;
+            _currentRegion = Facing == CardFacing.Up ? _frontRegion : _backRegion;
+
+            //_sceneNode.CreateTweenChain()
+            //    .ScaleTo(new Vector2(0.0f, 1.0f), duration, EasingFunctions.QuadraticEaseIn)
+            //    .Run(() =>
+            //    {
+            //        Facing = Facing == CardFacing.Down ? CardFacing.Up : CardFacing.Down;
+            //        _currentRegion = Facing == CardFacing.Up ? _frontRegion : _backRegion;
+            //    })
+            //    .ScaleTo(Vector2.One, duration, EasingFunctions.QuadraticEaseOut);
         }
 
-        public bool Contains(Point point)
-        {
-            return _sprite.GetBoundingRectangle()
-                .Contains(point);
-        }
+        //public bool Contains(Point point)
+        //{
+        //    return _sceneNode.GetBoundingRectangle()
+        //        .Contains(point);
+        //}
 
         public RectangleF GetBoundingRectangle()
         {
-            return _sprite.GetBoundingRectangle();
+            return new RectangleF(0, 0, _currentRegion.Width, _currentRegion.Height);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offsetPosition, float offsetRotation, Vector2 offsetScale)
         {
-            _sprite.Draw(spriteBatch, offsetPosition, offsetRotation, offsetScale);
+            spriteBatch.Draw(texture: _currentRegion.Texture, sourceRectangle: _currentRegion.Bounds,
+                position: offsetPosition, rotation: offsetRotation, scale: offsetScale);
         }
     }
 }

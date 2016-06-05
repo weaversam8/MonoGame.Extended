@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Shapes;
@@ -43,6 +42,53 @@ namespace MonoGame.Extended.SceneGraphs
         public SceneEntityCollection Entities { get; }
         public object Tag { get; set; }
 
+        private Vector2 _worldPosition;
+        public Vector2 WorldPosition
+        {
+            get
+            {
+                UpdateWorldTransform();
+                return _worldPosition;
+            }
+        }
+
+        private float _worldRotation;
+        public float WorldRotation
+        {
+            get
+            {
+                UpdateWorldTransform();
+                return _worldRotation;
+            }
+        }
+
+        private Vector2 _worldScale;
+        public Vector2 WorldScale
+        {
+            get
+            {
+                UpdateWorldTransform();
+                return _worldScale;
+            }
+        }
+
+        private bool UpdateWorldTransform()
+        {
+            // ideally if we could efficiently detect that nothing has changed we could skip these calculations
+            Vector2 position, scale;
+            float rotation;
+
+            if(DecomposeWorldTransform(out position, out rotation, out scale))
+            {
+                _worldPosition = position;
+                _worldRotation = rotation;
+                _worldScale = scale;
+                return true;
+            }
+
+            return false;
+        }
+
         public void Attach(SceneNode sceneNode)
         {
             Children.Add(sceneNode);
@@ -68,16 +114,13 @@ namespace MonoGame.Extended.SceneGraphs
             if(!Entities.Any())
                 return RectangleF.Empty;
 
-            Vector2 position, scale;
-            float rotation;
-
-            if (GetWorldTransform().Decompose(out position, out rotation, out scale))
+            if (UpdateWorldTransform())
             {
                 var rectangles = Entities
                     .Select(e =>
                     {
                         var r = e.GetBoundingRectangle();
-                        r.Offset(position);
+                        r.Offset(_worldPosition);
                         return r;
                     })
                     .Concat(Children.Select(i => i.GetBoundingRectangle()))
@@ -97,6 +140,12 @@ namespace MonoGame.Extended.SceneGraphs
         {
             var localTransform = GetLocalTransform();
             return Parent == null ? localTransform : Matrix.Multiply(localTransform, Parent.GetWorldTransform());
+        }
+
+        public bool DecomposeWorldTransform(out Vector2 position, out float rotation, out Vector2 scale)
+        {
+            return GetWorldTransform()
+                .Decompose(out position, out rotation, out scale);
         }
 
         public Matrix GetLocalTransform()

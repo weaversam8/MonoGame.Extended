@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Demo.Solitare.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,6 +7,7 @@ using MonoGame.Extended;
 using MonoGame.Extended.Animations;
 using MonoGame.Extended.Animations.Tweens;
 using MonoGame.Extended.InputListeners;
+using MonoGame.Extended.SceneGraphs;
 using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended.ViewportAdapters;
 
@@ -21,13 +21,14 @@ namespace Demo.Solitare
         private Camera2D _camera;
         private Deck<Card> _deck;
         private Table _table;
-        private readonly DragHandler<Card> _dragHandler;
+        private readonly DragHandler<SceneNode> _dragHandler;
         private readonly Random _random;
+        private readonly SceneNode _handNode = new SceneNode();
 
         public Game1()
         {
             _random = new Random();
-            _dragHandler = new DragHandler<Card>();
+            _dragHandler = new DragHandler<SceneNode>();
             _graphicsDeviceManager = new GraphicsDeviceManager(this)
             {
                 PreferredBackBufferWidth = 1024,
@@ -129,13 +130,15 @@ namespace Demo.Solitare
                 var card = _table.FindCardAt(position);
 
                 if (card != null && card.Facing == CardFacing.Up)
-                    _dragHandler.StartDrag(args.Position, card);
+                    _handNode.Attach(card);
+                    //_dragHandler.StartDrag(args.Position, card);
             }
         }
 
         private void OnMouseDrag(object sender, MouseEventArgs args)
         {
-            _dragHandler.Drag(args.Position);
+            _handNode.Position = args.Position.ToVector2();
+            //_dragHandler.Drag(args.Position);
         }
 
         private void OnMouseDragEnd(object sender, MouseEventArgs args)
@@ -146,9 +149,12 @@ namespace Demo.Solitare
             {
                 var pile = _table.FoundationPiles[0];
 
-                card.CreateTweenGroup()
-                    .MoveTo(_dragHandler.TargetStartPosition, 0.2f,
-                        EasingFunctions.CubicEaseOut);
+                //if (pile.DropRectangle.Contains(card.Center))
+                //    card.Flip();
+
+                //card.CreateTweenGroup()
+                //    .MoveTo(_dragHandler.TargetStartPosition, 0.2f,
+                //        EasingFunctions.CubicEaseOut);
             }
 
             _dragHandler.EndDrag();
@@ -187,7 +193,7 @@ namespace Demo.Solitare
                 foreach (var rank in Rank.GetAll())
                 {
                     var frontRegion = cardAtlas[$"card{suit}{rank}"];
-                    var card = new Card(rank, suit, frontRegion, backRegion);// { Position = _table.DrawSlot };
+                    var card = new Card(new SceneNode(), rank, suit, frontRegion, backRegion);
                     deck.Add(card);
                 }
             }
@@ -220,6 +226,7 @@ namespace Demo.Solitare
             //_wastePile.Draw(_spriteBatch);
             //_tableauPile.Draw(_spriteBatch);
             _table.Draw(_spriteBatch);
+            _handNode.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);

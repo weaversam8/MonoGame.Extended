@@ -2,6 +2,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.SceneGraphs;
+using MonoGame.Extended.Shapes;
 
 namespace Demo.Solitare.Entities.Piles
 {
@@ -15,18 +16,27 @@ namespace Demo.Solitare.Entities.Piles
         protected SceneNode SceneNode { get; }
         public Vector2 Position => SceneNode.Position;
 
-        protected abstract SceneNode CreateChildNode(bool firstChild);
+        public RectangleF DropRectangle => SceneNode.GetBoundingRectangle();
+
+        protected abstract SceneNode CreateChildNode();
 
         public virtual void Place(Card card)
         {
-            var children = SceneNode.Children;
+            if (!SceneNode.Entities.Any())
+            {
+                SceneNode.Attach(card);
+            }
+            else
+            {
+                var children = SceneNode.Children;
 
-            while (children.Any())
-                children = children[0].Children;
+                while (children.Any())
+                    children = children[0].Children;
 
-            var sceneNode = CreateChildNode(!SceneNode.Children.Any());
-            sceneNode.Attach(card);
-            children.Add(sceneNode);
+                var sceneNode = CreateChildNode();
+                sceneNode.Attach(card);
+                children.Add(sceneNode);
+            }
         }
 
         public Card TakeTop()

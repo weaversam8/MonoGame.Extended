@@ -17,7 +17,7 @@ namespace Demo.Solitare.Entities.Piles
             _size = size;
         }
 
-        protected override SceneNode CreateChildNode(bool isFirstChild)
+        protected override SceneNode CreateChildNode()
         {
             return new SceneNode {Position = new Vector2(0.25f, 0.25f)};
         }
