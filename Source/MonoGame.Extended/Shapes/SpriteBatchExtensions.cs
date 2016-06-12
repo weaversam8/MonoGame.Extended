@@ -136,6 +136,21 @@ namespace MonoGame.Extended.Shapes
         /// Draws a rectangle with the thickness provided
         /// </summary>
         /// <param name="spriteBatch">The destination drawing surface</param>
+        /// <param name="color">The color to draw the rectangle in</param>
+        /// <param name="thickness">The thickness of the lines</param>
+        /// <param name="x">The x coordinate of the top left corner</param>
+        /// <param name="y">The y coordinate of the top left corner</param>
+        /// <param name="width">The width of the rectangle</param>
+        /// <param name="height">The height of the rectangle</param>
+        public static void DrawRectangle(this SpriteBatch spriteBatch, float x, float y, float width, float height, Color color, float thickness = 1f)
+        {
+            DrawRectangle(spriteBatch, new RectangleF(x, y, width, height), color, thickness);
+        }
+
+        /// <summary>
+        /// Draws a rectangle with the thickness provided
+        /// </summary>
+        /// <param name="spriteBatch">The destination drawing surface</param>
         /// <param name="location">Where to draw</param>
         /// <param name="size">The size of the rectangle</param>
         /// <param name="color">The color to draw the rectangle in</param>
