@@ -81,6 +81,7 @@
     <Compile Include="Gui\Drawables\IGuiControlTemplate.cs" />
     <Compile Include="Gui\Layouts\GuiContainerLayout.cs" />
     <Compile Include="Gui\Layouts\GuiOrientation.cs" />
+    <Compile Include="SizeF.cs" />
     <Compile Include="Sprites\NinePatch.cs" />
     <Compile Include="Gui\GuiManager.cs" />
     <Compile Include="Gui\GuiSkin.cs" />

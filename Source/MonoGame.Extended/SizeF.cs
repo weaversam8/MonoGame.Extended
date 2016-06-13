@@ -1,22 +1,22 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 
 namespace MonoGame.Extended
 {
-    public struct Size : IEquatable<Size>
+    public struct SizeF : IEquatable<SizeF>
     {
-        public Size(int width, int height)
+        public SizeF(float width, float height)
             : this()
         {
             Width = width;
             Height = height;
         }
 
-        public int Width { get; }
-        public int Height { get; }
+        public float Width { get; }
+        public float Height { get; }
         public static Size Empty => new Size(0, 0);
         public static Size MaxValue => new Size(int.MaxValue, int.MaxValue);
-        public bool IsEmpty => Width == 0 && Height == 0;
+        public bool IsEmpty => Width.Equals(0) && Height.Equals(0);
 
         public override int GetHashCode()
         {
@@ -25,36 +25,27 @@ namespace MonoGame.Extended
                 return Width.GetHashCode() + Height.GetHashCode();
             }
         }
-
-        public static bool operator ==(Size a, Size b)
+        
+        public static bool operator ==(SizeF a, SizeF b)
         {
-            return a.Width == b.Width && a.Height == b.Height;
+            return a.Width.Equals(b.Width) && a.Height.Equals(b.Height);
         }
 
-        public static bool operator !=(Size a, Size b)
+        public static bool operator !=(SizeF a, SizeF b)
         {
             return !(a == b);
         }
 
-        public bool Equals(Size other)
+        public bool Equals(SizeF other)
         {
-            return Width == other.Width && Height == other.Height;
+            return Width.Equals(other.Width) && Height.Equals(other.Height);
         }
 
-        public static implicit operator Size(Point size)
+        public static implicit operator SizeF(Point size)
         {
-            return new Size(size.X, size.Y);
+            return new SizeF(size.X, size.Y);
         }
 
-        public static implicit operator Point(Size size)
-        {
-            return new Point(size.Width, size.Height);
-        }
-
-        public static implicit operator Vector2(Size size)
-        {
-            return new Vector2(size.Width, size.Height);
-        }
 
         public override bool Equals(object obj)
         {
